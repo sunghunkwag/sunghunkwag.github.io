@@ -19,121 +19,298 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#F1F3EF;
+    --bg:#EEF0F1;
     --surface:#FFFFFF;
-    --ink:#161A18;
-    --ink-soft:#4C5650;
-    --ink-faint:#7C877F;
-    --line:#D9DED6;
-    --accent:#2C5F4F;
-    --accent-ink:#F1F3EF;
-    --fail:#9C4630;
-    --fail-soft:#F4E7E1;
-    --accent-soft:#E3EDE7;
-    --shadow: 0 1px 2px rgba(20,26,22,0.04);
+    --ink:#12141C;
+    --ink-soft:#52565F;
+    --ink-faint:#868B93;
+    --line:#D8DCE0;
+    --signal:#8A661E;
+    --signal-soft:#F1E6CD;
+    --fail:#9A4A38;
+    --fail-soft:#F5E2DC;
     color-scheme: light;
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
-      --bg:#14181A; --surface:#1B211F; --ink:#E9EEEA; --ink-soft:#AAB5AD; --ink-faint:#7C877F;
-      --line:#2B332E; --accent:#79C6A7; --accent-ink:#0E1513; --fail:#E29277; --fail-soft:#2E211D;
-      --accent-soft:#1E2C26; --shadow: 0 1px 2px rgba(0,0,0,0.3); color-scheme: dark;
+      --bg:#10121A;
+      --surface:#171A24;
+      --ink:#ECEDF1;
+      --ink-soft:#9EA3B0;
+      --ink-faint:#666B78;
+      --line:#272B38;
+      --signal:#D7A94F;
+      --signal-soft:#2B2517;
+      --fail:#C97A63;
+      --fail-soft:#2A1C18;
+      color-scheme: dark;
     }
   }
   :root[data-theme="dark"]{
-    --bg:#14181A; --surface:#1B211F; --ink:#E9EEEA; --ink-soft:#AAB5AD; --ink-faint:#7C877F;
-    --line:#2B332E; --accent:#79C6A7; --accent-ink:#0E1513; --fail:#E29277; --fail-soft:#2E211D;
-    --accent-soft:#1E2C26; --shadow: 0 1px 2px rgba(0,0,0,0.3); color-scheme: dark;
+    --bg:#10121A;
+    --surface:#171A24;
+    --ink:#ECEDF1;
+    --ink-soft:#9EA3B0;
+    --ink-faint:#666B78;
+    --line:#272B38;
+    --signal:#D7A94F;
+    --signal-soft:#2B2517;
+    --fail:#C97A63;
+    --fail-soft:#2A1C18;
+    color-scheme: dark;
   }
+
   *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
   body{
-    background:var(--bg); color:var(--ink);
-    font-family:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
-    font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased;
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Instrument Sans",system-ui,-apple-system,sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
   }
-  .wrap{max-width:760px;margin:0 auto;padding-inline:20px;padding-block:56px 80px;}
-  h1,h2,h3{font-family:"IBM Plex Serif",Georgia,serif;font-weight:600;text-wrap:balance;margin:0;}
   .mono{font-family:"IBM Plex Mono",ui-monospace,monospace;}
-  a{color:var(--accent);text-decoration-thickness:1.5px;text-underline-offset:3px;}
-  a:focus-visible, button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px;}
-  .hero{display:flex;flex-direction:column;gap:22px;}
-  .hero-text{min-width:0;}
-  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 10px;}
-  .hero h1{font-size:clamp(28px,5vw,38px);}
-  .hero .sub{color:var(--ink-soft);margin:8px 0 0;font-size:15px;}
-  .hero .links{margin-top:18px;display:flex;gap:16px;flex-wrap:wrap;font-family:"IBM Plex Mono",monospace;font-size:13px;}
-  .hero .links a{color:var(--ink);border-bottom:1px solid var(--line);padding-bottom:1px;}
-  .hero .links a:hover{color:var(--accent);border-color:var(--accent);}
+  a{color:var(--signal);text-decoration-thickness:1.5px;text-underline-offset:3px;}
+  a:focus-visible, button:focus-visible{outline:2px solid var(--signal);outline-offset:3px;}
+
+  .page{
+    display:grid;
+    grid-template-columns: minmax(20px,1fr) min(780px, calc(100% - 40px)) minmax(20px,1fr);
+    padding-block:48px 88px;
+  }
+  .page > *{ grid-column: 2; }
+  .page > .bleed{ grid-column: 1 / -1; }
+
+  /* ---------- hero head ---------- */
+  .hero-head{margin-top:8px;}
+  .eyebrow{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:11px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--signal);
+    margin:0 0 18px;
+  }
+  .hero-head h1{
+    font-family:"Instrument Serif",Georgia,serif;
+    font-weight:400;
+    font-size:clamp(48px,9vw,92px);
+    letter-spacing:-0.02em;
+    line-height:1.02;
+    margin:0;
+    text-wrap:balance;
+  }
+  .hero-head .sub{
+    color:var(--ink-soft);
+    margin:20px 0 0;
+    font-size:clamp(16px,2vw,19px);
+    max-width:46ch;
+  }
+  .hero-head .links{
+    margin-top:24px;
+    display:flex;
+    gap:20px;
+    flex-wrap:wrap;
+    font-family:"IBM Plex Mono",monospace;
+    font-size:13px;
+  }
+  .hero-head .links a{color:var(--ink);border-bottom:1px solid var(--line);padding-bottom:1px;text-decoration:none;}
+  .hero-head .links a:hover{color:var(--signal);border-color:var(--signal);}
+
+  /* ---------- viewport (full-bleed instrument panel) ---------- */
   .viewport-panel{
-    position:relative;width:100%;
-    height:clamp(240px,40vw,340px);
-    border:1px solid var(--line);
+    position:relative;
+    width:100%;
+    height:clamp(360px,46vw,540px);
+    margin-top:40px;
     overflow:hidden;
     background:var(--bg);
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-image:
+      linear-gradient(color-mix(in srgb, var(--line) 55%, transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in srgb, var(--line) 55%, transparent) 1px, transparent 1px);
+    background-size:42px 42px;
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
   }
-  #searchspace{width:100%;height:100%;display:block;cursor:grab;}
+  #searchspace{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab;}
+  .tick{position:absolute;width:16px;height:16px;pointer-events:none;opacity:.8;}
+  .tick-tl{top:14px;left:14px;border-top:1.5px solid var(--signal);border-left:1.5px solid var(--signal);}
+  .tick-tr{top:14px;right:14px;border-top:1.5px solid var(--signal);border-right:1.5px solid var(--signal);}
+  .tick-bl{bottom:14px;left:14px;border-bottom:1.5px solid var(--signal);border-left:1.5px solid var(--signal);}
+  .tick-br{bottom:14px;right:14px;border-bottom:1.5px solid var(--signal);border-right:1.5px solid var(--signal);}
+  .reticle{position:absolute;top:0;left:0;width:38px;height:38px;pointer-events:none;opacity:0;transition:opacity .7s ease;}
+  .reticle.locked{opacity:1;}
+  .reticle span{position:absolute;width:11px;height:11px;}
+  .reticle span:nth-child(1){top:0;left:0;border-top:1.5px solid var(--signal);border-left:1.5px solid var(--signal);}
+  .reticle span:nth-child(2){top:0;right:0;border-top:1.5px solid var(--signal);border-right:1.5px solid var(--signal);}
+  .reticle span:nth-child(3){bottom:0;left:0;border-bottom:1.5px solid var(--signal);border-left:1.5px solid var(--signal);}
+  .reticle span:nth-child(4){bottom:0;right:0;border-bottom:1.5px solid var(--signal);border-right:1.5px solid var(--signal);}
   .viewport-caption{
-    position:absolute;left:12px;bottom:12px;
-    font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;
-    color:var(--ink-soft);background:var(--surface);padding:5px 9px;
-    border:1px solid var(--line);opacity:.92;
+    position:absolute;left:16px;bottom:16px;right:16px;
+    font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase;
+    color:var(--ink-soft);
   }
-  .thesis{margin-top:40px;padding-top:32px;border-top:1px solid var(--line);}
-  .thesis p{font-family:"IBM Plex Serif",Georgia,serif;font-size:clamp(19px,2.6vw,23px);line-height:1.5;color:var(--ink);margin:0;text-wrap:balance;}
-  .trackline{margin-top:18px;font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--ink-soft);}
-  .log{margin-top:52px;}
-  .log h2{font-size:13px;font-family:"IBM Plex Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);font-weight:500;margin-bottom:18px;}
-  .log-note{color:var(--ink-soft);font-size:14.5px;margin:0 0 18px;max-width:62ch;}
-  .entries{display:flex;flex-direction:column;gap:2px;}
-  .entry{background:var(--surface);border-left:3px solid var(--accent);box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px;}
-  .entry.retracted{border-left-color:var(--fail);}
-  .entry-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
-  .entry-tag{font-family:"IBM Plex Mono",monospace;font-size:12.5px;font-weight:500;letter-spacing:.02em;}
-  .pill{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:3px;background:var(--accent-soft);color:var(--accent);white-space:nowrap;}
-  .entry.retracted .pill{background:var(--fail-soft);color:var(--fail);}
-  .metric-row{display:flex;align-items:baseline;gap:18px;font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;}
-  .metric-row .num{font-size:26px;font-weight:600;color:var(--accent);}
+
+  /* ---------- thesis ---------- */
+  .thesis{margin-top:72px;}
+  .thesis p{
+    font-family:"Instrument Serif",Georgia,serif;
+    font-style:italic;
+    font-size:clamp(23px,3.2vw,32px);
+    line-height:1.42;
+    color:var(--ink);
+    margin:0;
+    text-wrap:balance;
+  }
+  .trackline{
+    margin-top:20px;
+    font-family:"IBM Plex Mono",monospace;
+    font-size:12.5px;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- log ---------- */
+  .log{margin-top:64px;}
+  .log h2{
+    font-size:13px;font-family:"IBM Plex Mono",monospace;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--ink-soft);font-weight:500;margin:0;
+  }
+  .log h2::after{content:"";display:block;width:28px;height:2px;background:var(--line);margin-top:10px;}
+  .log-note{color:var(--ink-soft);font-size:14.5px;margin:16px 0 24px;max-width:62ch;}
+  .entries{display:flex;flex-direction:column;gap:12px;margin-top:24px;}
+  .entry{
+    background:var(--surface);
+    border:1px solid var(--line);
+    padding:22px 24px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .entry-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .entry-tag{font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:500;letter-spacing:.02em;color:var(--ink);}
+  .status{display:inline-flex;align-items:center;gap:8px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap;}
+  .status .led{width:7px;height:7px;border-radius:50%;background:var(--ink-faint);flex:none;}
+  .status.ok{color:var(--signal);}
+  .status.ok .led{background:var(--signal);box-shadow:0 0 7px color-mix(in srgb, var(--signal) 65%, transparent);}
+  .status.bad{color:var(--fail);}
+  .status.bad .led{background:var(--fail);box-shadow:0 0 7px color-mix(in srgb, var(--fail) 65%, transparent);}
+  .metric-row{
+    display:flex;
+    align-items:baseline;
+    gap:20px;
+    font-family:"IBM Plex Mono",monospace;
+    font-variant-numeric:tabular-nums;
+  }
+  .metric-row .num{font-size:clamp(24px,4vw,30px);font-weight:600;color:var(--signal);}
   .metric-row .num.base{color:var(--ink-faint);font-size:18px;}
-  .metric-row .lbl{font-size:11px;color:var(--ink-soft);display:block;margin-top:2px;letter-spacing:.02em;}
-  .entry p{margin:0;font-size:14.5px;color:var(--ink-soft);max-width:64ch;}
+  .metric-row .lbl{font-size:11px;color:var(--ink-soft);display:block;margin-top:3px;letter-spacing:.02em;}
+  .entry p{margin:0;font-size:15px;color:var(--ink-soft);max-width:64ch;}
   .entry p strong{color:var(--ink);font-weight:600;}
-  .stats{margin-top:52px;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);}
-  .stat{background:var(--surface);padding:20px 14px;text-align:center;}
-  .stat .n{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;font-size:clamp(20px,4vw,26px);font-weight:600;color:var(--ink);}
-  .stat .l{font-size:11px;color:var(--ink-soft);margin-top:4px;letter-spacing:.02em;}
-  @media (max-width:520px){.stats{grid-template-columns:repeat(2,1fr);}}
-  .support{margin-top:52px;padding:28px 24px;background:var(--surface);border:1px solid var(--line);}
-  .support h2{font-size:20px;margin-bottom:12px;}
-  .support p{color:var(--ink-soft);font-size:15px;max-width:64ch;margin:0 0 18px;}
-  .support .contact{display:flex;gap:24px;flex-wrap:wrap;font-family:"IBM Plex Mono",monospace;font-size:13.5px;}
-  .support .contact a{color:var(--ink);border-bottom:1px solid var(--line);padding-bottom:1px;}
-  .support .contact a:hover{color:var(--accent);border-color:var(--accent);}
-  .support .contact .k{display:block;color:var(--ink-faint);font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;}
-  footer{margin-top:56px;text-align:center;color:var(--ink-faint);font-family:"IBM Plex Serif",Georgia,serif;font-style:italic;font-size:14.5px;}
+
+  /* ---------- stats ---------- */
+  .stats{
+    margin-top:64px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+  }
+  .stat{
+    background:var(--surface);
+    padding:22px 14px;
+    text-align:center;
+  }
+  .stat .n{
+    font-family:"IBM Plex Mono",monospace;
+    font-variant-numeric:tabular-nums;
+    font-size:clamp(20px,4vw,27px);
+    font-weight:600;
+    color:var(--ink);
+  }
+  .stat .l{
+    font-size:11px;
+    color:var(--ink-soft);
+    margin-top:5px;
+    letter-spacing:.02em;
+  }
+  @media (max-width:520px){
+    .stats{grid-template-columns:repeat(2,1fr);}
+  }
+
+  /* ---------- support ---------- */
+  .support{
+    margin-top:64px;
+    padding:32px 28px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-top:2px solid var(--signal);
+  }
+  .support .eyebrow{margin-bottom:14px;}
+  .support h2{
+    font-family:"Instrument Serif",Georgia,serif;
+    font-style:italic;
+    font-weight:400;
+    font-size:26px;
+    margin:0 0 14px;
+  }
+  .support p{color:var(--ink-soft);font-size:15px;max-width:64ch;margin:0 0 22px;}
+  .support .contact{
+    display:flex;
+    gap:28px;
+    flex-wrap:wrap;
+    font-family:"IBM Plex Mono",monospace;
+    font-size:13.5px;
+  }
+  .support .contact a{color:var(--ink);border-bottom:1px solid var(--line);padding-bottom:1px;text-decoration:none;}
+  .support .contact a:hover{color:var(--signal);border-color:var(--signal);}
+  .support .contact .k{display:block;color:var(--ink-faint);font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
+
+  footer{
+    margin-top:64px;
+    text-align:center;
+    color:var(--ink-faint);
+    font-family:"Instrument Serif",Georgia,serif;
+    font-style:italic;
+    font-size:16px;
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <header class="hero">
-    <div class="hero-text">
-      <p class="eyebrow">Independent AI Researcher</p>
-      <h1>Sung Hun Kwag</h1>
-      <p class="sub">Recursive self-improvement &amp; architecture search &middot; Gapyeong, South Korea</p>
-      <div class="links">
-        <a href="https://github.com/sunghunkwag" target="_blank" rel="noopener">github.com/sunghunkwag</a>
-        <a href="mailto:sunghunkwag@gmail.com">sunghunkwag@gmail.com</a>
-      </div>
-    </div>
-    <div class="viewport-panel">
-      <canvas id="searchspace"></canvas>
-      <p class="viewport-caption">2,600-point render &middot; 3,000-candidate search space &middot; one survivor</p>
+<div class="page">
+
+  <header class="hero-head">
+    <p class="eyebrow">[ Independent AI Researcher ]</p>
+    <h1>Sung Hun Kwag</h1>
+    <p class="sub">Recursive self-improvement &amp; architecture search &middot; Gapyeong, South Korea</p>
+    <div class="links">
+      <a href="https://github.com/sunghunkwag" target="_blank" rel="noopener">github.com/sunghunkwag</a>
+      <a href="mailto:sunghunkwag@gmail.com">sunghunkwag@gmail.com</a>
     </div>
   </header>
+
+  <div class="viewport-panel bleed">
+    <canvas id="searchspace"></canvas>
+    <div class="tick tick-tl"></div><div class="tick tick-tr"></div>
+    <div class="tick tick-bl"></div><div class="tick tick-br"></div>
+    <div class="reticle" id="reticle"><span></span><span></span><span></span><span></span></div>
+    <p class="viewport-caption">3,000-candidate search space &middot; seed 07 &middot; survivor locked</p>
+  </div>
 
   <section class="thesis">
     <p>Most self&#8209;improvement claims in AI research ship unverified. I build systems that check their own results before I believe them &mdash; including two of my own headline results, which the verification caught, and I retracted.</p>
@@ -143,26 +320,43 @@
   <section class="log">
     <h2>Validated</h2>
     <div class="entries">
+
       <article class="entry">
-        <div class="entry-head"><span class="entry-tag">attention-free-sequence-model</span><span class="pill">Validated</span></div>
+        <div class="entry-head">
+          <span class="entry-tag">attention-free-sequence-model</span>
+          <span class="status ok"><i class="led"></i>Validated</span>
+        </div>
         <div class="metric-row">
           <span><span class="num">97.6%</span><span class="lbl">search winner</span></span>
           <span><span class="num base">64.8%</span><span class="lbl">transformer baseline</span></span>
         </div>
         <p><strong>3,000 candidate architectures</strong> searched across 45 atomic mechanisms, evaluated on three long-range synthetic tasks. The winner uses none of the 5 hand-designed mechanisms tried first. Open question: sequence lengths of 32&ndash;64 only, no Mamba/RWKV/Hyena comparison yet &mdash; that's what the next round of compute is for.</p>
       </article>
+
       <article class="entry">
-        <div class="entry-head"><span class="entry-tag">rsi-bench</span><span class="pill">Active</span></div>
+        <div class="entry-head">
+          <span class="entry-tag">rsi-bench</span>
+          <span class="status"><i class="led"></i>Active</span>
+        </div>
         <p>A <strong>multi-axis benchmark</strong> for recursive self-improvement &mdash; scoring self-modification depth, improvement trajectories, operator discovery, meta-adaptation, safety, and autonomy in one suite.</p>
       </article>
+
       <article class="entry">
-        <div class="entry-head"><span class="entry-tag">rsi-metaforge-core</span><span class="pill">Validated</span></div>
-        <p><strong>Validation-gated program synthesis</strong> runtime: meta-meta learning loops, analogical transfer, sagrammar-mediated expansion, and anti-cheat verification built into the search loop itself &mdash; not bolted on after.</p>
+        <div class="entry-head">
+          <span class="entry-tag">rsi-metaforge-core</span>
+          <span class="status ok"><i class="led"></i>Validated</span>
+        </div>
+        <p><strong>Validation-gated program synthesis</strong> runtime: meta-meta learning loops, analogical transfer, grammar-mediated expansion, and anti-cheat verification built into the search loop itself &mdash; not bolted on after.</p>
       </article>
+
       <article class="entry">
-        <div class="entry-head"><span class="entry-tag">gated-self-improvement</span><span class="pill">Validated</span></div>
+        <div class="entry-head">
+          <span class="entry-tag">gated-self-improvement</span>
+          <span class="status ok"><i class="led"></i>Validated</span>
+        </div>
         <p><strong>LLM-free, deterministic, counterfactually-controlled</strong> recursive self-improvement engine. Every run's full results are published &mdash; nothing held back.</p>
       </article>
+
     </div>
   </section>
 
@@ -170,14 +364,23 @@
     <h2>Failure log</h2>
     <p class="log-note">Two headline results didn't survive their own verification gates. Publishing them here is the point &mdash; a validation system that never rejects its own results isn't one.</p>
     <div class="entries">
-      <article class="entry retracted">
-        <div class="entry-head"><span class="entry-tag">rsi-metaforge-core &middot; phase ae</span><span class="pill">Retracted</span></div>
+
+      <article class="entry">
+        <div class="entry-head">
+          <span class="entry-tag">rsi-metaforge-core &middot; phase ae</span>
+          <span class="status bad"><i class="led"></i>Retracted</span>
+        </div>
         <p>A <strong>15/15 adoption result.</strong> Traced back to the task generator and the search engine having been co-designed &mdash; the result was structurally guaranteed, not earned. Retracted before publication.</p>
       </article>
-      <article class="entry retracted">
-        <div class="entry-head"><span class="entry-tag">gated-self-improvement</span><span class="pill">Retracted</span></div>
+
+      <article class="entry">
+        <div class="entry-head">
+          <span class="entry-tag">gated-self-improvement</span>
+          <span class="status bad"><i class="led"></i>Retracted</span>
+        </div>
         <p>A <strong>compounding-improvement claim</strong> resting on a 5&times; compute mismatch between control and treatment runs. Found the mismatch, retracted the claim it supported.</p>
       </article>
+
     </div>
   </section>
 
@@ -189,6 +392,7 @@
   </section>
 
   <section class="support">
+    <p class="eyebrow">[ Support this work ]</p>
     <h2>What funding buys</h2>
     <p>Compute. Specifically: roughly 250 H100&#8209;hours to re-run the architecture search at real sequence lengths (512&ndash;1024) on a real text corpus instead of synthetic tasks, and to train Mamba, RWKV, and Hyena baselines under a matched budget &mdash; the comparison this work doesn't have yet. Every result, positive or negative, ships openly: search code, the full candidate library, and the writeup.</p>
     <div class="contact">
@@ -209,68 +413,115 @@
     var canvas = document.getElementById('searchspace');
     if(!canvas) return;
     var panel = canvas.parentElement;
+    var reticleEl = document.getElementById('reticle');
 
     function cssVar(name, fallback){
       var v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
       return v || fallback;
     }
+    function isDark(){
+      var attr = document.documentElement.getAttribute('data-theme');
+      if (attr === 'dark') return true;
+      if (attr === 'light') return false;
+      return !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    }
+    var dark = isDark();
 
+    var bgColor = new THREE.Color(cssVar('--bg', '#10121A'));
     var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
-    camera.position.set(0, 0, 9);
+    var camera = new THREE.PerspectiveCamera(48, 1, 0.1, 100);
+    camera.position.set(0, 0, 10.5);
     var renderer = new THREE.WebGLRenderer({canvas: canvas, antialias:true, alpha:true});
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 
-    var N = 2600, winnerIndex = 1200;
-    var positions = new Float32Array(N*3);
+    var N = 3000, winnerIndex = 1400;
+    var target = new Float32Array(N*3);
+    var start = new Float32Array(N*3);
+    var current = new Float32Array(N*3);
     var seed = 7;
     function rand(){ seed = (seed*1103515245+12345) & 0x7fffffff; return (seed % 100000)/100000; }
+
     for (var i=0;i<N;i++){
       var x=(rand()-0.5), y=(rand()-0.5), z=(rand()-0.5);
       var len = Math.sqrt(x*x+y*y+z*z) || 1;
-      var r = Math.pow(rand(), 0.5) * 4.2;
-      positions[i*3]   = (x/len)*r + (rand()-0.5)*0.3;
-      positions[i*3+1] = (y/len)*r*0.75 + (rand()-0.5)*0.3;
-      positions[i*3+2] = (z/len)*r + (rand()-0.5)*0.3;
+      var r = Math.pow(rand(), 0.5) * 4.4;
+      var tx = (x/len)*r + (rand()-0.5)*0.3;
+      var ty = (y/len)*r*0.72 + (rand()-0.5)*0.3;
+      var tz = (z/len)*r + (rand()-0.5)*0.3;
+      target[i*3]=tx; target[i*3+1]=ty; target[i*3+2]=tz;
+      var spread = 1.7 + rand()*1.1;
+      start[i*3]   = tx*spread + (rand()-0.5)*1.4;
+      start[i*3+1] = ty*spread + (rand()-0.5)*1.4;
+      start[i*3+2] = tz*spread + (rand()-0.5)*1.4;
     }
-    positions[winnerIndex*3]=0.6; positions[winnerIndex*3+1]=0.2; positions[winnerIndex*3+2]=1.8;
+    target[winnerIndex*3]=0.7; target[winnerIndex*3+1]=0.15; target[winnerIndex*3+2]=2.0;
+    start[winnerIndex*3]=target[winnerIndex*3]*2.6; start[winnerIndex*3+1]=target[winnerIndex*3+1]*2.6; start[winnerIndex*3+2]=target[winnerIndex*3+2]*2.6;
+    current.set(start);
+
+    var winnerPos = new THREE.Vector3(target[winnerIndex*3], target[winnerIndex*3+1], target[winnerIndex*3+2]);
+
+    var faint = new THREE.Color(cssVar('--ink-faint', '#666B78'));
+    var signal = new THREE.Color(cssVar('--signal', '#D7A94F'));
+    var colors = new Float32Array(N*3);
+    var maxDist = 3.0;
+    for (var j=0;j<N;j++){
+      var dx=target[j*3]-winnerPos.x, dy=target[j*3+1]-winnerPos.y, dz=target[j*3+2]-winnerPos.z;
+      var d = Math.sqrt(dx*dx+dy*dy+dz*dz);
+      var t = Math.max(0, 1 - d/maxDist);
+      t = Math.pow(t, 3.2);
+      var c = faint.clone().lerp(signal, t);
+      colors[j*3]=c.r; colors[j*3+1]=c.g; colors[j*3+2]=c.b;
+    }
 
     var geometry = new THREE.BufferGeometry();
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute('position', new THREE.BufferAttribute(current, 3));
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
-    var faintColor = new THREE.Color(cssVar('--ink-faint', '#7C877F'));
-    var accentColor = new THREE.Color(cssVar('--accent', '#2C5F4F'));
+    var glowCanvas = document.createElement('canvas');
+    glowCanvas.width = glowCanvas.height = 64;
+    var gctx = glowCanvas.getContext('2d');
+    var grad = gctx.createRadialGradient(32,32,0,32,32,32);
+    grad.addColorStop(0, 'rgba(255,255,255,1)');
+    grad.addColorStop(0.35, 'rgba(255,255,255,0.55)');
+    grad.addColorStop(1, 'rgba(255,255,255,0)');
+    gctx.fillStyle = grad;
+    gctx.fillRect(0,0,64,64);
+    var dotTex = new THREE.CanvasTexture(glowCanvas);
 
-    var material = new THREE.PointsMaterial({ color: faintColor, size:0.045, transparent:true, opacity:0.55, sizeAttenuation:true });
+    var material = new THREE.PointsMaterial({
+      size: dark ? 0.11 : 0.10,
+      map:dotTex, vertexColors:true, transparent:true,
+      opacity: dark ? 0.85 : 0.98,
+      depthWrite:false, sizeAttenuation:true,
+      blending: dark ? THREE.AdditiveBlending : THREE.NormalBlending
+    });
     var points = new THREE.Points(geometry, material);
     scene.add(points);
 
-    var winnerPos = new THREE.Vector3(positions[winnerIndex*3], positions[winnerIndex*3+1], positions[winnerIndex*3+2]);
-    var winnerMesh = new THREE.Mesh(new THREE.SphereGeometry(0.09,16,16), new THREE.MeshBasicMaterial({ color: accentColor }));
-    winnerMesh.position.copy(winnerPos);
-    scene.add(winnerMesh);
+    scene.fog = new THREE.Fog(bgColor.getHex(), 6, 15);
 
-    var glowCanvas = document.createElement('canvas');
-    glowCanvas.width = glowCanvas.height = 128;
-    var gctx = glowCanvas.getContext('2d');
-    var grad = gctx.createRadialGradient(64,64,0,64,64,64);
-    var styleStr = accentColor.getStyle();
-    grad.addColorStop(0, styleStr.replace('rgb','rgba').replace(')', ',0.9)'));
-    grad.addColorStop(1, styleStr.replace('rgb','rgba').replace(')', ',0)'));
-    gctx.fillStyle = grad;
-    gctx.fillRect(0,0,128,128);
-    var glowMat = new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(glowCanvas), transparent:true, depthWrite:false, blending: THREE.AdditiveBlending });
-    var glowSprite = new THREE.Sprite(glowMat);
-    glowSprite.scale.set(1.5,1.5,1.5);
-    glowSprite.position.copy(winnerPos);
-    scene.add(glowSprite);
+    var winnerGlowMat = new THREE.SpriteMaterial({
+      map: dotTex, color: signal, transparent:true, depthWrite:false,
+      blending: dark ? THREE.AdditiveBlending : THREE.NormalBlending,
+      opacity: dark ? 1 : 0.95
+    });
+    var winnerGlow = new THREE.Sprite(winnerGlowMat);
+    winnerGlow.scale.set(dark ? 1.1 : 0.85, dark ? 1.1 : 0.85, 1);
+    winnerGlow.position.copy(winnerPos);
+    scene.add(winnerGlow);
 
-    var lineMat = new THREE.LineBasicMaterial({ color: accentColor, transparent:true, opacity:0.22 });
-    for (var k=0;k<6;k++){
+    var lineMat = new THREE.LineBasicMaterial({ color: signal, transparent:true, opacity: dark ? 0.18 : 0.3 });
+    var traceTargets = [];
+    for (var k=0;k<5;k++){
       var idx = Math.floor(rand()*N);
-      var target = new THREE.Vector3(positions[idx*3], positions[idx*3+1], positions[idx*3+2]);
-      scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([winnerPos, target]), lineMat));
+      traceTargets.push(new THREE.Vector3(target[idx*3], target[idx*3+1], target[idx*3+2]));
     }
+    var traceLines = traceTargets.map(function(tgt){
+      var line = new THREE.Line(new THREE.BufferGeometry().setFromPoints([winnerPos, winnerPos]), lineMat);
+      line.userData.target = tgt;
+      scene.add(line);
+      return line;
+    });
 
     var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -290,20 +541,67 @@
       mouseY = (e.clientY-rect.top)/rect.height - 0.5;
     });
 
-    var t = 0;
-    function animate(){
-      requestAnimationFrame(animate);
-      if(!reduceMotion){
-        t += 0.0022;
-        scene.rotation.y = t + mouseX*0.5;
-        scene.rotation.x = mouseY*0.25;
-        glowMat.opacity = 0.75 + Math.sin(t*3)*0.15;
-      } else {
-        scene.rotation.y = 0.4;
+    var introMs = reduceMotion ? 0 : 1900;
+    var startTime = null;
+
+    function easeOutCubic(x){ return 1 - Math.pow(1-x, 3); }
+
+    function updateReticle(){
+      scene.updateMatrixWorld();
+      var worldPos = winnerGlow.position.clone().applyMatrix4(scene.matrixWorld);
+      var p = worldPos.project(camera);
+      if (p.z > 1 || p.z < -1 || panel.clientWidth === 0){
+        reticleEl.classList.remove('locked');
+        return;
       }
+      var w = panel.clientWidth, h = panel.clientHeight;
+      var sx = (p.x*0.5+0.5)*w;
+      var sy = (1-(p.y*0.5+0.5))*h;
+      reticleEl.style.transform = 'translate('+sx+'px,'+sy+'px) translate(-50%,-50%)';
+      reticleEl.classList.add('locked');
+    }
+
+    var t = 0;
+    function animate(ts){
+      requestAnimationFrame(animate);
+      if (startTime === null) startTime = ts;
+      var elapsed = ts - startTime;
+
+      if (elapsed < introMs){
+        var p = easeOutCubic(Math.min(1, elapsed/introMs));
+        var posAttr = geometry.attributes.position.array;
+        for (var i=0;i<N*3;i++){ posAttr[i] = start[i] + (target[i]-start[i])*p; }
+        geometry.attributes.position.needsUpdate = true;
+        winnerGlow.position.set(
+          start[winnerIndex*3] + (target[winnerIndex*3]-start[winnerIndex*3])*p,
+          start[winnerIndex*3+1] + (target[winnerIndex*3+1]-start[winnerIndex*3+1])*p,
+          start[winnerIndex*3+2] + (target[winnerIndex*3+2]-start[winnerIndex*3+2])*p
+        );
+      } else if (elapsed < introMs + 50) {
+        geometry.attributes.position.array.set(target);
+        geometry.attributes.position.needsUpdate = true;
+        winnerGlow.position.copy(winnerPos);
+      }
+
+      traceLines.forEach(function(line){
+        var posAttr = line.geometry.attributes.position.array;
+        posAttr[0]=winnerGlow.position.x; posAttr[1]=winnerGlow.position.y; posAttr[2]=winnerGlow.position.z;
+        posAttr[3]=line.userData.target.x; posAttr[4]=line.userData.target.y; posAttr[5]=line.userData.target.z;
+        line.geometry.attributes.position.needsUpdate = true;
+      });
+
+      if(!reduceMotion){
+        t += 0.0016;
+        scene.rotation.y = t + mouseX*0.35;
+        scene.rotation.x = mouseY*0.18;
+        winnerGlowMat.opacity = 0.8 + Math.sin(ts*0.0025)*0.15;
+      } else {
+        scene.rotation.y = 0.35;
+      }
+      updateReticle();
       renderer.render(scene, camera);
     }
-    animate();
+    requestAnimationFrame(animate);
   }catch(e){ /* page still works without the 3D panel */ }
 })();
 </script>
