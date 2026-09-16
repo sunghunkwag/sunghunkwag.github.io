@@ -64,6 +64,7 @@
   }
 
   *{box-sizing:border-box;}
+  html,body{overflow-x:hidden;}
   body{
     margin:0;
     background:var(--bg);
@@ -72,22 +73,37 @@
     font-size:16px;
     line-height:1.6;
     -webkit-font-smoothing:antialiased;
-    overflow-x:hidden;
   }
   .mono{font-family:"IBM Plex Mono",ui-monospace,monospace;}
   a{color:var(--signal);text-decoration-thickness:1.5px;text-underline-offset:3px;}
   a:focus-visible, button:focus-visible{outline:2px solid var(--signal);outline-offset:3px;}
 
+  /* ---------- persistent 3D backdrop ---------- */
+  #scene-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block;pointer-events:none;background:var(--bg);}
+  #reticle{position:fixed;top:0;left:0;width:38px;height:38px;pointer-events:none;opacity:0;transition:opacity .5s ease;z-index:2;}
+  #reticle.locked{opacity:1;}
+  #reticle span{position:absolute;width:11px;height:11px;}
+  #reticle span:nth-child(1){top:0;left:0;border-top:1.5px solid var(--signal);border-left:1.5px solid var(--signal);}
+  #reticle span:nth-child(2){top:0;right:0;border-top:1.5px solid var(--signal);border-right:1.5px solid var(--signal);}
+  #reticle span:nth-child(3){bottom:0;left:0;border-bottom:1.5px solid var(--signal);border-left:1.5px solid var(--signal);}
+  #reticle span:nth-child(4){bottom:0;right:0;border-bottom:1.5px solid var(--signal);border-right:1.5px solid var(--signal);}
+  #reticle.bad span{border-color:var(--fail);}
+
   .page{
+    position:relative;
+    z-index:1;
     display:grid;
-    grid-template-columns: minmax(20px,1fr) min(780px, calc(100% - 40px)) minmax(20px,1fr);
-    padding-block:48px 88px;
+    grid-template-columns: minmax(20px,1fr) min(720px, calc(100% - 40px)) minmax(20px,1fr);
+    padding-block:0 64px;
   }
   .page > *{ grid-column: 2; }
-  .page > .bleed{ grid-column: 1 / -1; }
 
-  /* ---------- hero head ---------- */
-  .hero-head{margin-top:8px;}
+  /* ---------- scroll beats ---------- */
+  .scene-beat{min-height:62vh;display:flex;align-items:center;}
+  .hero-beat{min-height:100vh;flex-direction:column;justify-content:center;align-items:flex-start;}
+  .support-beat{min-height:85vh;}
+
+  /* ---------- hero ---------- */
   .eyebrow{
     font-family:"IBM Plex Mono",monospace;
     font-size:11px;
@@ -96,7 +112,7 @@
     color:var(--signal);
     margin:0 0 18px;
   }
-  .hero-head h1{
+  .hero-beat h1{
     font-family:"Instrument Serif",Georgia,serif;
     font-weight:400;
     font-size:clamp(48px,9vw,92px);
@@ -105,13 +121,13 @@
     margin:0;
     text-wrap:balance;
   }
-  .hero-head .sub{
+  .hero-beat .sub{
     color:var(--ink-soft);
     margin:20px 0 0;
     font-size:clamp(16px,2vw,19px);
     max-width:46ch;
   }
-  .hero-head .links{
+  .hero-beat .links{
     margin-top:24px;
     display:flex;
     gap:20px;
@@ -119,77 +135,59 @@
     font-family:"IBM Plex Mono",monospace;
     font-size:13px;
   }
-  .hero-head .links a{color:var(--ink);border-bottom:1px solid var(--line);padding-bottom:1px;text-decoration:none;}
-  .hero-head .links a:hover{color:var(--signal);border-color:var(--signal);}
-
-  /* ---------- viewport (full-bleed instrument panel) ---------- */
-  .viewport-panel{
-    position:relative;
-    width:100%;
-    height:clamp(360px,46vw,540px);
-    margin-top:40px;
-    overflow:hidden;
-    background:var(--bg);
-    background-image:
-      linear-gradient(var(--line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--line) 1px, transparent 1px);
-    background-image:
-      linear-gradient(color-mix(in srgb, var(--line) 55%, transparent) 1px, transparent 1px),
-      linear-gradient(90deg, color-mix(in srgb, var(--line) 55%, transparent) 1px, transparent 1px);
-    background-size:42px 42px;
-    border-top:1px solid var(--line);
-    border-bottom:1px solid var(--line);
+  .hero-beat .links a{color:var(--ink);border-bottom:1px solid var(--line);padding-bottom:1px;text-decoration:none;}
+  .hero-beat .links a:hover{color:var(--signal);border-color:var(--signal);}
+  .scroll-cue{
+    margin-top:64px;
+    font-family:"IBM Plex Mono",monospace;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+    animation:cue-bounce 2.2s ease-in-out infinite;
   }
-  #searchspace{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab;}
-  .tick{position:absolute;width:16px;height:16px;pointer-events:none;opacity:.8;}
-  .tick-tl{top:14px;left:14px;border-top:1.5px solid var(--signal);border-left:1.5px solid var(--signal);}
-  .tick-tr{top:14px;right:14px;border-top:1.5px solid var(--signal);border-right:1.5px solid var(--signal);}
-  .tick-bl{bottom:14px;left:14px;border-bottom:1.5px solid var(--signal);border-left:1.5px solid var(--signal);}
-  .tick-br{bottom:14px;right:14px;border-bottom:1.5px solid var(--signal);border-right:1.5px solid var(--signal);}
-  .reticle{position:absolute;top:0;left:0;width:38px;height:38px;pointer-events:none;opacity:0;transition:opacity .7s ease;}
-  .reticle.locked{opacity:1;}
-  .reticle span{position:absolute;width:11px;height:11px;}
-  .reticle span:nth-child(1){top:0;left:0;border-top:1.5px solid var(--signal);border-left:1.5px solid var(--signal);}
-  .reticle span:nth-child(2){top:0;right:0;border-top:1.5px solid var(--signal);border-right:1.5px solid var(--signal);}
-  .reticle span:nth-child(3){bottom:0;left:0;border-bottom:1.5px solid var(--signal);border-left:1.5px solid var(--signal);}
-  .reticle span:nth-child(4){bottom:0;right:0;border-bottom:1.5px solid var(--signal);border-right:1.5px solid var(--signal);}
-  .viewport-caption{
-    position:absolute;left:16px;bottom:16px;right:16px;
-    font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase;
-    color:var(--ink-soft);
+  @keyframes cue-bounce{0%,100%{transform:translateY(0);opacity:.55;}50%{transform:translateY(7px);opacity:1;}}
+  @media (prefers-reduced-motion: reduce){ .scroll-cue{animation:none;} }
+
+  /* ---------- glass panel (shared) ---------- */
+  .glass{
+    width:100%;
+    background:var(--surface);
+    background:color-mix(in srgb, var(--surface) 85%, transparent);
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    border:1px solid var(--line);
   }
 
   /* ---------- thesis ---------- */
-  .thesis{margin-top:72px;}
-  .thesis p{
+  .thesis-card{padding:36px 34px;}
+  .thesis-card p{
     font-family:"Instrument Serif",Georgia,serif;
     font-style:italic;
-    font-size:clamp(23px,3.2vw,32px);
+    font-size:clamp(22px,3vw,30px);
     line-height:1.42;
     color:var(--ink);
     margin:0;
     text-wrap:balance;
   }
   .trackline{
-    margin-top:20px;
+    margin-top:18px;
     font-family:"IBM Plex Mono",monospace;
     font-size:12.5px;
     color:var(--ink-soft);
   }
 
-  /* ---------- log ---------- */
-  .log{margin-top:64px;}
-  .log h2{
+  /* ---------- log groups ---------- */
+  .log-group{width:100%;}
+  .log-group h2{
     font-size:13px;font-family:"IBM Plex Mono",monospace;letter-spacing:.1em;text-transform:uppercase;
     color:var(--ink-soft);font-weight:500;margin:0;
   }
-  .log h2::after{content:"";display:block;width:28px;height:2px;background:var(--line);margin-top:10px;}
-  .log-note{color:var(--ink-soft);font-size:14.5px;margin:16px 0 24px;max-width:62ch;}
-  .entries{display:flex;flex-direction:column;gap:12px;margin-top:24px;}
+  .log-group h2::after{content:"";display:block;width:28px;height:2px;background:var(--line);margin-top:10px;}
+  .log-note{color:var(--ink-soft);font-size:14.5px;margin:16px 0 0;max-width:62ch;}
+
   .entry{
-    background:var(--surface);
-    border:1px solid var(--line);
-    padding:22px 24px;
+    padding:26px 28px;
     display:flex;
     flex-direction:column;
     gap:12px;
@@ -222,8 +220,8 @@
   .entry p strong{color:var(--ink);font-weight:600;}
 
   /* ---------- stats ---------- */
+  .stats-wrap{padding:18px;}
   .stats{
-    margin-top:64px;
     display:grid;
     grid-template-columns:repeat(4,1fr);
     gap:1px;
@@ -254,10 +252,7 @@
 
   /* ---------- support ---------- */
   .support{
-    margin-top:64px;
-    padding:32px 28px;
-    background:var(--surface);
-    border:1px solid var(--line);
+    padding:34px 30px;
     border-top:2px solid var(--signal);
   }
   .support .eyebrow{margin-bottom:14px;}
@@ -281,7 +276,7 @@
   .support .contact .k{display:block;color:var(--ink-faint);font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
 
   footer{
-    margin-top:64px;
+    padding-top:40px;
     text-align:center;
     color:var(--ink-faint);
     font-family:"Instrument Serif",Georgia,serif;
@@ -292,9 +287,12 @@
 </head>
 <body>
 
+<canvas id="scene-canvas"></canvas>
+<div id="reticle"><span></span><span></span><span></span><span></span></div>
+
 <div class="page">
 
-  <header class="hero-head">
+  <header class="scene-beat hero-beat" data-scene="0">
     <p class="eyebrow">[ Independent AI Researcher ]</p>
     <h1>Sung Hun Kwag</h1>
     <p class="sub">Recursive self-improvement &amp; architecture search &middot; Gapyeong, South Korea</p>
@@ -302,26 +300,21 @@
       <a href="https://github.com/sunghunkwag" target="_blank" rel="noopener">github.com/sunghunkwag</a>
       <a href="mailto:sunghunkwag@gmail.com">sunghunkwag@gmail.com</a>
     </div>
+    <p class="scroll-cue">Scroll to enter the search space &darr;</p>
   </header>
 
-  <div class="viewport-panel bleed">
-    <canvas id="searchspace"></canvas>
-    <div class="tick tick-tl"></div><div class="tick tick-tr"></div>
-    <div class="tick tick-bl"></div><div class="tick tick-br"></div>
-    <div class="reticle" id="reticle"><span></span><span></span><span></span><span></span></div>
-    <p class="viewport-caption">3,000-candidate search space &middot; seed 07 &middot; survivor locked</p>
-  </div>
-
-  <section class="thesis">
-    <p>Most self&#8209;improvement claims in AI research ship unverified. I build systems that check their own results before I believe them &mdash; including two of my own headline results, which the verification caught, and I retracted.</p>
-    <p class="trackline">23 public repositories &middot; 1,320+ commits &middot; solo, unaffiliated &middot; design directed, agent&#8209;built</p>
+  <section class="scene-beat" data-scene="1">
+    <div class="glass thesis-card">
+      <p>Most self&#8209;improvement claims in AI research ship unverified. I build systems that check their own results before I believe them &mdash; including two of my own headline results, which the verification caught, and I retracted.</p>
+      <p class="trackline">23 public repositories &middot; 1,320+ commits &middot; solo, unaffiliated &middot; design directed, agent&#8209;built</p>
+    </div>
   </section>
 
-  <section class="log">
+  <div class="log-group">
     <h2>Validated</h2>
-    <div class="entries">
 
-      <article class="entry">
+    <article class="scene-beat" data-scene="2">
+      <div class="glass entry">
         <div class="entry-head">
           <span class="entry-tag">attention-free-sequence-model</span>
           <span class="status ok"><i class="led"></i>Validated</span>
@@ -331,73 +324,85 @@
           <span><span class="num base">64.8%</span><span class="lbl">transformer baseline</span></span>
         </div>
         <p><strong>3,000 candidate architectures</strong> searched across 45 atomic mechanisms, evaluated on three long-range synthetic tasks. The winner uses none of the 5 hand-designed mechanisms tried first. Open question: sequence lengths of 32&ndash;64 only, no Mamba/RWKV/Hyena comparison yet &mdash; that's what the next round of compute is for.</p>
-      </article>
+      </div>
+    </article>
 
-      <article class="entry">
+    <article class="scene-beat" data-scene="3">
+      <div class="glass entry">
         <div class="entry-head">
           <span class="entry-tag">rsi-bench</span>
           <span class="status"><i class="led"></i>Active</span>
         </div>
         <p>A <strong>multi-axis benchmark</strong> for recursive self-improvement &mdash; scoring self-modification depth, improvement trajectories, operator discovery, meta-adaptation, safety, and autonomy in one suite.</p>
-      </article>
+      </div>
+    </article>
 
-      <article class="entry">
+    <article class="scene-beat" data-scene="4">
+      <div class="glass entry">
         <div class="entry-head">
           <span class="entry-tag">rsi-metaforge-core</span>
           <span class="status ok"><i class="led"></i>Validated</span>
         </div>
         <p><strong>Validation-gated program synthesis</strong> runtime: meta-meta learning loops, analogical transfer, grammar-mediated expansion, and anti-cheat verification built into the search loop itself &mdash; not bolted on after.</p>
-      </article>
+      </div>
+    </article>
 
-      <article class="entry">
+    <article class="scene-beat" data-scene="5">
+      <div class="glass entry">
         <div class="entry-head">
           <span class="entry-tag">gated-self-improvement</span>
           <span class="status ok"><i class="led"></i>Validated</span>
         </div>
         <p><strong>LLM-free, deterministic, counterfactually-controlled</strong> recursive self-improvement engine. Every run's full results are published &mdash; nothing held back.</p>
-      </article>
+      </div>
+    </article>
+  </div>
 
-    </div>
-  </section>
-
-  <section class="log">
+  <div class="log-group">
     <h2>Failure log</h2>
     <p class="log-note">Two headline results didn't survive their own verification gates. Publishing them here is the point &mdash; a validation system that never rejects its own results isn't one.</p>
-    <div class="entries">
 
-      <article class="entry">
+    <article class="scene-beat" data-scene="6">
+      <div class="glass entry">
         <div class="entry-head">
           <span class="entry-tag">rsi-metaforge-core &middot; phase ae</span>
           <span class="status bad"><i class="led"></i>Retracted</span>
         </div>
         <p>A <strong>15/15 adoption result.</strong> Traced back to the task generator and the search engine having been co-designed &mdash; the result was structurally guaranteed, not earned. Retracted before publication.</p>
-      </article>
+      </div>
+    </article>
 
-      <article class="entry">
+    <article class="scene-beat" data-scene="7">
+      <div class="glass entry">
         <div class="entry-head">
           <span class="entry-tag">gated-self-improvement</span>
           <span class="status bad"><i class="led"></i>Retracted</span>
         </div>
         <p>A <strong>compounding-improvement claim</strong> resting on a 5&times; compute mismatch between control and treatment runs. Found the mismatch, retracted the claim it supported.</p>
-      </article>
+      </div>
+    </article>
+  </div>
 
+  <section class="scene-beat" data-scene="8">
+    <div class="glass stats-wrap">
+      <div class="stats">
+        <div class="stat"><div class="n">23</div><div class="l">Repositories</div></div>
+        <div class="stat"><div class="n">1,320+</div><div class="l">Commits</div></div>
+        <div class="stat"><div class="n">3,000</div><div class="l">Architectures searched</div></div>
+        <div class="stat"><div class="n">2</div><div class="l">Retractions published</div></div>
+      </div>
     </div>
   </section>
 
-  <section class="stats">
-    <div class="stat"><div class="n">23</div><div class="l">Repositories</div></div>
-    <div class="stat"><div class="n">1,320+</div><div class="l">Commits</div></div>
-    <div class="stat"><div class="n">3,000</div><div class="l">Architectures searched</div></div>
-    <div class="stat"><div class="n">2</div><div class="l">Retractions published</div></div>
-  </section>
-
-  <section class="support">
-    <p class="eyebrow">[ Support this work ]</p>
-    <h2>What funding buys</h2>
-    <p>Compute. Specifically: roughly 250 H100&#8209;hours to re-run the architecture search at real sequence lengths (512&ndash;1024) on a real text corpus instead of synthetic tasks, and to train Mamba, RWKV, and Hyena baselines under a matched budget &mdash; the comparison this work doesn't have yet. Every result, positive or negative, ships openly: search code, the full candidate library, and the writeup.</p>
-    <div class="contact">
-      <span><span class="k">Email</span><a href="mailto:sunghunkwag@gmail.com">sunghunkwag@gmail.com</a></span>
-      <span><span class="k">Code</span><a href="https://github.com/sunghunkwag" target="_blank" rel="noopener">github.com/sunghunkwag</a></span>
+  <section class="scene-beat support-beat" data-scene="9">
+    <div class="glass support">
+      <p class="eyebrow">[ Support this work ]</p>
+      <h2>What funding buys</h2>
+      <p>Compute. Specifically: roughly 250 H100&#8209;hours to re-run the architecture search at real sequence lengths (512&ndash;1024) on a real text corpus instead of synthetic tasks, and to train Mamba, RWKV, and Hyena baselines under a matched budget &mdash; the comparison this work doesn't have yet. Every result, positive or negative, ships openly: search code, the full candidate library, and the writeup.</p>
+      <div class="contact">
+        <span><span class="k">Email</span><a href="mailto:sunghunkwag@gmail.com">sunghunkwag@gmail.com</a></span>
+        <span><span class="k">Code</span><a href="https://github.com/sunghunkwag" target="_blank" rel="noopener">github.com/sunghunkwag</a></span>
+      </div>
     </div>
   </section>
 
@@ -410,10 +415,9 @@
 (function(){
   try{
     if (typeof THREE === 'undefined') return;
-    var canvas = document.getElementById('searchspace');
-    if(!canvas) return;
-    var panel = canvas.parentElement;
+    var canvas = document.getElementById('scene-canvas');
     var reticleEl = document.getElementById('reticle');
+    if(!canvas || !reticleEl) return;
 
     function cssVar(name, fallback){
       var v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -426,50 +430,70 @@
       return !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
     }
     var dark = isDark();
+    var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
     var bgColor = new THREE.Color(cssVar('--bg', '#10121A'));
     var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera(48, 1, 0.1, 100);
-    camera.position.set(0, 0, 10.5);
+    var camera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight, 0.1, 100);
     var renderer = new THREE.WebGLRenderer({canvas: canvas, antialias:true, alpha:true});
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 
-    var N = 3000, winnerIndex = 1400;
+    function resize(){
+      var w = window.innerWidth, h = window.innerHeight;
+      renderer.setSize(w, h, false);
+      camera.aspect = w/h;
+      camera.updateProjectionMatrix();
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    var N = 3000;
     var target = new Float32Array(N*3);
     var start = new Float32Array(N*3);
     var current = new Float32Array(N*3);
     var seed = 7;
     function rand(){ seed = (seed*1103515245+12345) & 0x7fffffff; return (seed % 100000)/100000; }
-
     for (var i=0;i<N;i++){
       var x=(rand()-0.5), y=(rand()-0.5), z=(rand()-0.5);
       var len = Math.sqrt(x*x+y*y+z*z) || 1;
-      var r = Math.pow(rand(), 0.5) * 4.4;
+      var r = Math.pow(rand(), 0.5) * 4.6;
       var tx = (x/len)*r + (rand()-0.5)*0.3;
-      var ty = (y/len)*r*0.72 + (rand()-0.5)*0.3;
+      var ty = (y/len)*r*0.7 + (rand()-0.5)*0.3;
       var tz = (z/len)*r + (rand()-0.5)*0.3;
       target[i*3]=tx; target[i*3+1]=ty; target[i*3+2]=tz;
-      var spread = 1.7 + rand()*1.1;
+      var spread = 1.6 + rand()*1.0;
       start[i*3]   = tx*spread + (rand()-0.5)*1.4;
       start[i*3+1] = ty*spread + (rand()-0.5)*1.4;
       start[i*3+2] = tz*spread + (rand()-0.5)*1.4;
     }
-    target[winnerIndex*3]=0.7; target[winnerIndex*3+1]=0.15; target[winnerIndex*3+2]=2.0;
-    start[winnerIndex*3]=target[winnerIndex*3]*2.6; start[winnerIndex*3+1]=target[winnerIndex*3+1]*2.6; start[winnerIndex*3+2]=target[winnerIndex*3+2]*2.6;
-    current.set(start);
-
-    var winnerPos = new THREE.Vector3(target[winnerIndex*3], target[winnerIndex*3+1], target[winnerIndex*3+2]);
+    current.set(reduceMotion ? target : start);
 
     var faint = new THREE.Color(cssVar('--ink-faint', '#666B78'));
     var signal = new THREE.Color(cssVar('--signal', '#D7A94F'));
+    var fail = new THREE.Color(cssVar('--fail', '#C97A63'));
+
+    var landmarkDefs = [
+      {pos:[0.7,0.15,2.0], kind:'ok'},
+      {pos:[-1.9,0.7,1.0], kind:'ok'},
+      {pos:[1.7,-0.9,-1.5], kind:'ok'},
+      {pos:[-1.1,-0.5,2.7], kind:'ok'},
+      {pos:[2.5,1.1,-0.7], kind:'bad'},
+      {pos:[-2.3,0.2,-1.9], kind:'bad'}
+    ];
+
     var colors = new Float32Array(N*3);
-    var maxDist = 3.0;
+    var maxDist = 2.6;
     for (var j=0;j<N;j++){
-      var dx=target[j*3]-winnerPos.x, dy=target[j*3+1]-winnerPos.y, dz=target[j*3+2]-winnerPos.z;
-      var d = Math.sqrt(dx*dx+dy*dy+dz*dz);
-      var t = Math.max(0, 1 - d/maxDist);
-      t = Math.pow(t, 3.2);
-      var c = faint.clone().lerp(signal, t);
+      var best = 1e9;
+      for (var li=0; li<landmarkDefs.length; li++){
+        var lp = landmarkDefs[li].pos;
+        var dx=target[j*3]-lp[0], dy=target[j*3+1]-lp[1], dz=target[j*3+2]-lp[2];
+        var d = Math.sqrt(dx*dx+dy*dy+dz*dz);
+        if (d<best) best=d;
+      }
+      var tt = Math.max(0, 1 - best/maxDist);
+      tt = Math.pow(tt, 3.2);
+      var c = faint.clone().lerp(signal, tt*0.85);
       colors[j*3]=c.r; colors[j*3+1]=c.g; colors[j*3+2]=c.b;
     }
 
@@ -489,121 +513,155 @@
     var dotTex = new THREE.CanvasTexture(glowCanvas);
 
     var material = new THREE.PointsMaterial({
-      size: dark ? 0.11 : 0.10,
+      size: dark ? 0.1 : 0.095,
       map:dotTex, vertexColors:true, transparent:true,
-      opacity: dark ? 0.85 : 0.98,
+      opacity: dark ? 0.8 : 0.95,
       depthWrite:false, sizeAttenuation:true,
       blending: dark ? THREE.AdditiveBlending : THREE.NormalBlending
     });
     var points = new THREE.Points(geometry, material);
     scene.add(points);
+    scene.fog = new THREE.Fog(bgColor.getHex(), 7, 17);
 
-    scene.fog = new THREE.Fog(bgColor.getHex(), 6, 15);
-
-    var winnerGlowMat = new THREE.SpriteMaterial({
-      map: dotTex, color: signal, transparent:true, depthWrite:false,
-      blending: dark ? THREE.AdditiveBlending : THREE.NormalBlending,
-      opacity: dark ? 1 : 0.95
-    });
-    var winnerGlow = new THREE.Sprite(winnerGlowMat);
-    winnerGlow.scale.set(dark ? 1.1 : 0.85, dark ? 1.1 : 0.85, 1);
-    winnerGlow.position.copy(winnerPos);
-    scene.add(winnerGlow);
-
-    var lineMat = new THREE.LineBasicMaterial({ color: signal, transparent:true, opacity: dark ? 0.18 : 0.3 });
-    var traceTargets = [];
-    for (var k=0;k<5;k++){
-      var idx = Math.floor(rand()*N);
-      traceTargets.push(new THREE.Vector3(target[idx*3], target[idx*3+1], target[idx*3+2]));
-    }
-    var traceLines = traceTargets.map(function(tgt){
-      var line = new THREE.Line(new THREE.BufferGeometry().setFromPoints([winnerPos, winnerPos]), lineMat);
-      line.userData.target = tgt;
-      scene.add(line);
-      return line;
+    var blendMode = dark ? THREE.AdditiveBlending : THREE.NormalBlending;
+    var landmarks = landmarkDefs.map(function(def){
+      var color = def.kind === 'bad' ? fail : signal;
+      var mat = new THREE.SpriteMaterial({ map: dotTex, color: color, transparent:true, depthWrite:false, blending: blendMode });
+      var sprite = new THREE.Sprite(mat);
+      sprite.position.set(def.pos[0], def.pos[1], def.pos[2]);
+      var baseScale = dark ? 0.6 : 0.5;
+      sprite.scale.set(baseScale, baseScale, 1);
+      scene.add(sprite);
+      var extra = null;
+      if (def.kind === 'bad'){
+        var edges = new THREE.EdgesGeometry(new THREE.IcosahedronGeometry(0.16, 0));
+        var lineMat2 = new THREE.LineBasicMaterial({ color: fail, transparent:true, opacity:0.7 });
+        extra = new THREE.LineSegments(edges, lineMat2);
+        extra.position.copy(sprite.position);
+        scene.add(extra);
+      }
+      return { def:def, sprite:sprite, mat:mat, extra:extra, current:0.28, targetOpacity:0.28 };
     });
 
-    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function V(x,y,z){ return new THREE.Vector3(x,y,z); }
+    var camWaypoints = [ V(0,0.6,11.5), V(0,1.3,8.2) ]
+      .concat(landmarks.map(function(lm){
+        var p = lm.sprite.position;
+        var dir = p.clone();
+        if (dir.lengthSq() < 0.0001) dir.set(0,0,1); else dir.normalize();
+        return p.clone().add(dir.multiplyScalar(2.4)).add(new THREE.Vector3(0,0.3,0));
+      }))
+      .concat([ V(0,4.2,9.5), V(0,0.2,3.0) ]);
+    var lookWaypoints = [ V(0,0,0), V(0,0,0) ]
+      .concat(landmarks.map(function(lm){ return lm.sprite.position.clone(); }))
+      .concat([ V(0,0,0), V(0,0,0.2) ]);
 
-    function resize(){
-      var w = panel.clientWidth || 1, h = panel.clientHeight || 1;
-      renderer.setSize(w, h, false);
-      camera.aspect = w/h;
-      camera.updateProjectionMatrix();
+    var posCurve = new THREE.CatmullRomCurve3(camWaypoints, false, 'catmullrom', 0.4);
+    var lookCurve = new THREE.CatmullRomCurve3(lookWaypoints, false, 'catmullrom', 0.4);
+    var SCENES = camWaypoints.length;
+    camera.position.copy(camWaypoints[0]);
+
+    var sceneEls = Array.prototype.slice.call(document.querySelectorAll('[data-scene]'));
+    var targetIndex = 0, smoothIndex = 0, ticking = false;
+    function computeActive(){
+      var center = window.innerHeight * 0.5;
+      var best = 0, bestDist = Infinity;
+      sceneEls.forEach(function(el){
+        var r = el.getBoundingClientRect();
+        var mid = r.top + r.height/2;
+        var dist = Math.abs(mid - center);
+        if (dist < bestDist){ bestDist = dist; best = parseInt(el.getAttribute('data-scene'),10); }
+      });
+      targetIndex = best;
     }
-    window.addEventListener('resize', resize);
-    resize();
+    function onScroll(){
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function(){ computeActive(); ticking = false; });
+    }
+    window.addEventListener('scroll', onScroll, { passive:true });
+    window.addEventListener('resize', onScroll);
+    computeActive();
+    smoothIndex = targetIndex;
 
     var mouseX = 0, mouseY = 0;
-    panel.addEventListener('pointermove', function(e){
-      var rect = panel.getBoundingClientRect();
-      mouseX = (e.clientX-rect.left)/rect.width - 0.5;
-      mouseY = (e.clientY-rect.top)/rect.height - 0.5;
+    window.addEventListener('pointermove', function(e){
+      mouseX = (e.clientX/window.innerWidth) - 0.5;
+      mouseY = (e.clientY/window.innerHeight) - 0.5;
     });
 
-    var introMs = reduceMotion ? 0 : 1900;
-    var startTime = null;
-
-    function easeOutCubic(x){ return 1 - Math.pow(1-x, 3); }
-
-    function updateReticle(){
-      scene.updateMatrixWorld();
-      var worldPos = winnerGlow.position.clone().applyMatrix4(scene.matrixWorld);
-      var p = worldPos.project(camera);
-      if (p.z > 1 || p.z < -1 || panel.clientWidth === 0){
+    function updateReticle(activeIdx){
+      if (activeIdx < 2 || activeIdx > 7){
         reticleEl.classList.remove('locked');
         return;
       }
-      var w = panel.clientWidth, h = panel.clientHeight;
-      var sx = (p.x*0.5+0.5)*w;
-      var sy = (1-(p.y*0.5+0.5))*h;
+      var lm = landmarks[activeIdx-2];
+      scene.updateMatrixWorld();
+      var worldPos = lm.sprite.position.clone().applyMatrix4(scene.matrixWorld);
+      var p = worldPos.project(camera);
+      if (p.z > 1 || p.z < -1){ reticleEl.classList.remove('locked'); return; }
+      var sx = (p.x*0.5+0.5)*window.innerWidth;
+      var sy = (1-(p.y*0.5+0.5))*window.innerHeight;
       reticleEl.style.transform = 'translate('+sx+'px,'+sy+'px) translate(-50%,-50%)';
       reticleEl.classList.add('locked');
+      reticleEl.classList.toggle('bad', activeIdx >= 6);
     }
 
-    var t = 0;
+    var introMs = reduceMotion ? 0 : 2000;
+    var startTime = null;
+    function easeOutCubic(x){ return 1 - Math.pow(1-x, 3); }
+
     function animate(ts){
       requestAnimationFrame(animate);
       if (startTime === null) startTime = ts;
       var elapsed = ts - startTime;
 
-      if (elapsed < introMs){
+      if (!reduceMotion && elapsed < introMs){
         var p = easeOutCubic(Math.min(1, elapsed/introMs));
         var posAttr = geometry.attributes.position.array;
         for (var i=0;i<N*3;i++){ posAttr[i] = start[i] + (target[i]-start[i])*p; }
         geometry.attributes.position.needsUpdate = true;
-        winnerGlow.position.set(
-          start[winnerIndex*3] + (target[winnerIndex*3]-start[winnerIndex*3])*p,
-          start[winnerIndex*3+1] + (target[winnerIndex*3+1]-start[winnerIndex*3+1])*p,
-          start[winnerIndex*3+2] + (target[winnerIndex*3+2]-start[winnerIndex*3+2])*p
-        );
-      } else if (elapsed < introMs + 50) {
+      } else if (!reduceMotion && elapsed < introMs + 50){
         geometry.attributes.position.array.set(target);
         geometry.attributes.position.needsUpdate = true;
-        winnerGlow.position.copy(winnerPos);
       }
 
-      traceLines.forEach(function(line){
-        var posAttr = line.geometry.attributes.position.array;
-        posAttr[0]=winnerGlow.position.x; posAttr[1]=winnerGlow.position.y; posAttr[2]=winnerGlow.position.z;
-        posAttr[3]=line.userData.target.x; posAttr[4]=line.userData.target.y; posAttr[5]=line.userData.target.z;
-        line.geometry.attributes.position.needsUpdate = true;
+      if (reduceMotion){
+        camera.position.copy(camWaypoints[0]);
+        camera.lookAt(lookWaypoints[0]);
+      } else {
+        smoothIndex += (targetIndex - smoothIndex) * 0.055;
+        var t = Math.max(0, Math.min(1, smoothIndex/(SCENES-1)));
+        var camPos = posCurve.getPoint(t);
+        var lookPos = lookCurve.getPoint(t).clone();
+        lookPos.x += mouseX*0.5;
+        lookPos.y += -mouseY*0.35;
+        camera.position.copy(camPos);
+        camera.lookAt(lookPos);
+      }
+
+      landmarks.forEach(function(lm, idx){
+        var isActive = (idx+2 === targetIndex);
+        lm.targetOpacity = isActive ? 1 : 0.28;
+        lm.current += (lm.targetOpacity - lm.current) * 0.08;
+        var flicker = lm.def.kind==='bad' ? (0.9 + Math.sin(ts*0.01 + idx)*0.1) : 1;
+        lm.mat.opacity = lm.current * flicker;
+        var s = (isActive ? (dark?0.85:0.7) : (dark?0.5:0.42));
+        lm.sprite.scale.set(s, s, 1);
+        if (lm.extra){
+          lm.extra.rotation.x = ts*0.0004 + idx;
+          lm.extra.rotation.y = ts*0.0006 + idx;
+          lm.extra.material.opacity = 0.35 + lm.current*0.5;
+        }
       });
 
-      if(!reduceMotion){
-        t += 0.0016;
-        scene.rotation.y = t + mouseX*0.35;
-        scene.rotation.x = mouseY*0.18;
-        winnerGlowMat.opacity = 0.8 + Math.sin(ts*0.0025)*0.15;
-      } else {
-        scene.rotation.y = 0.35;
-      }
-      updateReticle();
+      updateReticle(reduceMotion ? -1 : targetIndex);
       renderer.render(scene, camera);
     }
     requestAnimationFrame(animate);
-  }catch(e){ /* page still works without the 3D panel */ }
+  }catch(e){ /* page still works without the 3D scene */ }
 })();
 </script>
+
 </body>
 </html>
