@@ -94,38 +94,44 @@
   a{color:var(--signal);text-decoration-thickness:1.5px;text-underline-offset:3px;}
   a:focus-visible, button:focus-visible{outline:2px solid var(--signal);outline-offset:3px;}
 
-  /* ---------- persistent 3D backdrop ---------- */
-  #scene-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block;pointer-events:none;background:var(--bg);}
-  #vignette{position:fixed;inset:0;z-index:0;pointer-events:none;background:transparent;background:radial-gradient(ellipse at center, transparent 48%, color-mix(in srgb, var(--bg) 70%, transparent) 100%);}
-  #reticle{position:fixed;top:0;left:0;width:38px;height:38px;pointer-events:none;opacity:0;transition:opacity .5s ease;z-index:2;}
-  #reticle.locked{opacity:1;}
-  #reticle span{position:absolute;width:11px;height:11px;}
-  #reticle span:nth-child(1){top:0;left:0;border-top:1.5px solid var(--signal);border-left:1.5px solid var(--signal);}
-  #reticle span:nth-child(2){top:0;right:0;border-top:1.5px solid var(--signal);border-right:1.5px solid var(--signal);}
-  #reticle span:nth-child(3){bottom:0;left:0;border-bottom:1.5px solid var(--signal);border-left:1.5px solid var(--signal);}
-  #reticle span:nth-child(4){bottom:0;right:0;border-bottom:1.5px solid var(--signal);border-right:1.5px solid var(--signal);}
-  #reticle.bad span{border-color:var(--fail);}
+  /* ---------- ambient backdrop: static instrument-panel texture, CSS only, no 3D/canvas ---------- */
+  #ambient{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+  #ambient .blob{position:absolute;border-radius:50%;filter:blur(78px);}
+  #ambient .b1{width:620px;height:520px;top:-160px;left:-140px;background:var(--signal);opacity:.28;animation:drift-a 30s ease-in-out infinite alternate;}
+  #ambient .b2{width:520px;height:520px;top:12%;right:-180px;background:var(--fail);opacity:.16;animation:drift-b 36s ease-in-out infinite alternate;}
+  #ambient .b3{width:640px;height:520px;bottom:-200px;left:22%;background:var(--signal);opacity:.14;animation:drift-a 42s ease-in-out infinite alternate-reverse;}
+  #ambient .grid{position:absolute;inset:-40px;opacity:.5;background-image:radial-gradient(var(--line) 1px, transparent 1px);background-size:28px 28px;}
+  @keyframes drift-a{from{transform:translate(0,0);}to{transform:translate(34px,24px);}}
+  @keyframes drift-b{from{transform:translate(0,0);}to{transform:translate(-28px,30px);}}
+  @media (prefers-reduced-motion: reduce){ #ambient .blob{animation:none;} }
 
   .page{
     position:relative;
     z-index:1;
     display:grid;
     grid-template-columns: minmax(20px,1fr) min(720px, calc(100% - 40px)) minmax(20px,1fr);
-    padding-block:0 64px;
+    padding-block:0 96px;
+    row-gap:88px;
   }
   .page > *{ grid-column: 2; }
+  @media (max-width:640px){ .page{ row-gap:64px; } }
 
-  /* text that floats directly over the 3D scene (not inside a .glass panel) gets a soft halo so it stays legible over bright bloom */
-  .eyebrow, .hero-beat h1, .hero-beat .sub, .hero-beat .links a, .scroll-cue, .log-group h2, .log-note, footer{
-    text-shadow: 0 2px 24px var(--bg), 0 1px 6px var(--bg), 0 1px 2px var(--bg);
-  }
-
-  /* ---------- scroll beats ---------- */
-  .scene-beat{min-height:62vh;display:flex;align-items:center;}
-  .hero-beat{min-height:100vh;flex-direction:column;justify-content:center;align-items:flex-start;}
-  .support-beat{min-height:85vh;}
+  /* ---------- scroll reveal ---------- */
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1);}
+  .reveal.is-visible{opacity:1;transform:none;}
+  @media (prefers-reduced-motion: reduce){ .reveal{opacity:1;transform:none;transition:none;} }
 
   /* ---------- hero ---------- */
+  .hero-beat{
+    min-height:92vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:flex-start;
+    animation:hero-in .9s cubic-bezier(.2,.7,.2,1) both;
+  }
+  @media (prefers-reduced-motion: reduce){ .hero-beat{animation:none;} }
+  @keyframes hero-in{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
   .eyebrow{
     font-family:"IBM Plex Mono",monospace;
     font-size:11px;
@@ -175,10 +181,11 @@
   .glass{
     width:100%;
     background:var(--surface);
-    background:color-mix(in srgb, var(--surface) 85%, transparent);
-    backdrop-filter:blur(16px);
-    -webkit-backdrop-filter:blur(16px);
+    background:color-mix(in srgb, var(--surface) 88%, transparent);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
     border:1px solid var(--line);
+    transition:transform .35s ease, box-shadow .35s ease, border-color .35s ease;
   }
 
   /* ---------- thesis ---------- */
@@ -200,20 +207,32 @@
   }
 
   /* ---------- log groups ---------- */
-  .log-group{width:100%;}
+  .log-group{width:100%;display:flex;flex-direction:column;gap:28px;}
   .log-group h2{
     font-size:13px;font-family:"IBM Plex Mono",monospace;letter-spacing:.1em;text-transform:uppercase;
     color:var(--ink-soft);font-weight:500;margin:0;
   }
   .log-group h2::after{content:"";display:block;width:28px;height:2px;background:var(--line);margin-top:10px;}
-  .log-note{color:var(--ink-soft);font-size:14.5px;margin:16px 0 0;max-width:62ch;}
+  .log-note{color:var(--ink-soft);font-size:14.5px;margin:0;max-width:62ch;}
 
   .entry{
+    position:relative;
     padding:26px 28px;
     display:flex;
     flex-direction:column;
     gap:12px;
   }
+  .entry::before,.entry::after{
+    content:"";position:absolute;width:14px;height:14px;opacity:0;
+    border-color:var(--signal);
+    transition:opacity .3s ease, transform .3s ease;
+  }
+  .entry::before{top:8px;left:8px;border-top:1.5px solid;border-left:1.5px solid;transform:translate(5px,5px);}
+  .entry::after{bottom:8px;right:8px;border-bottom:1.5px solid;border-right:1.5px solid;transform:translate(-5px,-5px);}
+  .entry:hover{transform:translateY(-3px);border-color:color-mix(in srgb, var(--signal) 45%, var(--line));box-shadow:0 20px 44px -26px color-mix(in srgb, var(--ink) 45%, transparent);}
+  .entry:hover::before,.entry:hover::after{opacity:.9;transform:translate(0,0);}
+  .entry.entry-bad::before,.entry.entry-bad::after{border-color:var(--fail);}
+  .entry.entry-bad:hover{border-color:color-mix(in srgb, var(--fail) 45%, var(--line));}
   .entry-head{
     display:flex;
     align-items:center;
@@ -298,7 +317,6 @@
   .support .contact .k{display:block;color:var(--ink-faint);font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
 
   footer{
-    padding-top:40px;
     text-align:center;
     color:var(--ink-faint);
     font-family:"Instrument Serif",Georgia,serif;
@@ -308,13 +326,11 @@
 </style>
 </head>
 <body>
-<canvas id="scene-canvas"></canvas>
-<div id="vignette"></div>
-<div id="reticle"><span></span><span></span><span></span><span></span></div>
+<div id="ambient" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="grid"></div></div>
 
 <div class="page">
 
-  <header class="scene-beat hero-beat" data-scene="0">
+  <header class="hero-beat">
     <p class="eyebrow">[ Independent AI Researcher ]</p>
     <h1>Sung Hun Kwag</h1>
     <p class="sub">Recursive self-improvement &amp; architecture search &middot; Gapyeong, South Korea</p>
@@ -322,10 +338,10 @@
       <a href="https://github.com/sunghunkwag" target="_blank" rel="noopener">github.com/sunghunkwag</a>
       <a href="mailto:sunghunkwag@gmail.com">sunghunkwag@gmail.com</a>
     </div>
-    <p class="scroll-cue">Scroll to enter the search space &darr;</p>
+    <p class="scroll-cue">Scroll for results &amp; retractions &darr;</p>
   </header>
 
-  <section class="scene-beat" data-scene="1">
+  <section class="reveal">
     <div class="glass thesis-card">
       <p>Most self&#8209;improvement claims in AI research ship unverified. I build systems that check their own results before I believe them &mdash; including two of my own headline results, which the verification caught, and I retracted.</p>
       <p class="trackline">23 public repositories &middot; 1,320+ commits &middot; solo, unaffiliated &middot; design directed, agent&#8209;built</p>
@@ -335,7 +351,7 @@
   <div class="log-group">
     <h2>Validated</h2>
 
-    <article class="scene-beat" data-scene="2">
+    <article class="reveal">
       <div class="glass entry">
         <div class="entry-head">
           <span class="entry-tag">attention-free-sequence-model</span>
@@ -349,7 +365,7 @@
       </div>
     </article>
 
-    <article class="scene-beat" data-scene="3">
+    <article class="reveal">
       <div class="glass entry">
         <div class="entry-head">
           <span class="entry-tag">rsi-bench</span>
@@ -359,7 +375,7 @@
       </div>
     </article>
 
-    <article class="scene-beat" data-scene="4">
+    <article class="reveal">
       <div class="glass entry">
         <div class="entry-head">
           <span class="entry-tag">rsi-metaforge-core</span>
@@ -369,7 +385,7 @@
       </div>
     </article>
 
-    <article class="scene-beat" data-scene="5">
+    <article class="reveal">
       <div class="glass entry">
         <div class="entry-head">
           <span class="entry-tag">gated-self-improvement</span>
@@ -384,8 +400,8 @@
     <h2>Failure log</h2>
     <p class="log-note">Two headline results didn't survive their own verification gates. Publishing them here is the point &mdash; a validation system that never rejects its own results isn't one.</p>
 
-    <article class="scene-beat" data-scene="6">
-      <div class="glass entry">
+    <article class="reveal">
+      <div class="glass entry entry-bad">
         <div class="entry-head">
           <span class="entry-tag">rsi-metaforge-core &middot; phase ae</span>
           <span class="status bad"><i class="led"></i>Retracted</span>
@@ -394,8 +410,8 @@
       </div>
     </article>
 
-    <article class="scene-beat" data-scene="7">
-      <div class="glass entry">
+    <article class="reveal">
+      <div class="glass entry entry-bad">
         <div class="entry-head">
           <span class="entry-tag">gated-self-improvement</span>
           <span class="status bad"><i class="led"></i>Retracted</span>
@@ -405,7 +421,7 @@
     </article>
   </div>
 
-  <section class="scene-beat" data-scene="8">
+  <section class="reveal">
     <div class="glass stats-wrap">
       <div class="stats">
         <div class="stat"><div class="n">23</div><div class="l">Repositories</div></div>
@@ -416,7 +432,7 @@
     </div>
   </section>
 
-  <section class="scene-beat support-beat" data-scene="9">
+  <section class="reveal">
     <div class="glass support">
       <p class="eyebrow">[ Support this work ]</p>
       <h2>What funding buys</h2>
@@ -428,299 +444,28 @@
     </div>
   </section>
 
-  <footer>&ldquo;Failure is signal, not noise.&rdquo;</footer>
+  <footer class="reveal">&ldquo;Failure is signal, not noise.&rdquo;</footer>
 
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/Pass.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
 <script>
 (function(){
-  try{
-    if (typeof THREE === 'undefined') return;
-    var canvas = document.getElementById('scene-canvas');
-    var reticleEl = document.getElementById('reticle');
-    if(!canvas || !reticleEl) return;
-
-    function cssVar(name, fallback){
-      var v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-      return v || fallback;
-    }
-    function isDark(){
-      var attr = document.documentElement.getAttribute('data-theme');
-      if (attr === 'dark') return true;
-      if (attr === 'light') return false;
-      return !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    }
-    var dark = isDark();
-    var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-
-    var bgColor = new THREE.Color(cssVar('--bg', '#10121A'));
-    var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight, 0.1, 100);
-    var renderer = new THREE.WebGLRenderer({canvas: canvas, antialias:true, alpha:false});
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    renderer.setClearColor(bgColor.getHex(), 1);
-
-    var composer = null, bloomPass = null;
-    var bloomSupported = dark && typeof THREE.EffectComposer === 'function' && typeof THREE.UnrealBloomPass === 'function' && typeof THREE.RenderPass === 'function';
-    if (bloomSupported){
-      try{
-        composer = new THREE.EffectComposer(renderer);
-        composer.addPass(new THREE.RenderPass(scene, camera));
-        bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 0.85, 0.4, 0.08);
-        composer.addPass(bloomPass);
-      }catch(e){ composer = null; bloomPass = null; }
-    }
-
-    function resize(){
-      var w = window.innerWidth, h = window.innerHeight;
-      renderer.setSize(w, h, false);
-      camera.aspect = w/h;
-      camera.updateProjectionMatrix();
-      if (composer) composer.setSize(w, h);
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    var N = 3000;
-    var target = new Float32Array(N*3);
-    var start = new Float32Array(N*3);
-    var current = new Float32Array(N*3);
-    var seed = 7;
-    function rand(){ seed = (seed*1103515245+12345) & 0x7fffffff; return (seed % 100000)/100000; }
-    for (var i=0;i<N;i++){
-      var x=(rand()-0.5), y=(rand()-0.5), z=(rand()-0.5);
-      var len = Math.sqrt(x*x+y*y+z*z) || 1;
-      var r = Math.pow(rand(), 0.5) * 4.6;
-      var tx = (x/len)*r + (rand()-0.5)*0.3;
-      var ty = (y/len)*r*0.7 + (rand()-0.5)*0.3;
-      var tz = (z/len)*r + (rand()-0.5)*0.3;
-      target[i*3]=tx; target[i*3+1]=ty; target[i*3+2]=tz;
-      var spread = 1.6 + rand()*1.0;
-      start[i*3]   = tx*spread + (rand()-0.5)*1.4;
-      start[i*3+1] = ty*spread + (rand()-0.5)*1.4;
-      start[i*3+2] = tz*spread + (rand()-0.5)*1.4;
-    }
-    current.set(reduceMotion ? target : start);
-
-    var faint = new THREE.Color(cssVar('--ink-faint', '#666B78'));
-    var signal = new THREE.Color(cssVar('--signal', '#D7A94F'));
-    var fail = new THREE.Color(cssVar('--fail', '#C97A63'));
-
-    var landmarkDefs = [
-      {pos:[0.7,0.15,2.0], kind:'ok'},
-      {pos:[-1.9,0.7,1.0], kind:'ok'},
-      {pos:[1.7,-0.9,-1.5], kind:'ok'},
-      {pos:[-1.1,-0.5,2.7], kind:'ok'},
-      {pos:[2.5,1.1,-0.7], kind:'bad'},
-      {pos:[-2.3,0.2,-1.9], kind:'bad'}
-    ];
-
-    var colors = new Float32Array(N*3);
-    var maxDist = 2.6;
-    for (var j=0;j<N;j++){
-      var best = 1e9;
-      for (var li=0; li<landmarkDefs.length; li++){
-        var lp = landmarkDefs[li].pos;
-        var dx=target[j*3]-lp[0], dy=target[j*3+1]-lp[1], dz=target[j*3+2]-lp[2];
-        var d = Math.sqrt(dx*dx+dy*dy+dz*dz);
-        if (d<best) best=d;
+  var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var items = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+  if (reduceMotion || !('IntersectionObserver' in window)){
+    items.forEach(function(el){ el.classList.add('is-visible'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if (entry.isIntersecting){
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
       }
-      var tt = Math.max(0, 1 - best/maxDist);
-      tt = Math.pow(tt, 3.2);
-      var c = faint.clone().lerp(signal, tt*0.85);
-      colors[j*3]=c.r; colors[j*3+1]=c.g; colors[j*3+2]=c.b;
-    }
-
-    var geometry = new THREE.BufferGeometry();
-    geometry.setAttribute('position', new THREE.BufferAttribute(current, 3));
-    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-
-    var glowCanvas = document.createElement('canvas');
-    glowCanvas.width = glowCanvas.height = 64;
-    var gctx = glowCanvas.getContext('2d');
-    var grad = gctx.createRadialGradient(32,32,0,32,32,32);
-    grad.addColorStop(0, 'rgba(255,255,255,1)');
-    grad.addColorStop(0.35, 'rgba(255,255,255,0.55)');
-    grad.addColorStop(1, 'rgba(255,255,255,0)');
-    gctx.fillStyle = grad;
-    gctx.fillRect(0,0,64,64);
-    var dotTex = new THREE.CanvasTexture(glowCanvas);
-
-    var material = new THREE.PointsMaterial({
-      size: dark ? 0.1 : 0.095,
-      map:dotTex, vertexColors:true, transparent:true,
-      opacity: dark ? 0.8 : 0.95,
-      depthWrite:false, sizeAttenuation:true,
-      blending: dark ? THREE.AdditiveBlending : THREE.NormalBlending
     });
-    var points = new THREE.Points(geometry, material);
-    scene.add(points);
-    scene.fog = new THREE.Fog(bgColor.getHex(), 7, 17);
-
-    var blendMode = dark ? THREE.AdditiveBlending : THREE.NormalBlending;
-    // light theme has no real bloom (a bright-pixel threshold effect can't work against a near-white background --
-    // it just blows the whole frame to white), so it gets a punchier, more saturated soft-halo sprite behind each
-    // landmark instead, as a glow substitute suited to a light backdrop.
-    var signalGlow = new THREE.Color('#C9890E');
-    var failGlow = new THREE.Color('#C1592E');
-    var landmarks = landmarkDefs.map(function(def){
-      var color = def.kind === 'bad' ? fail : signal;
-      var mat = new THREE.SpriteMaterial({ map: dotTex, color: color, transparent:true, depthWrite:false, blending: blendMode });
-      var sprite = new THREE.Sprite(mat);
-      sprite.position.set(def.pos[0], def.pos[1], def.pos[2]);
-      var baseScale = dark ? 0.6 : 0.5;
-      sprite.scale.set(baseScale, baseScale, 1);
-      scene.add(sprite);
-      var extra = null;
-      if (def.kind === 'bad'){
-        var edges = new THREE.EdgesGeometry(new THREE.IcosahedronGeometry(0.16, 0));
-        var lineMat2 = new THREE.LineBasicMaterial({ color: fail, transparent:true, opacity:0.7 });
-        extra = new THREE.LineSegments(edges, lineMat2);
-        extra.position.copy(sprite.position);
-        scene.add(extra);
-      }
-      var halo = null;
-      if (!dark){
-        var haloMat = new THREE.SpriteMaterial({ map: dotTex, color: def.kind === 'bad' ? failGlow : signalGlow, transparent:true, depthWrite:false, blending:THREE.NormalBlending, opacity:0 });
-        halo = new THREE.Sprite(haloMat);
-        halo.position.copy(sprite.position);
-        scene.add(halo);
-      }
-      return { def:def, sprite:sprite, mat:mat, extra:extra, halo:halo, current:0.28, targetOpacity:0.28 };
-    });
-
-    function V(x,y,z){ return new THREE.Vector3(x,y,z); }
-    var camWaypoints = [ V(0,0.6,11.5), V(0,1.3,8.2) ]
-      .concat(landmarks.map(function(lm){
-        var p = lm.sprite.position;
-        var dir = p.clone();
-        if (dir.lengthSq() < 0.0001) dir.set(0,0,1); else dir.normalize();
-        return p.clone().add(dir.multiplyScalar(2.4)).add(new THREE.Vector3(0,0.3,0));
-      }))
-      .concat([ V(0,4.2,9.5), V(0,0.2,3.0) ]);
-    var lookWaypoints = [ V(0,0,0), V(0,0,0) ]
-      .concat(landmarks.map(function(lm){ return lm.sprite.position.clone(); }))
-      .concat([ V(0,0,0), V(0,0,0.2) ]);
-
-    var posCurve = new THREE.CatmullRomCurve3(camWaypoints, false, 'catmullrom', 0.4);
-    var lookCurve = new THREE.CatmullRomCurve3(lookWaypoints, false, 'catmullrom', 0.4);
-    var SCENES = camWaypoints.length;
-    camera.position.copy(camWaypoints[0]);
-
-    var sceneEls = Array.prototype.slice.call(document.querySelectorAll('[data-scene]'));
-    var targetIndex = 0, smoothIndex = 0, ticking = false;
-    function computeActive(){
-      var center = window.innerHeight * 0.5;
-      var best = 0, bestDist = Infinity;
-      sceneEls.forEach(function(el){
-        var r = el.getBoundingClientRect();
-        var mid = r.top + r.height/2;
-        var dist = Math.abs(mid - center);
-        if (dist < bestDist){ bestDist = dist; best = parseInt(el.getAttribute('data-scene'),10); }
-      });
-      targetIndex = best;
-    }
-    function onScroll(){
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(function(){ computeActive(); ticking = false; });
-    }
-    window.addEventListener('scroll', onScroll, { passive:true });
-    window.addEventListener('resize', onScroll);
-    computeActive();
-    smoothIndex = targetIndex;
-
-    var mouseX = 0, mouseY = 0;
-    window.addEventListener('pointermove', function(e){
-      mouseX = (e.clientX/window.innerWidth) - 0.5;
-      mouseY = (e.clientY/window.innerHeight) - 0.5;
-    });
-
-    function updateReticle(activeIdx){
-      if (activeIdx < 2 || activeIdx > 7){
-        reticleEl.classList.remove('locked');
-        return;
-      }
-      var lm = landmarks[activeIdx-2];
-      scene.updateMatrixWorld();
-      var worldPos = lm.sprite.position.clone().applyMatrix4(scene.matrixWorld);
-      var p = worldPos.project(camera);
-      if (p.z > 1 || p.z < -1){ reticleEl.classList.remove('locked'); return; }
-      var sx = (p.x*0.5+0.5)*window.innerWidth;
-      var sy = (1-(p.y*0.5+0.5))*window.innerHeight;
-      reticleEl.style.transform = 'translate('+sx+'px,'+sy+'px) translate(-50%,-50%)';
-      reticleEl.classList.add('locked');
-      reticleEl.classList.toggle('bad', activeIdx >= 6);
-    }
-
-    var introMs = reduceMotion ? 0 : 2000;
-    var startTime = null;
-    function easeOutCubic(x){ return 1 - Math.pow(1-x, 3); }
-
-    function animate(ts){
-      requestAnimationFrame(animate);
-      if (startTime === null) startTime = ts;
-      var elapsed = ts - startTime;
-
-      if (!reduceMotion && elapsed < introMs){
-        var p = easeOutCubic(Math.min(1, elapsed/introMs));
-        var posAttr = geometry.attributes.position.array;
-        for (var i=0;i<N*3;i++){ posAttr[i] = start[i] + (target[i]-start[i])*p; }
-        geometry.attributes.position.needsUpdate = true;
-      } else if (!reduceMotion && elapsed < introMs + 50){
-        geometry.attributes.position.array.set(target);
-        geometry.attributes.position.needsUpdate = true;
-      }
-
-      if (reduceMotion){
-        camera.position.copy(camWaypoints[0]);
-        camera.lookAt(lookWaypoints[0]);
-      } else {
-        smoothIndex += (targetIndex - smoothIndex) * 0.055;
-        var t = Math.max(0, Math.min(1, smoothIndex/(SCENES-1)));
-        var camPos = posCurve.getPoint(t);
-        var lookPos = lookCurve.getPoint(t).clone();
-        lookPos.x += mouseX*0.5;
-        lookPos.y += -mouseY*0.35;
-        camera.position.copy(camPos);
-        camera.lookAt(lookPos);
-      }
-
-      landmarks.forEach(function(lm, idx){
-        var isActive = (idx+2 === targetIndex);
-        lm.targetOpacity = isActive ? 1 : 0.28;
-        lm.current += (lm.targetOpacity - lm.current) * 0.08;
-        var flicker = lm.def.kind==='bad' ? (0.9 + Math.sin(ts*0.01 + idx)*0.1) : 1;
-        lm.mat.opacity = lm.current * flicker;
-        var s = (isActive ? (dark?0.85:0.7) : (dark?0.5:0.42));
-        lm.sprite.scale.set(s, s, 1);
-        if (lm.halo){
-          lm.halo.material.opacity = lm.current * 0.8;
-          var hs = s * 2.3;
-          lm.halo.scale.set(hs, hs, 1);
-        }
-        if (lm.extra){
-          lm.extra.rotation.x = ts*0.0004 + idx;
-          lm.extra.rotation.y = ts*0.0006 + idx;
-          lm.extra.material.opacity = 0.35 + lm.current*0.5;
-        }
-      });
-
-      updateReticle(reduceMotion ? -1 : targetIndex);
-      if (composer) composer.render(); else renderer.render(scene, camera);
-    }
-    requestAnimationFrame(animate);
-  }catch(e){ /* page still works without the 3D scene */ }
+  }, { threshold: 0.14, rootMargin: '0px 0px -8% 0px' });
+  items.forEach(function(el){ io.observe(el); });
 })();
 </script>
-
 </body>
 </html>
