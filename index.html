@@ -96,6 +96,7 @@
 
   /* ---------- persistent 3D backdrop ---------- */
   #scene-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block;pointer-events:none;background:var(--bg);}
+  #vignette{position:fixed;inset:0;z-index:0;pointer-events:none;background:transparent;background:radial-gradient(ellipse at center, transparent 48%, color-mix(in srgb, var(--bg) 70%, transparent) 100%);}
   #reticle{position:fixed;top:0;left:0;width:38px;height:38px;pointer-events:none;opacity:0;transition:opacity .5s ease;z-index:2;}
   #reticle.locked{opacity:1;}
   #reticle span{position:absolute;width:11px;height:11px;}
@@ -113,6 +114,11 @@
     padding-block:0 64px;
   }
   .page > *{ grid-column: 2; }
+
+  /* text that floats directly over the 3D scene (not inside a .glass panel) gets a soft halo so it stays legible over bright bloom */
+  .eyebrow, .hero-beat h1, .hero-beat .sub, .hero-beat .links a, .scroll-cue, .log-group h2, .log-note, footer{
+    text-shadow: 0 2px 24px var(--bg), 0 1px 6px var(--bg), 0 1px 2px var(--bg);
+  }
 
   /* ---------- scroll beats ---------- */
   .scene-beat{min-height:62vh;display:flex;align-items:center;}
@@ -304,6 +310,7 @@
 <body>
 
 <canvas id="scene-canvas"></canvas>
+<div id="vignette"></div>
 <div id="reticle"><span></span><span></span><span></span><span></span></div>
 
 <div class="page">
@@ -427,6 +434,13 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/Pass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
 <script>
 (function(){
   try{
@@ -451,14 +465,27 @@
     var bgColor = new THREE.Color(cssVar('--bg', '#10121A'));
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight, 0.1, 100);
-    var renderer = new THREE.WebGLRenderer({canvas: canvas, antialias:true, alpha:true});
+    var renderer = new THREE.WebGLRenderer({canvas: canvas, antialias:true, alpha:false});
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setClearColor(bgColor.getHex(), 1);
+
+    var composer = null, bloomPass = null;
+    var bloomSupported = dark && typeof THREE.EffectComposer === 'function' && typeof THREE.UnrealBloomPass === 'function' && typeof THREE.RenderPass === 'function';
+    if (bloomSupported){
+      try{
+        composer = new THREE.EffectComposer(renderer);
+        composer.addPass(new THREE.RenderPass(scene, camera));
+        bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 0.85, 0.4, 0.08);
+        composer.addPass(bloomPass);
+      }catch(e){ composer = null; bloomPass = null; }
+    }
 
     function resize(){
       var w = window.innerWidth, h = window.innerHeight;
       renderer.setSize(w, h, false);
       camera.aspect = w/h;
       camera.updateProjectionMatrix();
+      if (composer) composer.setSize(w, h);
     }
     window.addEventListener('resize', resize);
     resize();
@@ -672,7 +699,7 @@
       });
 
       updateReticle(reduceMotion ? -1 : targetIndex);
-      renderer.render(scene, camera);
+      if (composer) composer.render(); else renderer.render(scene, camera);
     }
     requestAnimationFrame(animate);
   }catch(e){ /* page still works without the 3D scene */ }
