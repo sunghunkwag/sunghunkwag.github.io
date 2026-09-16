@@ -38,42 +38,42 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#EEF0F1;
-    --surface:#FFFFFF;
-    --ink:#12141C;
-    --ink-soft:#52565F;
-    --ink-faint:#868B93;
-    --line:#D8DCE0;
-    --signal:#8A661E;
-    --signal-soft:#F1E6CD;
+    --bg:#E7F1E9;
+    --surface:#FBFDFB;
+    --ink:#12180F;
+    --ink-soft:#4E5B4C;
+    --ink-faint:#83917E;
+    --line:#D1DECE;
+    --signal:#1C7A48;
+    --signal-soft:#DBEFDF;
     --fail:#9A4A38;
     --fail-soft:#F5E2DC;
     color-scheme: light;
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
-      --bg:#10121A;
-      --surface:#171A24;
-      --ink:#ECEDF1;
-      --ink-soft:#9EA3B0;
-      --ink-faint:#666B78;
-      --line:#272B38;
-      --signal:#D7A94F;
-      --signal-soft:#2B2517;
+      --bg:#0A130D;
+      --surface:#111C14;
+      --ink:#E7EDE6;
+      --ink-soft:#99A995;
+      --ink-faint:#5F6E5B;
+      --line:#233326;
+      --signal:#43D488;
+      --signal-soft:#15291C;
       --fail:#C97A63;
       --fail-soft:#2A1C18;
       color-scheme: dark;
     }
   }
   :root[data-theme="dark"]{
-    --bg:#10121A;
-    --surface:#171A24;
-    --ink:#ECEDF1;
-    --ink-soft:#9EA3B0;
-    --ink-faint:#666B78;
-    --line:#272B38;
-    --signal:#D7A94F;
-    --signal-soft:#2B2517;
+    --bg:#0A130D;
+    --surface:#111C14;
+    --ink:#E7EDE6;
+    --ink-soft:#99A995;
+    --ink-faint:#5F6E5B;
+    --line:#233326;
+    --signal:#43D488;
+    --signal-soft:#15291C;
     --fail:#C97A63;
     --fail-soft:#2A1C18;
     color-scheme: dark;
@@ -94,12 +94,12 @@
   a{color:var(--signal);text-decoration-thickness:1.5px;text-underline-offset:3px;}
   a:focus-visible, button:focus-visible{outline:2px solid var(--signal);outline-offset:3px;}
 
-  /* ---------- ambient backdrop: static instrument-panel texture, CSS only, no 3D/canvas ---------- */
+  /* ---------- ambient backdrop: soft glowing green light, CSS only, no 3D/canvas ---------- */
   #ambient{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
   #ambient .blob{position:absolute;border-radius:50%;filter:blur(78px);}
-  #ambient .b1{width:620px;height:520px;top:-160px;left:-140px;background:var(--signal);opacity:.28;animation:drift-a 30s ease-in-out infinite alternate;}
-  #ambient .b2{width:520px;height:520px;top:12%;right:-180px;background:var(--fail);opacity:.16;animation:drift-b 36s ease-in-out infinite alternate;}
-  #ambient .b3{width:640px;height:520px;bottom:-200px;left:22%;background:var(--signal);opacity:.14;animation:drift-a 42s ease-in-out infinite alternate-reverse;}
+  #ambient .b1{width:620px;height:520px;top:-160px;left:-140px;background:var(--signal);opacity:.30;animation:drift-a 30s ease-in-out infinite alternate;}
+  #ambient .b2{width:520px;height:520px;top:12%;right:-180px;background:var(--signal);opacity:.20;animation:drift-b 36s ease-in-out infinite alternate;}
+  #ambient .b3{width:640px;height:520px;bottom:-200px;left:22%;background:var(--signal);opacity:.16;animation:drift-a 42s ease-in-out infinite alternate-reverse;}
   #ambient .grid{position:absolute;inset:-40px;opacity:.5;background-image:radial-gradient(var(--line) 1px, transparent 1px);background-size:28px 28px;}
   @keyframes drift-a{from{transform:translate(0,0);}to{transform:translate(34px,24px);}}
   @keyframes drift-b{from{transform:translate(0,0);}to{transform:translate(-28px,30px);}}
