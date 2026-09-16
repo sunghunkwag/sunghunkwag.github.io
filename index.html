@@ -308,7 +308,6 @@
 </style>
 </head>
 <body>
-
 <canvas id="scene-canvas"></canvas>
 <div id="vignette"></div>
 <div id="reticle"><span></span><span></span><span></span><span></span></div>
@@ -567,6 +566,11 @@
     scene.fog = new THREE.Fog(bgColor.getHex(), 7, 17);
 
     var blendMode = dark ? THREE.AdditiveBlending : THREE.NormalBlending;
+    // light theme has no real bloom (a bright-pixel threshold effect can't work against a near-white background --
+    // it just blows the whole frame to white), so it gets a punchier, more saturated soft-halo sprite behind each
+    // landmark instead, as a glow substitute suited to a light backdrop.
+    var signalGlow = new THREE.Color('#C9890E');
+    var failGlow = new THREE.Color('#C1592E');
     var landmarks = landmarkDefs.map(function(def){
       var color = def.kind === 'bad' ? fail : signal;
       var mat = new THREE.SpriteMaterial({ map: dotTex, color: color, transparent:true, depthWrite:false, blending: blendMode });
@@ -583,7 +587,14 @@
         extra.position.copy(sprite.position);
         scene.add(extra);
       }
-      return { def:def, sprite:sprite, mat:mat, extra:extra, current:0.28, targetOpacity:0.28 };
+      var halo = null;
+      if (!dark){
+        var haloMat = new THREE.SpriteMaterial({ map: dotTex, color: def.kind === 'bad' ? failGlow : signalGlow, transparent:true, depthWrite:false, blending:THREE.NormalBlending, opacity:0 });
+        halo = new THREE.Sprite(haloMat);
+        halo.position.copy(sprite.position);
+        scene.add(halo);
+      }
+      return { def:def, sprite:sprite, mat:mat, extra:extra, halo:halo, current:0.28, targetOpacity:0.28 };
     });
 
     function V(x,y,z){ return new THREE.Vector3(x,y,z); }
@@ -691,6 +702,11 @@
         lm.mat.opacity = lm.current * flicker;
         var s = (isActive ? (dark?0.85:0.7) : (dark?0.5:0.42));
         lm.sprite.scale.set(s, s, 1);
+        if (lm.halo){
+          lm.halo.material.opacity = lm.current * 0.8;
+          var hs = s * 2.3;
+          lm.halo.scale.set(hs, hs, 1);
+        }
         if (lm.extra){
           lm.extra.rotation.x = ts*0.0004 + idx;
           lm.extra.rotation.y = ts*0.0006 + idx;
