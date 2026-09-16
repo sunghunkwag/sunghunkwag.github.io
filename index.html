@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sung Hun Kwag — Independent AI Researcher (RSI &amp; Architecture Search)</title>
+<meta name="description" content="Sung Hun Kwag is an independent, unaffiliated AI researcher in South Korea working on recursive self-improvement (RSI) and neural architecture search. Portfolio of validated results and published retractions, with 23 open-source repositories on GitHub.">
+<meta name="keywords" content="recursive self-improvement, RSI, neural architecture search, attention-free, independent AI researcher, AGI research, open source AI, Sung Hun Kwag, program synthesis, validation-gated search">
+<meta name="author" content="Sung Hun Kwag">
+<link rel="canonical" href="https://sunghunkwag.github.io/">
+
+<meta property="og:type" content="profile">
+<meta property="og:title" content="Sung Hun Kwag — Independent AI Researcher">
+<meta property="og:description" content="Recursive self-improvement &amp; architecture search research. 23 repositories, 3,000 architectures searched, 2 of his own results retracted and published anyway.">
+<meta property="og:url" content="https://sunghunkwag.github.io/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sung Hun Kwag — Independent AI Researcher">
+<meta name="twitter:description" content="Recursive self-improvement &amp; architecture search research, built and verified in the open.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F1F3EF;
+    --surface:#FFFFFF;
+    --ink:#161A18;
+    --ink-soft:#4C5650;
+    --ink-faint:#7C877F;
+    --line:#D9DED6;
+    --accent:#2C5F4F;
+    --accent-ink:#F1F3EF;
+    --fail:#9C4630;
+    --fail-soft:#F4E7E1;
+    --accent-soft:#E3EDE7;
+    --shadow: 0 1px 2px rgba(20,26,22,0.04);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#14181A; --surface:#1B211F; --ink:#E9EEEA; --ink-soft:#AAB5AD; --ink-faint:#7C877F;
+      --line:#2B332E; --accent:#79C6A7; --accent-ink:#0E1513; --fail:#E29277; --fail-soft:#2E211D;
+      --accent-soft:#1E2C26; --shadow: 0 1px 2px rgba(0,0,0,0.3); color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#14181A; --surface:#1B211F; --ink:#E9EEEA; --ink-soft:#AAB5AD; --ink-faint:#7C877F;
+    --line:#2B332E; --accent:#79C6A7; --accent-ink:#0E1513; --fail:#E29277; --fail-soft:#2E211D;
+    --accent-soft:#1E2C26; --shadow: 0 1px 2px rgba(0,0,0,0.3); color-scheme: dark;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+    font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding-inline:20px;padding-block:56px 80px;}
+  h1,h2,h3{font-family:"IBM Plex Serif",Georgia,serif;font-weight:600;text-wrap:balance;margin:0;}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,monospace;}
+  a{color:var(--accent);text-decoration-thickness:1.5px;text-underline-offset:3px;}
+  a:focus-visible, button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px;}
+  .hero{display:flex;flex-direction:column;gap:22px;}
+  .hero-text{min-width:0;}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 10px;}
+  .hero h1{font-size:clamp(28px,5vw,38px);}
+  .hero .sub{color:var(--ink-soft);margin:8px 0 0;font-size:15px;}
+  .hero .links{margin-top:18px;display:flex;gap:16px;flex-wrap:wrap;font-family:"IBM Plex Mono",monospace;font-size:13px;}
+  .hero .links a{color:var(--ink);border-bottom:1px solid var(--line);padding-bottom:1px;}
+  .hero .links a:hover{color:var(--accent);border-color:var(--accent);}
+  .viewport-panel{
+    position:relative;width:100%;
+    height:clamp(240px,40vw,340px);
+    border:1px solid var(--line);
+    overflow:hidden;
+    background:var(--bg);
+  }
+  #searchspace{width:100%;height:100%;display:block;cursor:grab;}
+  .viewport-caption{
+    position:absolute;left:12px;bottom:12px;
+    font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--ink-soft);background:var(--surface);padding:5px 9px;
+    border:1px solid var(--line);opacity:.92;
+  }
+  .thesis{margin-top:40px;padding-top:32px;border-top:1px solid var(--line);}
+  .thesis p{font-family:"IBM Plex Serif",Georgia,serif;font-size:clamp(19px,2.6vw,23px);line-height:1.5;color:var(--ink);margin:0;text-wrap:balance;}
+  .trackline{margin-top:18px;font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--ink-soft);}
+  .log{margin-top:52px;}
+  .log h2{font-size:13px;font-family:"IBM Plex Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);font-weight:500;margin-bottom:18px;}
+  .log-note{color:var(--ink-soft);font-size:14.5px;margin:0 0 18px;max-width:62ch;}
+  .entries{display:flex;flex-direction:column;gap:2px;}
+  .entry{background:var(--surface);border-left:3px solid var(--accent);box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px;}
+  .entry.retracted{border-left-color:var(--fail);}
+  .entry-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+  .entry-tag{font-family:"IBM Plex Mono",monospace;font-size:12.5px;font-weight:500;letter-spacing:.02em;}
+  .pill{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:3px;background:var(--accent-soft);color:var(--accent);white-space:nowrap;}
+  .entry.retracted .pill{background:var(--fail-soft);color:var(--fail);}
+  .metric-row{display:flex;align-items:baseline;gap:18px;font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;}
+  .metric-row .num{font-size:26px;font-weight:600;color:var(--accent);}
+  .metric-row .num.base{color:var(--ink-faint);font-size:18px;}
+  .metric-row .lbl{font-size:11px;color:var(--ink-soft);display:block;margin-top:2px;letter-spacing:.02em;}
+  .entry p{margin:0;font-size:14.5px;color:var(--ink-soft);max-width:64ch;}
+  .entry p strong{color:var(--ink);font-weight:600;}
+  .stats{margin-top:52px;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);}
+  .stat{background:var(--surface);padding:20px 14px;text-align:center;}
+  .stat .n{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;font-size:clamp(20px,4vw,26px);font-weight:600;color:var(--ink);}
+  .stat .l{font-size:11px;color:var(--ink-soft);margin-top:4px;letter-spacing:.02em;}
+  @media (max-width:520px){.stats{grid-template-columns:repeat(2,1fr);}}
+  .support{margin-top:52px;padding:28px 24px;background:var(--surface);border:1px solid var(--line);}
+  .support h2{font-size:20px;margin-bottom:12px;}
+  .support p{color:var(--ink-soft);font-size:15px;max-width:64ch;margin:0 0 18px;}
+  .support .contact{display:flex;gap:24px;flex-wrap:wrap;font-family:"IBM Plex Mono",monospace;font-size:13.5px;}
+  .support .contact a{color:var(--ink);border-bottom:1px solid var(--line);padding-bottom:1px;}
+  .support .contact a:hover{color:var(--accent);border-color:var(--accent);}
+  .support .contact .k{display:block;color:var(--ink-faint);font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;}
+  footer{margin-top:56px;text-align:center;color:var(--ink-faint);font-family:"IBM Plex Serif",Georgia,serif;font-style:italic;font-size:14.5px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="hero-text">
+      <p class="eyebrow">Independent AI Researcher</p>
+      <h1>Sung Hun Kwag</h1>
+      <p class="sub">Recursive self-improvement &amp; architecture search &middot; Gapyeong, South Korea</p>
+      <div class="links">
+        <a href="https://github.com/sunghunkwag" target="_blank" rel="noopener">github.com/sunghunkwag</a>
+        <a href="mailto:sunghunkwag@gmail.com">sunghunkwag@gmail.com</a>
+      </div>
+    </div>
+    <div class="viewport-panel">
+      <canvas id="searchspace"></canvas>
+      <p class="viewport-caption">2,600-point render &middot; 3,000-candidate search space &middot; one survivor</p>
+    </div>
+  </header>
+
+  <section class="thesis">
+    <p>Most self&#8209;improvement claims in AI research ship unverified. I build systems that check their own results before I believe them &mdash; including two of my own headline results, which the verification caught, and I retracted.</p>
+    <p class="trackline">23 public repositories &middot; 1,320+ commits &middot; solo, unaffiliated &middot; design directed, agent&#8209;built</p>
+  </section>
+
+  <section class="log">
+    <h2>Validated</h2>
+    <div class="entries">
+      <article class="entry">
+        <div class="entry-head"><span class="entry-tag">attention-free-sequence-model</span><span class="pill">Validated</span></div>
+        <div class="metric-row">
+          <span><span class="num">97.6%</span><span class="lbl">search winner</span></span>
+          <span><span class="num base">64.8%</span><span class="lbl">transformer baseline</span></span>
+        </div>
+        <p><strong>3,000 candidate architectures</strong> searched across 45 atomic mechanisms, evaluated on three long-range synthetic tasks. The winner uses none of the 5 hand-designed mechanisms tried first. Open question: sequence lengths of 32&ndash;64 only, no Mamba/RWKV/Hyena comparison yet &mdash; that's what the next round of compute is for.</p>
+      </article>
+      <article class="entry">
+        <div class="entry-head"><span class="entry-tag">rsi-bench</span><span class="pill">Active</span></div>
+        <p>A <strong>multi-axis benchmark</strong> for recursive self-improvement &mdash; scoring self-modification depth, improvement trajectories, operator discovery, meta-adaptation, safety, and autonomy in one suite.</p>
+      </article>
+      <article class="entry">
+        <div class="entry-head"><span class="entry-tag">rsi-metaforge-core</span><span class="pill">Validated</span></div>
+        <p><strong>Validation-gated program synthesis</strong> runtime: meta-meta learning loops, analogical transfer, sagrammar-mediated expansion, and anti-cheat verification built into the search loop itself &mdash; not bolted on after.</p>
+      </article>
+      <article class="entry">
+        <div class="entry-head"><span class="entry-tag">gated-self-improvement</span><span class="pill">Validated</span></div>
+        <p><strong>LLM-free, deterministic, counterfactually-controlled</strong> recursive self-improvement engine. Every run's full results are published &mdash; nothing held back.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="log">
+    <h2>Failure log</h2>
+    <p class="log-note">Two headline results didn't survive their own verification gates. Publishing them here is the point &mdash; a validation system that never rejects its own results isn't one.</p>
+    <div class="entries">
+      <article class="entry retracted">
+        <div class="entry-head"><span class="entry-tag">rsi-metaforge-core &middot; phase ae</span><span class="pill">Retracted</span></div>
+        <p>A <strong>15/15 adoption result.</strong> Traced back to the task generator and the search engine having been co-designed &mdash; the result was structurally guaranteed, not earned. Retracted before publication.</p>
+      </article>
+      <article class="entry retracted">
+        <div class="entry-head"><span class="entry-tag">gated-self-improvement</span><span class="pill">Retracted</span></div>
+        <p>A <strong>compounding-improvement claim</strong> resting on a 5&times; compute mismatch between control and treatment runs. Found the mismatch, retracted the claim it supported.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="stat"><div class="n">23</div><div class="l">Repositories</div></div>
+    <div class="stat"><div class="n">1,320+</div><div class="l">Commits</div></div>
+    <div class="stat"><div class="n">3,000</div><div class="l">Architectures searched</div></div>
+    <div class="stat"><div class="n">2</div><div class="l">Retractions published</div></div>
+  </section>
+
+  <section class="support">
+    <h2>What funding buys</h2>
+    <p>Compute. Specifically: roughly 250 H100&#8209;hours to re-run the architecture search at real sequence lengths (512&ndash;1024) on a real text corpus instead of synthetic tasks, and to train Mamba, RWKV, and Hyena baselines under a matched budget &mdash; the comparison this work doesn't have yet. Every result, positive or negative, ships openly: search code, the full candidate library, and the writeup.</p>
+    <div class="contact">
+      <span><span class="k">Email</span><a href="mailto:sunghunkwag@gmail.com">sunghunkwag@gmail.com</a></span>
+      <span><span class="k">Code</span><a href="https://github.com/sunghunkwag" target="_blank" rel="noopener">github.com/sunghunkwag</a></span>
+    </div>
+  </section>
+
+  <footer>&ldquo;Failure is signal, not noise.&rdquo;</footer>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  try{
+    if (typeof THREE === 'undefined') return;
+    var canvas = document.getElementById('searchspace');
+    if(!canvas) return;
+    var panel = canvas.parentElement;
+
+    function cssVar(name, fallback){
+      var v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+      return v || fallback;
+    }
+
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
+    camera.position.set(0, 0, 9);
+    var renderer = new THREE.WebGLRenderer({canvas: canvas, antialias:true, alpha:true});
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+    var N = 2600, winnerIndex = 1200;
+    var positions = new Float32Array(N*3);
+    var seed = 7;
+    function rand(){ seed = (seed*1103515245+12345) & 0x7fffffff; return (seed % 100000)/100000; }
+    for (var i=0;i<N;i++){
+      var x=(rand()-0.5), y=(rand()-0.5), z=(rand()-0.5);
+      var len = Math.sqrt(x*x+y*y+z*z) || 1;
+      var r = Math.pow(rand(), 0.5) * 4.2;
+      positions[i*3]   = (x/len)*r + (rand()-0.5)*0.3;
+      positions[i*3+1] = (y/len)*r*0.75 + (rand()-0.5)*0.3;
+      positions[i*3+2] = (z/len)*r + (rand()-0.5)*0.3;
+    }
+    positions[winnerIndex*3]=0.6; positions[winnerIndex*3+1]=0.2; positions[winnerIndex*3+2]=1.8;
+
+    var geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+    var faintColor = new THREE.Color(cssVar('--ink-faint', '#7C877F'));
+    var accentColor = new THREE.Color(cssVar('--accent', '#2C5F4F'));
+
+    var material = new THREE.PointsMaterial({ color: faintColor, size:0.045, transparent:true, opacity:0.55, sizeAttenuation:true });
+    var points = new THREE.Points(geometry, material);
+    scene.add(points);
+
+    var winnerPos = new THREE.Vector3(positions[winnerIndex*3], positions[winnerIndex*3+1], positions[winnerIndex*3+2]);
+    var winnerMesh = new THREE.Mesh(new THREE.SphereGeometry(0.09,16,16), new THREE.MeshBasicMaterial({ color: accentColor }));
+    winnerMesh.position.copy(winnerPos);
+    scene.add(winnerMesh);
+
+    var glowCanvas = document.createElement('canvas');
+    glowCanvas.width = glowCanvas.height = 128;
+    var gctx = glowCanvas.getContext('2d');
+    var grad = gctx.createRadialGradient(64,64,0,64,64,64);
+    var styleStr = accentColor.getStyle();
+    grad.addColorStop(0, styleStr.replace('rgb','rgba').replace(')', ',0.9)'));
+    grad.addColorStop(1, styleStr.replace('rgb','rgba').replace(')', ',0)'));
+    gctx.fillStyle = grad;
+    gctx.fillRect(0,0,128,128);
+    var glowMat = new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(glowCanvas), transparent:true, depthWrite:false, blending: THREE.AdditiveBlending });
+    var glowSprite = new THREE.Sprite(glowMat);
+    glowSprite.scale.set(1.5,1.5,1.5);
+    glowSprite.position.copy(winnerPos);
+    scene.add(glowSprite);
+
+    var lineMat = new THREE.LineBasicMaterial({ color: accentColor, transparent:true, opacity:0.22 });
+    for (var k=0;k<6;k++){
+      var idx = Math.floor(rand()*N);
+      var target = new THREE.Vector3(positions[idx*3], positions[idx*3+1], positions[idx*3+2]);
+      scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([winnerPos, target]), lineMat));
+    }
+
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function resize(){
+      var w = panel.clientWidth || 1, h = panel.clientHeight || 1;
+      renderer.setSize(w, h, false);
+      camera.aspect = w/h;
+      camera.updateProjectionMatrix();
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    var mouseX = 0, mouseY = 0;
+    panel.addEventListener('pointermove', function(e){
+      var rect = panel.getBoundingClientRect();
+      mouseX = (e.clientX-rect.left)/rect.width - 0.5;
+      mouseY = (e.clientY-rect.top)/rect.height - 0.5;
+    });
+
+    var t = 0;
+    function animate(){
+      requestAnimationFrame(animate);
+      if(!reduceMotion){
+        t += 0.0022;
+        scene.rotation.y = t + mouseX*0.5;
+        scene.rotation.x = mouseY*0.25;
+        glowMat.opacity = 0.75 + Math.sin(t*3)*0.15;
+      } else {
+        scene.rotation.y = 0.4;
+      }
+      renderer.render(scene, camera);
+    }
+    animate();
+  }catch(e){ /* page still works without the 3D panel */ }
+})();
+</script>
+</body>
+</html>
