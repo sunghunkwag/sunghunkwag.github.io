@@ -38,64 +38,73 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#E7F1E9;
+    --bg:#F9F9F9;
     --surface:#FFFFFF;
-    --ink:#12180F;
-    --ink-soft:#4E5B4C;
-    --ink-faint:#83917E;
-    --line:#D1DECE;
-    --signal:#1C7A48;
-    --signal-soft:#DBEFDF;
+    --ink:#1E1E24;
+    --ink-soft:#5C5C63;
+    --ink-faint:#8F8F95;
+    --line:#E3E2E2;
+    --signal:#FF772B;
+    --signal-soft:#FFE4D3;
+    --good:#1C7A48;
+    --good-soft:#DBEFDF;
     --fail:#9A4A38;
     --fail-soft:#F5E2DC;
-    --band-bg:#0E1A12;
-    --band-surface:#16241B;
-    --band-ink:#EAF2E9;
-    --band-ink-soft:#9FB39B;
-    --band-line:#25382C;
-    --band-signal:#43D488;
+    --band-bg:#1E1E24;
+    --band-surface:#2A2A31;
+    --band-ink:#F9F9F9;
+    --band-ink-soft:#B7B7BC;
+    --band-line:#3A3A42;
+    --band-signal:#FF9A5C;
+    --band-good:#43D488;
     --band-fail:#C97A63;
     color-scheme: light;
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
-      --bg:#0A130D;
-      --surface:#111C14;
-      --ink:#E7EDE6;
-      --ink-soft:#99A995;
-      --ink-faint:#5F6E5B;
-      --line:#233326;
-      --signal:#43D488;
-      --signal-soft:#15291C;
+      --bg:#131316;
+      --surface:#1D1D22;
+      --ink:#F2F1EF;
+      --ink-soft:#A8A7AC;
+      --ink-faint:#737277;
+      --line:#2E2E34;
+      --signal:#FF8A47;
+      --signal-soft:#3A2418;
+      --good:#43D488;
+      --good-soft:#15291C;
       --fail:#C97A63;
       --fail-soft:#2A1C18;
-      --band-bg:#050B07;
-      --band-surface:#0D1712;
-      --band-ink:#E7EDE6;
-      --band-ink-soft:#8FA38B;
-      --band-line:#1B2A20;
-      --band-signal:#43D488;
+      --band-bg:#09090B;
+      --band-surface:#17171B;
+      --band-ink:#F2F1EF;
+      --band-ink-soft:#98979C;
+      --band-line:#232328;
+      --band-signal:#FF9A5C;
+      --band-good:#43D488;
       --band-fail:#C97A63;
       color-scheme: dark;
     }
   }
   :root[data-theme="dark"]{
-    --bg:#0A130D;
-    --surface:#111C14;
-    --ink:#E7EDE6;
-    --ink-soft:#99A995;
-    --ink-faint:#5F6E5B;
-    --line:#233326;
-    --signal:#43D488;
-    --signal-soft:#15291C;
+    --bg:#131316;
+    --surface:#1D1D22;
+    --ink:#F2F1EF;
+    --ink-soft:#A8A7AC;
+    --ink-faint:#737277;
+    --line:#2E2E34;
+    --signal:#FF8A47;
+    --signal-soft:#3A2418;
+    --good:#43D488;
+    --good-soft:#15291C;
     --fail:#C97A63;
     --fail-soft:#2A1C18;
-    --band-bg:#050B07;
-    --band-surface:#0D1712;
-    --band-ink:#E7EDE6;
-    --band-ink-soft:#8FA38B;
-    --band-line:#1B2A20;
-    --band-signal:#43D488;
+    --band-bg:#09090B;
+    --band-surface:#17171B;
+    --band-ink:#F2F1EF;
+    --band-ink-soft:#98979C;
+    --band-line:#232328;
+    --band-signal:#FF9A5C;
+    --band-good:#43D488;
     --band-fail:#C97A63;
     color-scheme: dark;
   }
@@ -117,12 +126,12 @@
   a{color:var(--signal);text-decoration-thickness:1.5px;text-underline-offset:3px;}
   a:focus-visible, button:focus-visible, .btn:focus-visible{outline:2px solid var(--signal);outline-offset:3px;}
 
-  /* ---------- ambient backdrop: soft glowing green light, CSS only, no 3D/canvas ---------- */
+  /* ---------- ambient backdrop: faint warm glow, CSS only, no 3D/canvas ---------- */
   #ambient{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
   #ambient .blob{position:absolute;border-radius:50%;filter:blur(78px);}
-  #ambient .b1{width:620px;height:520px;top:-160px;left:-140px;background:var(--signal);opacity:.30;animation:drift-a 30s ease-in-out infinite alternate;}
-  #ambient .b2{width:520px;height:520px;top:12%;right:-180px;background:var(--signal);opacity:.20;animation:drift-b 36s ease-in-out infinite alternate;}
-  #ambient .b3{width:640px;height:520px;bottom:-200px;left:22%;background:var(--signal);opacity:.16;animation:drift-a 42s ease-in-out infinite alternate-reverse;}
+  #ambient .b1{width:620px;height:520px;top:-160px;left:-140px;background:var(--signal);opacity:.16;animation:drift-a 30s ease-in-out infinite alternate;}
+  #ambient .b2{width:520px;height:520px;top:12%;right:-180px;background:var(--signal);opacity:.11;animation:drift-b 36s ease-in-out infinite alternate;}
+  #ambient .b3{width:640px;height:520px;bottom:-200px;left:22%;background:var(--signal);opacity:.09;animation:drift-a 42s ease-in-out infinite alternate-reverse;}
   #ambient .grid{position:absolute;inset:-40px;opacity:.5;background-image:radial-gradient(var(--line) 1px, transparent 1px);background-size:28px 28px;}
   @keyframes drift-a{from{transform:translate(0,0);}to{transform:translate(34px,24px);}}
   @keyframes drift-b{from{transform:translate(0,0);}to{transform:translate(-28px,30px);}}
@@ -142,17 +151,27 @@
     --ink-faint:var(--band-ink-soft);
     --line:var(--band-line);
     --signal:var(--band-signal);
+    --good:var(--band-good);
     --fail:var(--band-fail);
   }
 
-  /* ---------- top nav ---------- */
+  /* ---------- top nav (always a dark band, like a fixed masthead) ---------- */
   .topnav{
+    width:100%;
+    background:var(--band-bg);
+    --surface:var(--band-surface);
+    --ink:var(--band-ink);
+    --ink-soft:var(--band-ink-soft);
+    --line:var(--band-line);
+    --signal:var(--band-signal);
+  }
+  .topnav-inner{
     display:flex;
     align-items:center;
     justify-content:space-between;
     flex-wrap:wrap;
     gap:12px 16px;
-    padding-block:28px 0;
+    padding-block:20px;
   }
   .topnav-mark{
     font-size:12px;
@@ -176,8 +195,8 @@
     transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease, color .25s ease, background .25s ease;
   }
   .btn-solid{
-    background:linear-gradient(135deg, var(--signal), color-mix(in srgb, var(--signal) 55%, #8FE3B8));
-    color:#07120B;
+    background:var(--signal);
+    color:#1A1006;
     font-weight:600;
     border:1px solid transparent;
   }
@@ -215,11 +234,11 @@
     margin:0 0 18px;
   }
   .hero-beat h1{
-    font-family:"Instrument Serif",Georgia,serif;
-    font-weight:400;
-    font-size:clamp(48px,9vw,92px);
+    font-family:"Instrument Sans",sans-serif;
+    font-weight:800;
+    font-size:clamp(44px,8vw,80px);
     letter-spacing:-0.02em;
-    line-height:1.02;
+    line-height:1.04;
     margin:0;
     text-wrap:balance;
   }
@@ -265,10 +284,10 @@
   /* ---------- thesis ---------- */
   .thesis-card{padding:36px 34px;}
   .thesis-card p{
-    font-family:"Instrument Serif",Georgia,serif;
-    font-style:italic;
-    font-size:clamp(22px,3vw,30px);
-    line-height:1.42;
+    font-family:"Instrument Sans",sans-serif;
+    font-weight:500;
+    font-size:clamp(19px,2.6vw,25px);
+    line-height:1.5;
     color:var(--ink);
     margin:0;
     text-wrap:balance;
@@ -302,12 +321,12 @@
   }
   .entry::before,.entry::after{
     content:"";position:absolute;width:14px;height:14px;opacity:0;
-    border-color:var(--signal);
+    border-color:var(--good);
     transition:opacity .3s ease, transform .3s ease;
   }
   .entry::before{top:8px;left:8px;border-top:1.5px solid;border-left:1.5px solid;transform:translate(5px,5px);}
   .entry::after{bottom:8px;right:8px;border-bottom:1.5px solid;border-right:1.5px solid;transform:translate(-5px,-5px);}
-  .entry:hover{transform:translateY(-3px);border-color:color-mix(in srgb, var(--signal) 45%, var(--line));box-shadow:0 20px 44px -26px color-mix(in srgb, var(--ink) 45%, transparent);}
+  .entry:hover{transform:translateY(-3px);border-color:color-mix(in srgb, var(--good) 45%, var(--line));box-shadow:0 20px 44px -26px color-mix(in srgb, var(--ink) 45%, transparent);}
   .entry:hover::before,.entry:hover::after{opacity:.9;transform:translate(0,0);}
   .entry.entry-bad::before,.entry.entry-bad::after{border-color:var(--fail);}
   .entry.entry-bad:hover{border-color:color-mix(in srgb, var(--fail) 45%, var(--line));}
@@ -321,8 +340,8 @@
   .entry-tag{font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:500;letter-spacing:.02em;color:var(--ink);}
   .status{display:inline-flex;align-items:center;gap:8px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap;}
   .status .led{width:7px;height:7px;border-radius:50%;background:var(--ink-faint);flex:none;}
-  .status.ok{color:var(--signal);}
-  .status.ok .led{background:var(--signal);box-shadow:0 0 7px color-mix(in srgb, var(--signal) 65%, transparent);}
+  .status.ok{color:var(--good);}
+  .status.ok .led{background:var(--good);box-shadow:0 0 7px color-mix(in srgb, var(--good) 65%, transparent);}
   .status.bad{color:var(--fail);}
   .status.bad .led{background:var(--fail);box-shadow:0 0 7px color-mix(in srgb, var(--fail) 65%, transparent);}
   .metric-row{
@@ -332,7 +351,7 @@
     font-family:"IBM Plex Mono",monospace;
     font-variant-numeric:tabular-nums;
   }
-  .metric-row .num{font-size:clamp(24px,4vw,30px);font-weight:600;color:var(--signal);}
+  .metric-row .num{font-size:clamp(24px,4vw,30px);font-weight:600;color:var(--good);}
   .metric-row .num.base{color:var(--ink-faint);font-size:18px;}
   .metric-row .lbl{font-size:11px;color:var(--ink-soft);display:block;margin-top:3px;letter-spacing:.02em;}
   .entry p{margin:0;font-size:15px;color:var(--ink-soft);max-width:64ch;}
@@ -380,10 +399,10 @@
   .support-mark circle{stroke:var(--signal);}
   .support .eyebrow{margin-bottom:14px;position:relative;}
   .support h2{
-    font-family:"Instrument Serif",Georgia,serif;
-    font-style:italic;
-    font-weight:400;
-    font-size:26px;
+    font-family:"Instrument Sans",sans-serif;
+    font-weight:800;
+    font-size:clamp(24px,3.4vw,32px);
+    letter-spacing:-0.01em;
     margin:0 0 14px;
     position:relative;
   }
@@ -397,11 +416,10 @@
 
   footer{
     text-align:center;
-    color:var(--ink-faint);
-    font-family:"Instrument Serif",Georgia,serif;
-    font-style:italic;
+    font-family:"Instrument Sans",sans-serif;
+    font-weight:500;
     font-size:16px;
-    padding-block:56px 48px;
+    color:var(--ink-soft);
   }
 </style>
 </head>
@@ -410,9 +428,11 @@
 
 <div class="page">
 
-  <nav class="topnav wrap">
-    <span class="topnav-mark mono">Sung Hun Kwag</span>
-    <a class="btn btn-ghost" href="#support">Support this work</a>
+  <nav class="topnav">
+    <div class="wrap topnav-inner">
+      <span class="topnav-mark mono">Sung Hun Kwag</span>
+      <a class="btn btn-solid" href="#support">Support this work</a>
+    </div>
   </nav>
 
   <header class="hero-beat wrap">
@@ -548,7 +568,9 @@
     </div>
   </section>
 
-  <footer class="wrap reveal">&ldquo;Failure is signal, not noise.&rdquo;</footer>
+  <footer class="band band-dark">
+    <div class="wrap">&ldquo;Failure is signal, not noise.&rdquo;</div>
+  </footer>
 
 </div>
 
