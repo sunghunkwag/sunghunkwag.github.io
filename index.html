@@ -39,7 +39,7 @@
 <style>
   :root{
     --bg:#E7F1E9;
-    --surface:#FBFDFB;
+    --surface:#FFFFFF;
     --ink:#12180F;
     --ink-soft:#4E5B4C;
     --ink-faint:#83917E;
@@ -48,6 +48,13 @@
     --signal-soft:#DBEFDF;
     --fail:#9A4A38;
     --fail-soft:#F5E2DC;
+    --band-bg:#0E1A12;
+    --band-surface:#16241B;
+    --band-ink:#EAF2E9;
+    --band-ink-soft:#9FB39B;
+    --band-line:#25382C;
+    --band-signal:#43D488;
+    --band-fail:#C97A63;
     color-scheme: light;
   }
   @media (prefers-color-scheme: dark){
@@ -62,6 +69,13 @@
       --signal-soft:#15291C;
       --fail:#C97A63;
       --fail-soft:#2A1C18;
+      --band-bg:#050B07;
+      --band-surface:#0D1712;
+      --band-ink:#E7EDE6;
+      --band-ink-soft:#8FA38B;
+      --band-line:#1B2A20;
+      --band-signal:#43D488;
+      --band-fail:#C97A63;
       color-scheme: dark;
     }
   }
@@ -76,11 +90,20 @@
     --signal-soft:#15291C;
     --fail:#C97A63;
     --fail-soft:#2A1C18;
+    --band-bg:#050B07;
+    --band-surface:#0D1712;
+    --band-ink:#E7EDE6;
+    --band-ink-soft:#8FA38B;
+    --band-line:#1B2A20;
+    --band-signal:#43D488;
+    --band-fail:#C97A63;
     color-scheme: dark;
   }
 
   *{box-sizing:border-box;}
   html,body{overflow-x:hidden;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} }
   body{
     margin:0;
     background:var(--bg);
@@ -92,7 +115,7 @@
   }
   .mono{font-family:"IBM Plex Mono",ui-monospace,monospace;}
   a{color:var(--signal);text-decoration-thickness:1.5px;text-underline-offset:3px;}
-  a:focus-visible, button:focus-visible{outline:2px solid var(--signal);outline-offset:3px;}
+  a:focus-visible, button:focus-visible, .btn:focus-visible{outline:2px solid var(--signal);outline-offset:3px;}
 
   /* ---------- ambient backdrop: soft glowing green light, CSS only, no 3D/canvas ---------- */
   #ambient{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
@@ -105,16 +128,66 @@
   @keyframes drift-b{from{transform:translate(0,0);}to{transform:translate(-28px,30px);}}
   @media (prefers-reduced-motion: reduce){ #ambient .blob{animation:none;} }
 
-  .page{
-    position:relative;
-    z-index:1;
-    display:grid;
-    grid-template-columns: minmax(20px,1fr) min(720px, calc(100% - 40px)) minmax(20px,1fr);
-    padding-block:0 96px;
-    row-gap:88px;
+  /* ---------- layout: page / wrap / full-bleed band ---------- */
+  .page{position:relative;z-index:1;}
+  .wrap{max-width:760px;margin-inline:auto;padding-inline:20px;}
+  .band .wrap{padding-block:76px;}
+  @media (max-width:640px){ .band .wrap{padding-block:54px;} }
+  .band-light{background:var(--surface);}
+  .band-dark{
+    background:var(--band-bg);
+    --surface:var(--band-surface);
+    --ink:var(--band-ink);
+    --ink-soft:var(--band-ink-soft);
+    --ink-faint:var(--band-ink-soft);
+    --line:var(--band-line);
+    --signal:var(--band-signal);
+    --fail:var(--band-fail);
   }
-  .page > *{ grid-column: 2; }
-  @media (max-width:640px){ .page{ row-gap:64px; } }
+
+  /* ---------- top nav ---------- */
+  .topnav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px 16px;
+    padding-block:28px 0;
+  }
+  .topnav-mark{
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ink);
+  }
+
+  /* ---------- buttons (capsule) ---------- */
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:12px 24px;
+    border-radius:999px;
+    font-family:"IBM Plex Mono",monospace;
+    font-size:13px;
+    letter-spacing:.02em;
+    text-decoration:none;
+    white-space:nowrap;
+    transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease, color .25s ease, background .25s ease;
+  }
+  .btn-solid{
+    background:linear-gradient(135deg, var(--signal), color-mix(in srgb, var(--signal) 55%, #8FE3B8));
+    color:#07120B;
+    font-weight:600;
+    border:1px solid transparent;
+  }
+  .btn-solid:hover{transform:translateY(-2px);box-shadow:0 16px 32px -16px color-mix(in srgb, var(--signal) 70%, transparent);}
+  .btn-ghost{
+    background:transparent;
+    color:var(--ink);
+    border:1.5px solid var(--line);
+  }
+  .btn-ghost:hover{border-color:var(--signal);color:var(--signal);transform:translateY(-2px);}
 
   /* ---------- scroll reveal ---------- */
   .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1);}
@@ -123,11 +196,12 @@
 
   /* ---------- hero ---------- */
   .hero-beat{
-    min-height:92vh;
+    min-height:80vh;
     display:flex;
     flex-direction:column;
     justify-content:center;
     align-items:flex-start;
+    padding-block:48px 64px;
     animation:hero-in .9s cubic-bezier(.2,.7,.2,1) both;
   }
   @media (prefers-reduced-motion: reduce){ .hero-beat{animation:none;} }
@@ -185,7 +259,7 @@
     backdrop-filter:blur(14px);
     -webkit-backdrop-filter:blur(14px);
     border:1px solid var(--line);
-    transition:transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+    transition:transform .35s ease, box-shadow .35s ease, border-color .35s ease, background .35s ease;
   }
 
   /* ---------- thesis ---------- */
@@ -209,10 +283,14 @@
   /* ---------- log groups ---------- */
   .log-group{width:100%;display:flex;flex-direction:column;gap:28px;}
   .log-group h2{
-    font-size:13px;font-family:"IBM Plex Mono",monospace;letter-spacing:.1em;text-transform:uppercase;
-    color:var(--ink-soft);font-weight:500;margin:0;
+    font-family:"Instrument Sans",sans-serif;
+    font-weight:800;
+    font-size:clamp(26px,4vw,36px);
+    letter-spacing:-0.015em;
+    line-height:1.1;
+    margin:0;
+    color:var(--ink);
   }
-  .log-group h2::after{content:"";display:block;width:28px;height:2px;background:var(--line);margin-top:10px;}
   .log-note{color:var(--ink-soft);font-size:14.5px;margin:0;max-width:62ch;}
 
   .entry{
@@ -295,26 +373,27 @@
   .support{
     padding:34px 30px;
     border-top:2px solid var(--signal);
+    position:relative;
+    overflow:hidden;
   }
-  .support .eyebrow{margin-bottom:14px;}
+  .support-mark{position:absolute;top:-30px;right:-30px;width:150px;height:150px;opacity:.5;pointer-events:none;}
+  .support-mark circle{stroke:var(--signal);}
+  .support .eyebrow{margin-bottom:14px;position:relative;}
   .support h2{
     font-family:"Instrument Serif",Georgia,serif;
     font-style:italic;
     font-weight:400;
     font-size:26px;
     margin:0 0 14px;
+    position:relative;
   }
-  .support p{color:var(--ink-soft);font-size:15px;max-width:64ch;margin:0 0 22px;}
+  .support p{color:var(--ink-soft);font-size:15px;max-width:64ch;margin:0 0 26px;position:relative;}
   .support .contact{
     display:flex;
-    gap:28px;
+    gap:14px;
     flex-wrap:wrap;
-    font-family:"IBM Plex Mono",monospace;
-    font-size:13.5px;
+    position:relative;
   }
-  .support .contact a{color:var(--ink);border-bottom:1px solid var(--line);padding-bottom:1px;text-decoration:none;}
-  .support .contact a:hover{color:var(--signal);border-color:var(--signal);}
-  .support .contact .k{display:block;color:var(--ink-faint);font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
 
   footer{
     text-align:center;
@@ -322,6 +401,7 @@
     font-family:"Instrument Serif",Georgia,serif;
     font-style:italic;
     font-size:16px;
+    padding-block:56px 48px;
   }
 </style>
 </head>
@@ -330,7 +410,12 @@
 
 <div class="page">
 
-  <header class="hero-beat">
+  <nav class="topnav wrap">
+    <span class="topnav-mark mono">Sung Hun Kwag</span>
+    <a class="btn btn-ghost" href="#support">Support this work</a>
+  </nav>
+
+  <header class="hero-beat wrap">
     <p class="eyebrow">[ Independent AI Researcher ]</p>
     <h1>Sung Hun Kwag</h1>
     <p class="sub">Recursive self-improvement &amp; architecture search &middot; Gapyeong, South Korea</p>
@@ -341,110 +426,129 @@
     <p class="scroll-cue">Scroll for results &amp; retractions &darr;</p>
   </header>
 
-  <section class="reveal">
-    <div class="glass thesis-card">
-      <p>Most self&#8209;improvement claims in AI research ship unverified. I build systems that check their own results before I believe them &mdash; including two of my own headline results, which the verification caught, and I retracted.</p>
-      <p class="trackline">23 public repositories &middot; 1,320+ commits &middot; solo, unaffiliated &middot; design directed, agent&#8209;built</p>
-    </div>
-  </section>
-
-  <div class="log-group">
-    <h2>Validated</h2>
-
-    <article class="reveal">
-      <div class="glass entry">
-        <div class="entry-head">
-          <span class="entry-tag">attention-free-sequence-model</span>
-          <span class="status ok"><i class="led"></i>Validated</span>
-        </div>
-        <div class="metric-row">
-          <span><span class="num">97.6%</span><span class="lbl">search winner</span></span>
-          <span><span class="num base">64.8%</span><span class="lbl">transformer baseline</span></span>
-        </div>
-        <p><strong>3,000 candidate architectures</strong> searched across 45 atomic mechanisms, evaluated on three long-range synthetic tasks. The winner uses none of the 5 hand-designed mechanisms tried first. Open question: sequence lengths of 32&ndash;64 only, no Mamba/RWKV/Hyena comparison yet &mdash; that's what the next round of compute is for.</p>
-      </div>
-    </article>
-
-    <article class="reveal">
-      <div class="glass entry">
-        <div class="entry-head">
-          <span class="entry-tag">rsi-bench</span>
-          <span class="status"><i class="led"></i>Active</span>
-        </div>
-        <p>A <strong>multi-axis benchmark</strong> for recursive self-improvement &mdash; scoring self-modification depth, improvement trajectories, operator discovery, meta-adaptation, safety, and autonomy in one suite.</p>
-      </div>
-    </article>
-
-    <article class="reveal">
-      <div class="glass entry">
-        <div class="entry-head">
-          <span class="entry-tag">rsi-metaforge-core</span>
-          <span class="status ok"><i class="led"></i>Validated</span>
-        </div>
-        <p><strong>Validation-gated program synthesis</strong> runtime: meta-meta learning loops, analogical transfer, grammar-mediated expansion, and anti-cheat verification built into the search loop itself &mdash; not bolted on after.</p>
-      </div>
-    </article>
-
-    <article class="reveal">
-      <div class="glass entry">
-        <div class="entry-head">
-          <span class="entry-tag">gated-self-improvement</span>
-          <span class="status ok"><i class="led"></i>Validated</span>
-        </div>
-        <p><strong>LLM-free, deterministic, counterfactually-controlled</strong> recursive self-improvement engine. Every run's full results are published &mdash; nothing held back.</p>
-      </div>
-    </article>
-  </div>
-
-  <div class="log-group">
-    <h2>Failure log</h2>
-    <p class="log-note">Two headline results didn't survive their own verification gates. Publishing them here is the point &mdash; a validation system that never rejects its own results isn't one.</p>
-
-    <article class="reveal">
-      <div class="glass entry entry-bad">
-        <div class="entry-head">
-          <span class="entry-tag">rsi-metaforge-core &middot; phase ae</span>
-          <span class="status bad"><i class="led"></i>Retracted</span>
-        </div>
-        <p>A <strong>15/15 adoption result.</strong> Traced back to the task generator and the search engine having been co-designed &mdash; the result was structurally guaranteed, not earned. Retracted before publication.</p>
-      </div>
-    </article>
-
-    <article class="reveal">
-      <div class="glass entry entry-bad">
-        <div class="entry-head">
-          <span class="entry-tag">gated-self-improvement</span>
-          <span class="status bad"><i class="led"></i>Retracted</span>
-        </div>
-        <p>A <strong>compounding-improvement claim</strong> resting on a 5&times; compute mismatch between control and treatment runs. Found the mismatch, retracted the claim it supported.</p>
-      </div>
-    </article>
-  </div>
-
-  <section class="reveal">
-    <div class="glass stats-wrap">
-      <div class="stats">
-        <div class="stat"><div class="n">23</div><div class="l">Repositories</div></div>
-        <div class="stat"><div class="n">1,320+</div><div class="l">Commits</div></div>
-        <div class="stat"><div class="n">3,000</div><div class="l">Architectures searched</div></div>
-        <div class="stat"><div class="n">2</div><div class="l">Retractions published</div></div>
+  <section class="band band-light reveal">
+    <div class="wrap">
+      <div class="glass thesis-card">
+        <p>Most self&#8209;improvement claims in AI research ship unverified. I build systems that check their own results before I believe them &mdash; including two of my own headline results, which the verification caught, and I retracted.</p>
+        <p class="trackline">23 public repositories &middot; 1,320+ commits &middot; solo, unaffiliated &middot; design directed, agent&#8209;built</p>
       </div>
     </div>
   </section>
 
-  <section class="reveal">
-    <div class="glass support">
-      <p class="eyebrow">[ Support this work ]</p>
-      <h2>What funding buys</h2>
-      <p>Compute. Specifically: roughly 250 H100&#8209;hours to re-run the architecture search at real sequence lengths (512&ndash;1024) on a real text corpus instead of synthetic tasks, and to train Mamba, RWKV, and Hyena baselines under a matched budget &mdash; the comparison this work doesn't have yet. Every result, positive or negative, ships openly: search code, the full candidate library, and the writeup.</p>
-      <div class="contact">
-        <span><span class="k">Email</span><a href="mailto:sunghunkwag@gmail.com">sunghunkwag@gmail.com</a></span>
-        <span><span class="k">Code</span><a href="https://github.com/sunghunkwag" target="_blank" rel="noopener">github.com/sunghunkwag</a></span>
+  <section class="band band-dark">
+    <div class="wrap">
+      <div class="log-group">
+        <h2>Validated</h2>
+
+        <article class="reveal">
+          <div class="glass entry">
+            <div class="entry-head">
+              <span class="entry-tag">attention-free-sequence-model</span>
+              <span class="status ok"><i class="led"></i>Validated</span>
+            </div>
+            <div class="metric-row">
+              <span><span class="num">97.6%</span><span class="lbl">search winner</span></span>
+              <span><span class="num base">64.8%</span><span class="lbl">transformer baseline</span></span>
+            </div>
+            <p><strong>3,000 candidate architectures</strong> searched across 45 atomic mechanisms, evaluated on three long-range synthetic tasks. The winner uses none of the 5 hand-designed mechanisms tried first. Open question: sequence lengths of 32&ndash;64 only, no Mamba/RWKV/Hyena comparison yet &mdash; that's what the next round of compute is for.</p>
+          </div>
+        </article>
+
+        <article class="reveal">
+          <div class="glass entry">
+            <div class="entry-head">
+              <span class="entry-tag">rsi-bench</span>
+              <span class="status"><i class="led"></i>Active</span>
+            </div>
+            <p>A <strong>multi-axis benchmark</strong> for recursive self-improvement &mdash; scoring self-modification depth, improvement trajectories, operator discovery, meta-adaptation, safety, and autonomy in one suite.</p>
+          </div>
+        </article>
+
+        <article class="reveal">
+          <div class="glass entry">
+            <div class="entry-head">
+              <span class="entry-tag">rsi-metaforge-core</span>
+              <span class="status ok"><i class="led"></i>Validated</span>
+            </div>
+            <p><strong>Validation-gated program synthesis</strong> runtime: meta-meta learning loops, analogical transfer, grammar-mediated expansion, and anti-cheat verification built into the search loop itself &mdash; not bolted on after.</p>
+          </div>
+        </article>
+
+        <article class="reveal">
+          <div class="glass entry">
+            <div class="entry-head">
+              <span class="entry-tag">gated-self-improvement</span>
+              <span class="status ok"><i class="led"></i>Validated</span>
+            </div>
+            <p><strong>LLM-free, deterministic, counterfactually-controlled</strong> recursive self-improvement engine. Every run's full results are published &mdash; nothing held back.</p>
+          </div>
+        </article>
       </div>
     </div>
   </section>
 
-  <footer class="reveal">&ldquo;Failure is signal, not noise.&rdquo;</footer>
+  <section class="band band-light">
+    <div class="wrap">
+      <div class="log-group">
+        <h2>Failure log</h2>
+        <p class="log-note reveal">Two headline results didn't survive their own verification gates. Publishing them here is the point &mdash; a validation system that never rejects its own results isn't one.</p>
+
+        <article class="reveal">
+          <div class="glass entry entry-bad">
+            <div class="entry-head">
+              <span class="entry-tag">rsi-metaforge-core &middot; phase ae</span>
+              <span class="status bad"><i class="led"></i>Retracted</span>
+            </div>
+            <p>A <strong>15/15 adoption result.</strong> Traced back to the task generator and the search engine having been co-designed &mdash; the result was structurally guaranteed, not earned. Retracted before publication.</p>
+          </div>
+        </article>
+
+        <article class="reveal">
+          <div class="glass entry entry-bad">
+            <div class="entry-head">
+              <span class="entry-tag">gated-self-improvement</span>
+              <span class="status bad"><i class="led"></i>Retracted</span>
+            </div>
+            <p>A <strong>compounding-improvement claim</strong> resting on a 5&times; compute mismatch between control and treatment runs. Found the mismatch, retracted the claim it supported.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band-dark">
+    <div class="wrap">
+      <div class="glass stats-wrap reveal">
+        <div class="stats">
+          <div class="stat"><div class="n">23</div><div class="l">Repositories</div></div>
+          <div class="stat"><div class="n">1,320+</div><div class="l">Commits</div></div>
+          <div class="stat"><div class="n">3,000</div><div class="l">Architectures searched</div></div>
+          <div class="stat"><div class="n">2</div><div class="l">Retractions published</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band-light" id="support">
+    <div class="wrap">
+      <div class="glass support reveal">
+        <svg class="support-mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+          <circle cx="50" cy="50" r="46" fill="none" stroke-width="1"></circle>
+          <circle cx="50" cy="50" r="32" fill="none" stroke-width="1"></circle>
+          <circle cx="50" cy="50" r="18" fill="none" stroke-width="1"></circle>
+        </svg>
+        <p class="eyebrow">[ Support this work ]</p>
+        <h2>What funding buys</h2>
+        <p>Compute. Specifically: roughly 250 H100&#8209;hours to re-run the architecture search at real sequence lengths (512&ndash;1024) on a real text corpus instead of synthetic tasks, and to train Mamba, RWKV, and Hyena baselines under a matched budget &mdash; the comparison this work doesn't have yet. Every result, positive or negative, ships openly: search code, the full candidate library, and the writeup.</p>
+        <div class="contact">
+          <a class="btn btn-solid" href="mailto:sunghunkwag@gmail.com">sunghunkwag@gmail.com</a>
+          <a class="btn btn-ghost" href="https://github.com/sunghunkwag" target="_blank" rel="noopener">github.com/sunghunkwag</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="wrap reveal">&ldquo;Failure is signal, not noise.&rdquo;</footer>
 
 </div>
 
