@@ -3,20 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sung Hun Kwag — Independent AI Researcher (Recursive Self-Improvement &amp; Architecture Search)</title>
-<meta name="description" content="Sung Hun Kwag is an independent, unaffiliated AI researcher in South Korea working on recursive self-improvement (RSI) and neural architecture search. Portfolio of validated results and published retractions, with 23 open-source repositories on GitHub.">
+<title>Intelligence Research Project — Recursive Self-Improvement &amp; Architecture Search (Sung Hun Kwag)</title>
+<meta name="description" content="An independent intelligence research project by Sung Hun Kwag, working on recursive self-improvement (RSI) and neural architecture search in South Korea. Validated results and published retractions, with 23 open-source repositories on GitHub.">
 <meta name="keywords" content="recursive self-improvement, RSI, neural architecture search, attention-free, independent AI researcher, AGI research, open source AI, Sung Hun Kwag, program synthesis, validation-gated search">
 <meta name="author" content="Sung Hun Kwag">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://sunghunkwag.github.io/">
 <meta name="google-site-verification" content="VLRR7e_mlywf18lUX8r34llUfazIfXLyenjHkKhW1Kw" />
 
-<meta property="og:type" content="profile">
-<meta property="og:title" content="Sung Hun Kwag — Independent AI Researcher">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Intelligence Research Project — Sung Hun Kwag">
 <meta property="og:description" content="Recursive self-improvement &amp; architecture search research. 23 repositories, 3,000 architectures searched, 2 of his own results retracted and published anyway.">
 <meta property="og:url" content="https://sunghunkwag.github.io/">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Sung Hun Kwag — Independent AI Researcher">
+<meta name="twitter:title" content="Intelligence Research Project — Sung Hun Kwag">
 <meta name="twitter:description" content="Recursive self-improvement &amp; architecture search research, built and verified in the open.">
 
 <script type="application/ld+json">
@@ -358,6 +358,11 @@
   .metric-row .lbl{font-size:11px;color:var(--ink-soft);display:block;margin-top:3px;letter-spacing:.02em;}
   .entry p{margin:0;font-size:15px;color:var(--ink-soft);max-width:64ch;}
   .entry p strong{color:var(--ink);font-weight:600;}
+  .metric-scope{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-faint);letter-spacing:.02em;margin:-4px 0 0;}
+  .entry-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .entry-date{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--ink-faint);letter-spacing:.03em;white-space:nowrap;}
+  .entry-evidence{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.03em;white-space:nowrap;text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:1px;color:var(--ink-soft);}
+  .entry-evidence:hover{color:var(--signal);border-color:var(--signal);}
 
   /* ---------- stats ---------- */
   .stats-wrap{padding:18px;}
@@ -432,14 +437,14 @@
 
   <nav class="topnav">
     <div class="wrap topnav-inner">
-      <span class="topnav-mark mono">Sung Hun Kwag</span>
+      <span class="topnav-mark mono">Intelligence Research Project</span>
       <a class="btn btn-solid" href="#support">Support this work</a>
     </div>
   </nav>
 
   <header class="hero-beat wrap">
     <p class="eyebrow">[ Independent AI Researcher ]</p>
-    <h1>Sung Hun Kwag</h1>
+    <h1>Intelligence Research Project</h1>
     <p class="sub">Recursive self-improvement &amp; architecture search &middot; Gapyeong, South Korea</p>
     <div class="links">
       <a href="https://github.com/sunghunkwag" target="_blank" rel="noopener">github.com/sunghunkwag</a>
@@ -461,18 +466,24 @@
     <div class="wrap">
       <div class="log-group">
         <h2>Validated</h2>
+        <p class="log-note reveal">&ldquo;Validated&rdquo; means the result survives a stated counterfactual or held-out test I can point to &mdash; not a badge I award myself. Each entry links to that evidence.</p>
 
         <article class="reveal">
           <div class="glass entry">
             <div class="entry-head">
               <span class="entry-tag">attention-free-sequence-model</span>
-              <span class="status ok"><i class="led"></i>Validated</span>
+              <span class="entry-meta">
+                <span class="entry-date">Updated Jun 2026</span>
+                <a class="entry-evidence" href="https://github.com/sunghunkwag/attention-free-sequence-model#limitations" target="_blank" rel="noopener">Evidence &rarr;</a>
+                <span class="status ok"><i class="led"></i>Validated</span>
+              </span>
             </div>
             <div class="metric-row">
               <span><span class="num">97.6%</span><span class="lbl">search winner</span></span>
               <span><span class="num base">64.8%</span><span class="lbl">transformer baseline</span></span>
             </div>
-            <p><strong>3,000 candidate architectures</strong> searched across 45 atomic mechanisms, evaluated on three long-range synthetic tasks. The winner uses none of the 5 hand-designed mechanisms tried first. Open question: sequence lengths of 32&ndash;64 only, no Mamba/RWKV/Hyena comparison yet &mdash; that's what the next round of compute is for.</p>
+            <p class="metric-scope">3 synthetic long-range tasks &middot; sequence length 32&ndash;64 &middot; no Mamba / RWKV / Hyena comparison yet</p>
+            <p><strong>3,000 candidate architectures</strong> searched across 45 atomic mechanisms &mdash; 99.6% evaluated successfully, top 10% re-run at full length. The winner uses none of the 5 hand-designed mechanisms tried first. Real-scale comparison against subquadratic baselines is what the next round of compute is for.</p>
           </div>
         </article>
 
@@ -480,7 +491,11 @@
           <div class="glass entry">
             <div class="entry-head">
               <span class="entry-tag">rsi-bench</span>
-              <span class="status"><i class="led"></i>Active</span>
+              <span class="entry-meta">
+                <span class="entry-date">Updated Mar 2026</span>
+                <a class="entry-evidence" href="https://github.com/sunghunkwag/rsi-bench/actions/workflows/tests.yml" target="_blank" rel="noopener">74 tests &rarr;</a>
+                <span class="status"><i class="led"></i>Active</span>
+              </span>
             </div>
             <p>A <strong>multi-axis benchmark</strong> for recursive self-improvement &mdash; scoring self-modification depth, improvement trajectories, operator discovery, meta-adaptation, safety, and autonomy in one suite.</p>
           </div>
@@ -490,9 +505,13 @@
           <div class="glass entry">
             <div class="entry-head">
               <span class="entry-tag">rsi-metaforge-core</span>
-              <span class="status ok"><i class="led"></i>Validated</span>
+              <span class="entry-meta">
+                <span class="entry-date">Updated Jul 2026</span>
+                <a class="entry-evidence" href="https://github.com/sunghunkwag/rsi-metaforge-core/blob/main/docs/05_limitations.md" target="_blank" rel="noopener">Gates &amp; limits &rarr;</a>
+                <span class="status ok"><i class="led"></i>Validated</span>
+              </span>
             </div>
-            <p><strong>Validation-gated program synthesis</strong> runtime: meta-meta learning loops, analogical transfer, grammar-mediated expansion, and anti-cheat verification built into the search loop itself &mdash; not bolted on after.</p>
+            <p><strong>Validation-gated program synthesis</strong> runtime: meta-meta learning loops, analogical transfer, grammar-mediated expansion, and anti-cheat verification built into the search loop itself &mdash; not bolted on after. 270 tests, re-run on every change via CI.</p>
           </div>
         </article>
 
@@ -500,9 +519,13 @@
           <div class="glass entry">
             <div class="entry-head">
               <span class="entry-tag">gated-self-improvement</span>
-              <span class="status ok"><i class="led"></i>Validated</span>
+              <span class="entry-meta">
+                <span class="entry-date">Updated Jul 2026</span>
+                <a class="entry-evidence" href="https://github.com/sunghunkwag/gated-self-improvement#how-to-read-a-claim-here" target="_blank" rel="noopener">Evidence &rarr;</a>
+                <span class="status ok"><i class="led"></i>Validated</span>
+              </span>
             </div>
-            <p><strong>LLM-free, deterministic, counterfactually-controlled</strong> recursive self-improvement engine. Every run's full results are published &mdash; nothing held back.</p>
+            <p><strong>LLM-free, deterministic, counterfactually-controlled</strong> recursive self-improvement engine. Every claim is gated against a matched control at equal compute &mdash; every run's full results are published, nothing held back.</p>
           </div>
         </article>
       </div>
@@ -519,9 +542,13 @@
           <div class="glass entry entry-bad">
             <div class="entry-head">
               <span class="entry-tag">rsi-metaforge-core &middot; phase ae</span>
-              <span class="status bad"><i class="led"></i>Retracted</span>
+              <span class="entry-meta">
+                <span class="entry-date">Caught pre&#8209;publication</span>
+                <a class="entry-evidence" href="https://github.com/sunghunkwag/rsi-metaforge-core/blob/main/docs/05_limitations.md" target="_blank" rel="noopener">Standing gate &rarr;</a>
+                <span class="status bad"><i class="led"></i>Retracted</span>
+              </span>
             </div>
-            <p>A <strong>15/15 adoption result.</strong> Traced back to the task generator and the search engine having been co-designed &mdash; the result was structurally guaranteed, not earned. Retracted before publication.</p>
+            <p>A <strong>15/15 adoption result.</strong> Traced back to the task generator and the search engine having been co-designed &mdash; the result was structurally guaranteed, not earned. Caught by the same claim-boundary discipline linked above before it ever shipped, so there's no separate postmortem file &mdash; only the standing rule that produced the catch.</p>
           </div>
         </article>
 
@@ -529,9 +556,13 @@
           <div class="glass entry entry-bad">
             <div class="entry-head">
               <span class="entry-tag">gated-self-improvement</span>
-              <span class="status bad"><i class="led"></i>Retracted</span>
+              <span class="entry-meta">
+                <span class="entry-date">Updated Jul 2026</span>
+                <a class="entry-evidence" href="https://github.com/sunghunkwag/gated-self-improvement/blob/main/results/UPGRADE_RESULTS.md" target="_blank" rel="noopener">Postmortem &rarr;</a>
+                <span class="status bad"><i class="led"></i>Retracted</span>
+              </span>
             </div>
-            <p>A <strong>compounding-improvement claim</strong> resting on a 5&times; compute mismatch between control and treatment runs. Found the mismatch, retracted the claim it supported.</p>
+            <p>A <strong>compounding-improvement claim</strong> resting on a 5&times; compute mismatch between control and treatment runs (the original chain measured &minus;2.08 tasks of self&#8209;harm, p&lt;1e&#8209;4). Found the mismatch, repaired the mechanism, retracted the original claim, and republished the corrected result with the failure left in the record.</p>
           </div>
         </article>
       </div>
@@ -561,9 +592,10 @@
         </svg>
         <p class="eyebrow">[ Support this work ]</p>
         <h2>What funding buys</h2>
-        <p>Compute. Specifically: roughly 250 H100&#8209;hours to re-run the architecture search at real sequence lengths (512&ndash;1024) on a real text corpus instead of synthetic tasks, and to train Mamba, RWKV, and Hyena baselines under a matched budget &mdash; the comparison this work doesn't have yet. Every result, positive or negative, ships openly: search code, the full candidate library, and the writeup.</p>
+        <p>Compute. Specifically: roughly 250 H100&#8209;hours &mdash; <strong>about $750&ndash;1,000 at current spot rates</strong> &mdash; to re-run the architecture search at real sequence lengths (512&ndash;1024) on a real text corpus instead of synthetic tasks, and to train Mamba, RWKV, and Hyena baselines under a matched budget. Every result, positive or negative, ships openly: search code, the full candidate library, and the writeup.</p>
+        <p class="trackline" style="margin-top:-10px;margin-bottom:22px;">Payment: wire / Wise transfer, arranged by email &mdash; bank and tax-residency details sent privately, no platform in between.</p>
         <div class="contact">
-          <a class="btn btn-solid" href="mailto:sunghunkwag@gmail.com">sunghunkwag@gmail.com</a>
+          <a class="btn btn-solid" href="mailto:sunghunkwag@gmail.com">Email for transfer details</a>
           <a class="btn btn-ghost" href="https://github.com/sunghunkwag" target="_blank" rel="noopener">github.com/sunghunkwag</a>
         </div>
       </div>
