@@ -1,6 +1,6 @@
 # Intelligence Research Project
 
-English-language website for [Sung Hun Kwag's independent AI research](https://sunghunkwag.github.io/), intended for a worldwide audience.
+English-language website for [Intelligence Research Project independent AI research](https://sunghunkwag.github.io/), intended for a worldwide audience.
 
 - [Homepage](https://sunghunkwag.github.io/): researcher introduction, project evidence, retractions, and research support.
 - [Research areas](https://sunghunkwag.github.io/research/): recursive self-improvement, neural architecture search, attention-free sequence models, and validation-gated program synthesis.
@@ -37,3 +37,7 @@ The [attention-free sequence model note](https://sunghunkwag.github.io/research/
 Run `node --test tests/site.test.mjs` with Node.js 22 or later. A read-only GitHub Actions workflow checks page metadata, internal links and fragments, sitemap coverage, structured-data references, and content visibility on each pull request and push. These checks prevent technical regressions; they do not measure ranking or prove Google indexing.
 
 Before adding a research note, include primary evidence and clearly distinguish a reported result, a calculation, and a planned experiment. Update the sitemap and link the note from an existing page. Use meaningful titles for readers; do not create near-duplicate pages for keyword variants.
+
+## Project identity
+
+Use **Intelligence Research Project** as the public identity and homepage heading. Do not introduce the owner’s personal name into visible copy, page titles, social metadata, or structured data. Keep the existing repository and contact destinations. The visual system uses dark forest charcoal, warm ivory, restrained brass accents, editorial serif headings, and a code-native research-loop illustration.

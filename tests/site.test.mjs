@@ -114,3 +114,12 @@ test('Homepage preserves both original and active Search Console verification ta
   assert.ok(tokens.includes('VLRR7e_mlywf18lUX8r34llUfazIfXLyenjHkKhW1Kw'));
   assert.ok(tokens.includes('NF-4K5jGPvN4lWdqnNApFgtFtNAsVajT7kvSBKEvx50'));
 });
+
+test('Public identity remains the project rather than its owner', () => {
+  const heading = read('index.html').match(/<h1[^>]*>([\s\S]*?)<\/h1>/)[1].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+  assert.equal(heading, 'Intelligence Research Project');
+  for (const file of indexable) {
+    assert.doesNotMatch(read(file), /Sung Hun Kwag/i, file);
+    assert.match(read(file), /"@type": "ResearchProject"/, file);
+  }
+});

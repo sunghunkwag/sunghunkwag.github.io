@@ -3,36 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Attention-Free AI Models: Architecture Search Results | Sung Hun Kwag</title>
+<title>Attention-Free AI Models: Architecture Search Results | Intelligence Research Project</title>
 <meta name="description" content="A research note on 3,000 attention-free model candidates: task-level results, benchmark code, reproducibility caveats, and limits of the transformer comparison.">
-<meta name="author" content="Sung Hun Kwag">
+<meta name="author" content="Intelligence Research Project">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="https://sunghunkwag.github.io/research/attention-free-sequence-model/">
 <meta name="google-site-verification" content="VLRR7e_mlywf18lUX8r34llUfazIfXLyenjHkKhW1Kw">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Intelligence Research Project">
-<meta property="og:title" content="Attention-Free AI Models: Architecture Search Results | Sung Hun Kwag">
+<meta property="og:title" content="Attention-Free AI Models: Architecture Search Results | Intelligence Research Project">
 <meta property="og:description" content="A research note on 3,000 attention-free model candidates: task-level results, benchmark code, reproducibility caveats, and limits of the transformer comparison.">
 <meta property="og:url" content="https://sunghunkwag.github.io/research/attention-free-sequence-model/">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Attention-Free AI Models: Architecture Search Results | Sung Hun Kwag">
+<meta name="twitter:title" content="Attention-Free AI Models: Architecture Search Results | Intelligence Research Project">
 <meta name="twitter:description" content="A research note on 3,000 attention-free model candidates: task-level results, benchmark code, reproducibility caveats, and limits of the transformer comparison.">
-<meta name="theme-color" content="#14161a">
+<meta name="theme-color" content="#141b1b">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/assets/site.css">
 <script type="application/ld+json">{
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "Person",
-      "@id": "https://sunghunkwag.github.io/#researcher",
-      "name": "Sung Hun Kwag",
+      "@type": "ResearchProject",
+      "@id": "https://sunghunkwag.github.io/#project",
+      "name": "Intelligence Research Project",
       "url": "https://sunghunkwag.github.io/",
       "sameAs": [
         "https://github.com/sunghunkwag"
       ],
-      "jobTitle": "Independent AI Researcher",
-      "description": "Independent, unaffiliated AI researcher studying recursive self-improvement, neural architecture search, and validation-gated program synthesis.",
+      "description": "An independent, open-source AI research project studying recursive self-improvement, neural architecture search, and validation-gated program synthesis.",
       "knowsAbout": [
         "Artificial intelligence research",
         "Recursive self-improvement",
@@ -47,17 +46,16 @@
       "@id": "https://sunghunkwag.github.io/#website",
       "url": "https://sunghunkwag.github.io/",
       "name": "Intelligence Research Project",
-      "alternateName": "Sung Hun Kwag AI Research",
       "inLanguage": "en",
       "publisher": {
-        "@id": "https://sunghunkwag.github.io/#researcher"
+        "@id": "https://sunghunkwag.github.io/#project"
       }
     },
     {
       "@type": "WebPage",
       "@id": "https://sunghunkwag.github.io/research/attention-free-sequence-model/#webpage",
       "url": "https://sunghunkwag.github.io/research/attention-free-sequence-model/",
-      "name": "Attention-Free AI Models: Architecture Search Results | Sung Hun Kwag",
+      "name": "Attention-Free AI Models: Architecture Search Results | Intelligence Research Project",
       "description": "A research note on 3,000 attention-free model candidates: task-level results, benchmark code, reproducibility caveats, and limits of the transformer comparison.",
       "inLanguage": "en",
       "isPartOf": {
@@ -79,7 +77,7 @@
       "dateModified": "2026-09-21",
       "inLanguage": "en",
       "author": {
-        "@id": "https://sunghunkwag.github.io/#researcher"
+        "@id": "https://sunghunkwag.github.io/#project"
       },
       "mainEntityOfPage": {
         "@id": "https://sunghunkwag.github.io/research/attention-free-sequence-model/#webpage"
@@ -119,7 +117,7 @@
 </head>
 <body id="top"><a class="skip-link" href="#main">Skip to content</a><div class="page"><nav class="topnav" aria-label="Main navigation">
     <div class="wrap topnav-inner">
-      <a class="topnav-mark mono" href="/">Intelligence Research Project</a>
+      <a class="topnav-mark" href="/"><svg class="brand-symbol" width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 3 37 32H3Z M20 13 31 32 M20 13 9 32 M20 23v9" fill="none" stroke="currentColor" stroke-width="1.3"/></svg><span>Intelligence<br>Research Project</span></a>
       <div class="nav-links">
         <a href="/research/">Research</a>
         <a href="/#results">Results</a>
@@ -134,7 +132,7 @@
 <p class="eyebrow">Research note / Architecture search</p>
 <h1>Attention-free sequence models: what the architecture search actually shows</h1>
 <p class="sub">A guide to the reported results, the code behind them, and the limits of comparing a searched architecture with a transformer on short synthetic tasks.</p>
-<p class="article-meta">Research by <a href="/">Sung Hun Kwag</a> · Published <time datetime="2026-09-21">September 21, 2026</time></p>
+<p class="article-meta">A note from <a href="/">Intelligence Research Project</a> · Published <time datetime="2026-09-21">September 21, 2026</time></p>
 <p class="note">This note summarizes the project's published artifacts. It does not report a new benchmark run or an independent replication.</p>
 <div class="nav-links"><a href="#results-table">Results</a><a href="#mechanisms">Mechanisms</a><a href="#limitations">Limits</a><a href="#reproduce">Reproduce</a></div>
 </header>
@@ -191,6 +189,6 @@ python benchmarks/search_benchmark.py</code></pre>
 <div class="hero-actions"><a class="btn btn-solid" href="/research/">All research areas</a><a class="btn btn-ghost" href="/#failures">Failure log</a></div>
 </div></section>
 </article></main><footer class="band band-dark"><div class="wrap footer-inner">
-  <p>Intelligence Research Project<br><span class="footer-note">Independent AI research by Sung Hun Kwag.</span></p>
+  <p>Intelligence Research Project<br><span class="footer-note">Independent research. Open evidence.</span></p>
   <div class="nav-links"><a href="/research/">Research areas</a><a href="https://github.com/sunghunkwag">GitHub</a><a href="mailto:sunghunkwag@gmail.com">Contact</a><a href="#top">Back to top ↑</a></div>
   </div></footer></div></body></html>
