@@ -29,3 +29,11 @@ Search Console submission requires the owner's Google session; it is not perform
 Update sitemap lastmod only when a page's substantive content changes. Add new canonical pages to the sitemap as they are published. Keep structured data aligned with visible content; do not add invented affiliations, publications, awards, or ratings.
 
 References: [Google SEO starter guide](https://developers.google.com/search/docs/fundamentals/seo-starter-guide), [sitemaps](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap), [structured data guidelines](https://developers.google.com/search/docs/appearance/structured-data/sd-policies).
+
+## Research notes and regression checks
+
+The [attention-free sequence model note](https://sunghunkwag.github.io/research/attention-free-sequence-model/) includes a task-level results table, downloadable CSV, pinned source links, a reproducibility guide, and explicit interpretation limits. These are reported project results, not a new independent benchmark run.
+
+Run `node --test tests/site.test.mjs` with Node.js 22 or later. A read-only GitHub Actions workflow checks page metadata, internal links and fragments, sitemap coverage, structured-data references, and content visibility on each pull request and push. These checks prevent technical regressions; they do not measure ranking or prove Google indexing.
+
+Before adding a research note, include primary evidence and clearly distinguish a reported result, a calculation, and a planned experiment. Update the sitemap and link the note from an existing page. Use meaningful titles for readers; do not create near-duplicate pages for keyword variants.

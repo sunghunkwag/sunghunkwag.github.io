@@ -435,3 +435,20 @@ main:focus{outline:none;}
 @media(max-width:700px){.topic-grid{grid-template-columns:1fr;}.hero-beat{padding-block:54px;}.band .wrap{padding-block:44px;}.topnav-inner{gap:10px;}.nav-links{gap:4px 18px;}.entry{padding:22px 20px;}.thesis-card,.support{padding:26px 22px;}.hero-actions .btn{padding:12px 20px;}.metric-row{flex-wrap:wrap;}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;}}
 @media print{#ambient,.topnav,.skip-link,.hero-actions{display:none;}.band{background:white!important;--ink:#111;--ink-soft:#333;--surface:white;--line:#ddd;--signal:#234;--good:#164;--fail:#922;}.band .wrap{padding-block:24px;}.glass{backdrop-filter:none;}.entry{break-inside:avoid;}}
+
+/* Research notes keep evidence tables and code readable on small screens. */
+.hero-domain{display:block;font-size:.45em;line-height:1.2;letter-spacing:-.02em;color:var(--ink-soft);margin-top:14px;}
+.article-header{padding-top:42px;}
+.article-header h1{font-size:clamp(34px,5vw,58px);line-height:1.12;max-width:24ch;}
+.breadcrumbs{display:flex;gap:10px;flex-wrap:wrap;font-size:13px;margin-bottom:32px;}
+.article-meta{font-size:14px;color:var(--ink-soft);}
+.article-header .note{max-width:76ch;font-size:15px;}
+.table-scroll{overflow-x:auto;margin-block:24px;border:1px solid var(--line);}
+.table-scroll:focus-visible{outline:2px solid var(--signal);outline-offset:4px;}
+table{border-collapse:collapse;width:100%;min-width:640px;font-variant-numeric:tabular-nums;}
+caption{text-align:left;padding:18px;font-size:14px;color:var(--ink-soft);}
+th,td{padding:14px 18px;border-top:1px solid var(--line);text-align:right;}
+th:first-child{text-align:left;}thead th{font-size:13px;}tbody tr:last-child{font-weight:700;background:var(--surface);}
+pre{white-space:pre;overflow-x:auto;padding:24px;background:var(--surface);border:1px solid var(--line);max-width:100%;}
+code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.9em;overflow-wrap:anywhere;}
+pre code{overflow-wrap:normal;}

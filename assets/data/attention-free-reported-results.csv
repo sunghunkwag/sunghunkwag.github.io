@@ -1,0 +1,5 @@
+task,transformer_accuracy_percent,afn_v3_accuracy_percent,discovered_accuracy_percent,gain_percentage_points
+Nested Depth,92.5,98.4,99.8,7.3
+MultiScale Copy,52.2,94.0,98.6,46.4
+Hierarchical Parity,49.7,50.7,94.4,44.7
+Mean accuracy,64.8,81.0,97.6,32.8
