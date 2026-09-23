@@ -2,7 +2,7 @@
 
 English-language website for [Intelligence Research Project independent AI research](https://sunghunkwag.github.io/), intended for a worldwide audience.
 
-- [Homepage](https://sunghunkwag.github.io/): researcher introduction, project evidence, retractions, and research support.
+- [Homepage](https://sunghunkwag.github.io/): project introduction, project evidence, retractions, and research support.
 - [Research areas](https://sunghunkwag.github.io/research/): recursive self-improvement, neural architecture search, attention-free sequence models, and validation-gated program synthesis.
 
 ## Development
@@ -13,7 +13,7 @@ Preserve evidence links and scope limitations when updating results. A synthetic
 
 ## Search setup
 
-Both indexable pages have a unique English title and description, an absolute canonical URL, Open Graph / Twitter metadata, and linked WebSite, WebPage, and Person JSON-LD. The existing Google verification token is preserved. robots.txt allows crawling and advertises sitemap.xml. The custom 404 is noindex.
+All indexable pages have a unique English title and description, an absolute canonical URL, Open Graph / Twitter metadata, and linked WebSite, WebPage, and ResearchProject JSON-LD. The existing Google verification token is preserved. robots.txt allows crawling and advertises sitemap.xml. The custom 404 is noindex.
 
 No regional targeting or Korean-language page is configured. English content is available globally. Google does not use the keywords meta tag for ranking, so keyword stuffing is deliberately avoided.
 
@@ -45,3 +45,9 @@ Use **Intelligence Research Project** as the public identity and homepage headin
 ## Motion
 
 The hero projects a rotating four-dimensional Clifford torus through 3D into a canvas. It is conceptual artwork, not research data. Fine pointers adjust the view with eased movement. A visible control pauses and resumes it, reduced-motion preferences start it paused, and offscreen or background tabs suspend rendering. The original SVG remains the fallback. Research text is present in HTML and visible even when JavaScript fails. Intersection-triggered entrances use the Web Animations API without adding hidden-content classes; section navigation uses native smooth scrolling.
+
+## Citable research library
+
+Three notes connect architecture-search results, RSI-Bench methods, and matched-compute RSI results to immutable sources. BibTeX and CSL JSON cite the explanatory webpages, distinct from software authorship. CSV downloads preserve reported values and limitations.
+
+The RSI-Bench note records one verified external bibliographic mention from Mindverse (August 23, 2026; checked September 23, 2026). It is not described as peer review, independent replication, endorsement, or a verified clickable backlink. Do not turn mentions or mirrored repository pages into invented scientific validation.

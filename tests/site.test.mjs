@@ -127,3 +127,21 @@ test('Public identity remains the project rather than its owner', () => {
     assert.match(read(file), /"@type": "ResearchProject"/, file);
   }
 });
+
+test('Citations identify the correct note and reported results retain their contrasts', () => {
+  for (const slug of ['attention-free-sequence-model', 'rsi-bench', 'gated-self-improvement']) {
+    const url = origin + '/research/' + slug + '/';
+    const citation = JSON.parse(read('assets/citations/' + slug + '.json'))[0];
+    assert.equal(citation.URL, url);
+    assert.deepEqual(citation.author, [{ literal: 'Intelligence Research Project' }]);
+    assert.ok(read('assets/citations/' + slug + '.bib').includes(url));
+    assert.ok(ids(read('research/' + slug + '/index.html')).includes('cite'));
+  }
+  const csv = read('assets/data/gated-rsi-reported-results.csv').trim().split('\n').slice(1).map(row => row.split(','));
+  assert.equal(csv.length, 8);
+  assert.deepEqual(csv.map(row => Number(row[3])), [1.55, 1.47, 2.18, 1.67, -2.08, -2.03, 0.10, -0.37]);
+  assert.deepEqual(csv.slice(-2).map(row => row[4]), ['ns', 'ns']);
+  assert.ok(csv.every(row => row[5] === '9e67b2159b174fa4f263a78aac28bf18b00b20fc'));
+  assert.match(read('research/rsi-bench/index.html'), /Missing is not zero/);
+  assert.match(read('research/rsi-bench/index.html'), /does not claim a clickable backlink/);
+});
