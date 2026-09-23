@@ -9,8 +9,10 @@
   let paused = reduced.matches;
   let frame = 0, lastTime = 0, phase = 0, visible = true;
   let pointer = { x: 0, y: 0 }, target = { x: 0, y: 0 };
+  let gpu = null;
+  try { gpu = canvas && window.createResearchSculpture?.(canvas); } catch { /* Keep fallback. */ }
   let ctx = null;
-  try { ctx = canvas?.getContext('2d', { alpha: true }); } catch { /* Keep SVG. */ }
+  try { if (!gpu) ctx = canvas?.getContext('2d', { alpha: true }); } catch { /* Keep SVG. */ }
 
   // A Clifford torus in four dimensions, rotated in XW and YZ planes,
   // then perspective-projected through 3D into the canvas.
@@ -28,6 +30,7 @@
     return { x: 250 + x * 108 * depth3, y: 250 + y * 108 * depth3, z };
   }
   function draw() {
+    if (gpu) { gpu.draw(phase, pointer); return; }
     if (!ctx) return;
     ctx.clearRect(0, 0, 500, 500);
     const glow = ctx.createRadialGradient(250, 250, 12, 250, 250, 228);
@@ -75,17 +78,19 @@
     pointer.y += (target.y - pointer.y) * Math.min(1, delta * 5);
     draw(); frame = requestAnimationFrame(tick);
   }
-  function start() { if (ctx && !frame && !paused && visible && !document.hidden) frame = requestAnimationFrame(tick); }
+  function start() { if ((gpu || ctx) && !frame && !paused && visible && !document.hidden) frame = requestAnimationFrame(tick); }
   const entranceAnimations = new Set();
   function state() {
     document.documentElement.classList.toggle('motion-paused', paused);
     if (control) { control.textContent = paused ? 'Play motion' : 'Pause motion'; control.setAttribute('aria-pressed', String(paused)); }
     if (paused) { stop(); entranceAnimations.forEach(a => a.finish()); entranceAnimations.clear(); } else start();
   }
-  if (ctx) {
+  if (gpu || ctx) {
     const resize = () => {
       const size = Math.max(1, Math.round(canvas.getBoundingClientRect().width * Math.min(devicePixelRatio || 1, 1.75)));
-      canvas.width = canvas.height = size; ctx.setTransform(size / 500, 0, 0, size / 500, 0, 0); draw();
+      if (gpu) gpu.resize(size);
+      else { canvas.width = canvas.height = size; ctx.setTransform(size / 500, 0, 0, size / 500, 0, 0); }
+      draw();
     };
     resize(); figure.classList.add('has-manifold');
     if ('ResizeObserver' in window) new ResizeObserver(resize).observe(canvas);

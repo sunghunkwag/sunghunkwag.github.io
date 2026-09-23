@@ -108,7 +108,7 @@ test('Research content does not depend on a JavaScript reveal to be visible', ()
   assert.doesNotMatch(read('assets/site.css'), /\.reveal\s*\{[^}]*opacity\s*:\s*0(?:\D|$)/);
   for (const file of indexable) {
     const scripts = [...read(file).matchAll(/<script([^>]*)>/g)].map(m => m[1]);
-    assert.ok(scripts.every(s => s.includes('type="application/ld+json"') || (s.includes('src="/assets/motion.js') && s.includes('defer'))), file);
+    assert.ok(scripts.every(s => s.includes('type="application/ld+json"') || ((s.includes('src="/assets/motion.js') || s.includes('src="/assets/sculpture.js')) && s.includes('defer'))), file);
   }
   assert.doesNotMatch(read('assets/site.css'), /(?:\.reveal|\[data-motion[^]*?)\s*\{[^}]*visibility\s*:\s*hidden/);
 });
@@ -137,7 +137,7 @@ test('Citations identify the correct note and reported results retain their cont
     assert.ok(read('assets/citations/' + slug + '.bib').includes(url));
     assert.ok(ids(read('research/' + slug + '/index.html')).includes('cite'));
   }
-  const csv = read('assets/data/gated-rsi-reported-results.csv').trim().split('\n').slice(1).map(row => row.split(','));
+  const csv = read('assets/data/gated-rsi-reported-results.csv').trim().split(/\r?\n/).slice(1).map(row => row.split(','));
   assert.equal(csv.length, 8);
   assert.deepEqual(csv.map(row => Number(row[3])), [1.55, 1.47, 2.18, 1.67, -2.08, -2.03, 0.10, -0.37]);
   assert.deepEqual(csv.slice(-2).map(row => row[4]), ['ns', 'ns']);

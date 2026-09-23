@@ -176,3 +176,8 @@ pre code{overflow-wrap:normal;}
 .motion-paused .btn,.motion-paused .topic-card,.motion-paused .entry{transition:none;transform:none;}
 @media(prefers-reduced-motion:reduce){.reading-progress{display:none;}}
 @media print{.manifold-canvas,.motion-toggle,.reading-progress{display:none!important;}}
+
+/* Studio-lit research sculpture. */
+.manifold-stage{background:radial-gradient(ellipse at 50% 47%,#749a7920,transparent 66%);}
+.manifold-stage::after{content:"";position:absolute;left:24%;right:24%;height:6%;bottom:7%;background:#030c0977;border-radius:50%;filter:blur(15px);z-index:-1;pointer-events:none;}
+@media(min-width:1051px){.hero-grid{grid-template-columns:minmax(0,1.3fr) minmax(0,1.1fr);gap:20px;}}
