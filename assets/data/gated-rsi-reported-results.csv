@@ -1,0 +1,9 @@
+contrast,environment,n,task_difference,p_value,source_revision
+R5PLUS_minus_ROUND1_5X,local,40,1.55,<0.0001,9e67b2159b174fa4f263a78aac28bf18b00b20fc
+R5PLUS_minus_ROUND1_5X,kaggle,60,1.47,0.00005,9e67b2159b174fa4f263a78aac28bf18b00b20fc
+R5PLUS_minus_ROUND5,local,40,2.18,<0.0001,9e67b2159b174fa4f263a78aac28bf18b00b20fc
+R5PLUS_minus_ROUND5,kaggle,60,1.67,0.00005,9e67b2159b174fa4f263a78aac28bf18b00b20fc
+ROUND5_minus_COLD,local,40,-2.08,<0.0001,9e67b2159b174fa4f263a78aac28bf18b00b20fc
+ROUND5_minus_COLD,kaggle,60,-2.03,0.00005,9e67b2159b174fa4f263a78aac28bf18b00b20fc
+R5PLUS_minus_COLD,local,40,0.1,ns,9e67b2159b174fa4f263a78aac28bf18b00b20fc
+R5PLUS_minus_COLD,kaggle,60,-0.37,ns,9e67b2159b174fa4f263a78aac28bf18b00b20fc
