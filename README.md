@@ -7,7 +7,7 @@ English-language website for [Intelligence Research Project independent AI resea
 
 ## Development
 
-Static HTML and CSS, with no build step, JavaScript dependency, external font request, or package installation required. Serve the repository root using any static HTTP server. Internal URLs are root-relative, as required for this GitHub Pages user site. Shared styles are in assets/site.css.
+Static HTML and CSS with an optional, dependency-free motion script. No build step, external font request, or package installation is required. Serve the repository root using any static HTTP server. Internal URLs are root-relative, as required for this GitHub Pages user site. Shared styles are in assets/site.css.
 
 Preserve evidence links and scope limitations when updating results. A synthetic benchmark result must not be presented as general language-model superiority. The failure log is part of the research record.
 
@@ -34,10 +34,14 @@ References: [Google SEO starter guide](https://developers.google.com/search/docs
 
 The [attention-free sequence model note](https://sunghunkwag.github.io/research/attention-free-sequence-model/) includes a task-level results table, downloadable CSV, pinned source links, a reproducibility guide, and explicit interpretation limits. These are reported project results, not a new independent benchmark run.
 
-Run `node --test tests/site.test.mjs` with Node.js 22 or later. A read-only GitHub Actions workflow checks page metadata, internal links and fragments, sitemap coverage, structured-data references, and content visibility on each pull request and push. These checks prevent technical regressions; they do not measure ranking or prove Google indexing.
+Run `node --test tests/*.test.mjs` with Node.js 22 or later. A read-only GitHub Actions workflow checks page metadata, internal links and fragments, sitemap coverage, structured-data references, content visibility, and motion lifecycle behavior on each pull request and push. These checks prevent technical regressions; they do not measure ranking or prove Google indexing.
 
 Before adding a research note, include primary evidence and clearly distinguish a reported result, a calculation, and a planned experiment. Update the sitemap and link the note from an existing page. Use meaningful titles for readers; do not create near-duplicate pages for keyword variants.
 
 ## Project identity
 
 Use **Intelligence Research Project** as the public identity and homepage heading. Do not introduce the owner’s personal name into visible copy, page titles, social metadata, or structured data. Keep the existing repository and contact destinations. The visual system uses dark forest charcoal, warm ivory, restrained brass accents, editorial serif headings, and a code-native research-loop illustration.
+
+## Motion
+
+The hero projects a rotating four-dimensional Clifford torus through 3D into a canvas. It is conceptual artwork, not research data. Fine pointers adjust the view with eased movement. A visible control pauses and resumes it, reduced-motion preferences start it paused, and offscreen or background tabs suspend rendering. The original SVG remains the fallback. Research text is present in HTML and visible even when JavaScript fails. Intersection-triggered entrances use the Web Animations API without adding hidden-content classes; section navigation uses native smooth scrolling.

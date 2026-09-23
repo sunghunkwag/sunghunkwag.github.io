@@ -15,4 +15,4 @@ jobs:
         with:
           node-version: '22'
       - name: Validate static site and search metadata
-        run: node --test tests/site.test.mjs
+        run: node --test tests/*.test.mjs
