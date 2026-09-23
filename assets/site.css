@@ -155,3 +155,20 @@ pre code{overflow-wrap:normal;}
 @media(max-width:370px){.hero-copy h1{font-size:45px;}.hero-actions{align-items:flex-start;flex-direction:column;gap:12px;}.hero-foot{align-items:flex-start;flex-direction:column;gap:12px;}.topnav .nav-links{gap:20px;}.entry-meta{font-size:9px;}.hero-beat h1{font-size:37px;}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto;}*,*::before,*::after{animation:none!important;transition:none!important;}}
 @media print{.topnav,.hero-figure,.hero-foot,.skip-link,.hero-actions{display:none;}.wrap{width:100%;}.home-hero,.band-dark{background:white;color:#111;--ink:#111;--ink-soft:#333;--line:#ccc;--surface:white;--good:#164;--signal:#234;}.hero-grid{display:block;}.hero-copy h1 em,.hero-deck,.hero-description{color:#222;}.band .wrap{padding-block:30px;}.entry{break-inside:avoid;background:white;}.research-section p{color:#333;}}
+
+/* Interactive manifold and progressive motion. */
+.manifold-stage{position:relative;aspect-ratio:1;isolation:isolate;}
+.manifold-canvas{position:absolute;inset:0;width:100%;height:100%;display:none;}
+.has-manifold .manifold-canvas{display:block;}
+.has-manifold .research-orbit{opacity:0;}
+.manifold-stage .research-orbit{margin:0;}
+.motion-toggle{border:1px solid #ffffff30;background:transparent;color:#c8d0c3;font:10px/1.5 var(--mono);letter-spacing:.04em;padding:8px 12px;cursor:pointer;min-height:36px;transition:background .25s,border-color .25s;}
+.motion-toggle:hover{background:#ffffff0c;border-color:#c8b58e;}
+.motion-toggle[hidden]{display:none;}
+.reading-progress{position:fixed;inset:0 0 auto;height:2px;background:var(--brass);z-index:30;transform:scaleX(0);transform-origin:left;pointer-events:none;}
+.btn,.topic-card,.entry{transition:transform .45s cubic-bezier(.16,1,.3,1),background .25s,border-color .25s,box-shadow .45s;}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){.btn:hover{transform:translateY(-3px);box-shadow:0 8px 24px #00000012;}.topic-card:hover{transform:translateY(-5px);}.entry:hover{transform:translateY(-4px);border-color:#9caf9977;}.btn span,.text-link span{transition:transform .35s;}.btn:hover span,.text-link:hover span{transform:translate(3px,-2px);}}
+.motion-paused{scroll-behavior:auto;}
+.motion-paused .btn,.motion-paused .topic-card,.motion-paused .entry{transition:none;transform:none;}
+@media(prefers-reduced-motion:reduce){.reading-progress{display:none;}}
+@media print{.manifold-canvas,.motion-toggle,.reading-progress{display:none!important;}}

@@ -106,7 +106,11 @@ test('Research note retains evidence limitations and pinned source links', () =>
 
 test('Research content does not depend on a JavaScript reveal to be visible', () => {
   assert.doesNotMatch(read('assets/site.css'), /\.reveal\s*\{[^}]*opacity\s*:\s*0(?:\D|$)/);
-  for (const file of indexable) assert.doesNotMatch(read(file), /<script(?! type="application\/ld\+json")/);
+  for (const file of indexable) {
+    const scripts = [...read(file).matchAll(/<script([^>]*)>/g)].map(m => m[1]);
+    assert.ok(scripts.every(s => s.includes('type="application/ld+json"') || (s.includes('src="/assets/motion.js') && s.includes('defer'))), file);
+  }
+  assert.doesNotMatch(read('assets/site.css'), /(?:\.reveal|\[data-motion[^]*?)\s*\{[^}]*visibility\s*:\s*hidden/);
 });
 
 test('Homepage preserves both original and active Search Console verification tags', () => {
