@@ -1,4 +1,4 @@
-/* GPU-lit research sculpture. Procedural geometry; no library or network dependency. */
+/* Monochrome neural architecture and evaluation feedback. Procedural geometry; no library or network dependency. */
 (() => {
   'use strict';
   const vertex = [
@@ -7,7 +7,7 @@
     'varying vec3 vPosition; varying vec3 vNormal; varying vec2 vUV;',
     'void main(){',
     'vec3 p=uRotation*aPosition*uScale;',
-    'p.y+=sin(uTime*.28)*.055;',
+    'p.y+=.28+sin(uTime*.28)*.035;',
     'vPosition=p; vNormal=normalize(uRotation*aNormal); vUV=aUV;',
     'vec3 view=p-vec3(0.,0.,8.5);',
     'float near=.1; float far=40.; float f=2.41421356;',
@@ -30,51 +30,73 @@
     'return ((1.-f)*(1.-metal)*base/PI+d*g*f/max(4.*nl*nv,.001))*color*nl;',
     '}',
     'vec3 studio(vec3 r){',
-    'vec3 c=mix(vec3(.025,.055,.047),vec3(.34,.42,.36),smoothstep(-.5,.9,r.y));',
-    'float softbox=exp(-pow((r.x+.42)/.22,2.)-pow((r.y-.65)/.65,2.));',
-    'float strip=exp(-pow((r.x-.6)/.08,2.)-pow((r.y+.1)/.8,2.));',
-    'float rim=pow(max(dot(r,normalize(vec3(-.7,.2,-.5))),0.),18.);',
-    'return c+softbox*vec3(1.8,1.7,1.36)+strip*vec3(.6,1.5,1.25)+rim*vec3(1.4,.75,.32);',
+    'float sky=mix(.035,.3,smoothstep(-.5,.9,r.y));',
+    'float softbox=exp(-pow((r.x+.42)/.25,2.)-pow((r.y-.65)/.65,2.));',
+    'float strip=exp(-pow((r.x-.6)/.1,2.)-pow((r.y+.1)/.8,2.));',
+    'return vec3(sky+softbox*1.8+strip*.8);',
     '}',
     'void main(){',
     'vec3 n=normalize(vNormal); vec3 v=normalize(vec3(0.,0.,8.5)-vPosition);',
-    'float band=pow(.5+.5*sin(vUV.x*6.2831853*3.+.6),2.);',
-    'vec3 base=mix(vec3(.11,.25,.22),vec3(.7,.51,.26),smoothstep(.23,.85,band));',
-    'float metal=.78; float rough=.27;',
-    'if(uMaterial>.5){base=vec3(.56,.46,.26);rough=.3;metal=.88;}',
-    'vec3 color=light(n,v,normalize(vec3(-3.,5.,5.)-vPosition),vec3(4.5,4.1,3.3),base,metal,rough);',
-    'color+=light(n,v,normalize(vec3(4.,1.,1.)-vPosition),vec3(1.1,2.8,2.3),base,metal,rough);',
-    'color+=light(n,v,normalize(vec3(-2.,-3.,-2.)-vPosition),vec3(2.4,1.3,.55),base,metal,rough);',
+    'vec3 base=vec3(.38);float metal=.72;float rough=.32;',
+    'if(uMaterial>.5){base=vec3(.13);rough=.4;metal=.45;}',
+    'vec3 color=light(n,v,normalize(vec3(-3.,5.,5.)-vPosition),vec3(4.2),base,metal,rough);',
+    'color+=light(n,v,normalize(vec3(4.,1.,1.)-vPosition),vec3(2.),base,metal,rough);',
+    'color+=light(n,v,normalize(vec3(-2.,-3.,-2.)-vPosition),vec3(1.6),base,metal,rough);',
     'float nv=max(dot(n,v),0.);vec3 f=fresnel(nv,mix(vec3(.04),base,metal));',
-    'color+=studio(reflect(-v,n))*f*.8+base*.17;',
-    'float thread=pow(.5+.5*cos(vUV.y*6.2831853*32.),18.);',
-    'color*=.93+.07*thread;',
-    'float flow=pow(.5+.5*cos(vUV.x*6.2831853*3.-uTime*.38),34.);',
-    'float seam=pow(.5+.5*cos(vUV.y*6.2831853*3.),90.);',
-    'if(uMaterial<.5)color+=vec3(.44,.8,.61)*flow*seam*.5;',
+    'color+=studio(reflect(-v,n))*f*.8+base*.13;',
+    'float signal=exp(-pow((fract(uTime*.12)-vUV.x)/.075,2.));',
+    'color+=vec3(signal*(uMaterial>.5?.7:.32));',
     'gl_FragColor=vec4(pow(film(color),vec3(1./2.2)),1.);',
     '}'
   ].join('\n');
   const normalize=v=>{const l=Math.hypot(...v)||1;return v.map(x=>x/l);};
   const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
-  function knot(u){const r=1.62+.49*Math.cos(3*u);return [r*Math.cos(2*u),r*Math.sin(2*u),.72*Math.sin(3*u)];}
-  function mesh(halo=false) {
-    const vertices=[], indices=[], rings=halo?192:320, sides=halo?10:40;
-    for(let i=0;i<=rings;i++){
-      const u=i/rings*Math.PI*2;
-      const c=halo?[2.6*Math.cos(u),2.6*Math.sin(u)*.4,2.6*Math.sin(u)*.9165]:knot(u);
-      const before=halo?[2.6*Math.cos(u-.001),2.6*Math.sin(u-.001)*.4,2.6*Math.sin(u-.001)*.9165]:knot(u-.001);
-      const after=halo?[2.6*Math.cos(u+.001),2.6*Math.sin(u+.001)*.4,2.6*Math.sin(u+.001)*.9165]:knot(u+.001);
-      const t=normalize(after.map((x,k)=>x-before[k]));
-      const b=normalize(cross(t,halo?[0,.9165,-.4]:[Math.cos(2*u),Math.sin(2*u),0]));
-      const n=normalize(cross(b,t));
-      for(let j=0;j<=sides;j++){
-        const v=j/sides*Math.PI*2;
-        const norm=n.map((x,k)=>x*Math.cos(v)+b[k]*Math.sin(v));
-        const radius=halo?.012:.255;
-        vertices.push(...c.map((x,k)=>x+radius*norm[k]),...norm,i/rings,j/sides);
-        if(i<rings&&j<sides){const a=i*(sides+1)+j,d=a+sides+1;indices.push(a,d,a+1,d,d+1,a+1);}
+  // A conceptual candidate network, not a measured or deployed model.
+  const layers=[3,5,5,2].map((count,layer)=>Array.from({length:count},(_,i)=>({
+    p:[[-2.1,-.75,.75,2.1][layer],(i-(count-1)/2)*.58,layer===0?0:(i%2?.38:-.38)],
+    phase:layer/3*.82+.06, radius:layer===3?.21:.155
+  })));
+  const edges=[];
+  for(let l=0;l<3;l++)for(let i=0;i<layers[l].length;i++)for(let j=0;j<layers[l+1].length;j++){
+    if(l===2||Math.abs(i/(layers[l].length-1)-j/(layers[l+1].length-1))<.51)edges.push([layers[l][i],layers[l+1][j]]);
+  }
+  function mesh(links=false) {
+    const vertices=[],indices=[];
+    function surface(rings,sides,point){
+      const base=vertices.length/8;
+      for(let i=0;i<=rings;i++)for(let j=0;j<=sides;j++){
+        vertices.push(...point(i/rings,j/sides));
+        if(i<rings&&j<sides){const a=base+i*(sides+1)+j,d=a+sides+1;indices.push(a,d,a+1,d,d+1,a+1);}
       }
+    }
+    function tube(a,b,radius=.016){
+      const tangent=normalize(b.p.map((v,k)=>v-a.p[k]));
+      const n=normalize(cross(tangent,Math.abs(tangent[1])>.95?[1,0,0]:[0,1,0]));
+      const binormal=normalize(cross(tangent,n));
+      surface(16,10,(u,v)=>{
+        const angle=v*Math.PI*2,normal=n.map((x,k)=>x*Math.cos(angle)+binormal[k]*Math.sin(angle));
+        return [...a.p.map((x,k)=>x+(b.p[k]-x)*u+normal[k]*radius),...normal,a.phase+(b.phase-a.phase)*u,v];
+      });
+    }
+    if(!links){
+      for(const node of layers.flat())surface(24,32,(u,v)=>{
+        const theta=u*Math.PI,phi=v*Math.PI*2;
+        const normal=[Math.sin(theta)*Math.cos(phi),Math.cos(theta),Math.sin(theta)*Math.sin(phi)];
+        return [...node.p.map((x,k)=>x+normal[k]*node.radius),...normal,node.phase,v];
+      });
+    }else{
+      edges.forEach(([a,b])=>tube(a,b));
+      // Evaluation feeds the next search iteration along the lower return path.
+      let previous={p:[2.1,-.29,-.38],phase:.9};
+      const controls=[[2.1,-.29,-.38],[2.9,-2.35,0],[-2.9,-2.35,0],[-2.1,-.58,0]];
+      for(let i=1;i<=64;i++){
+        const t=i/64,q=1-t;
+        const next={p:[0,1,2].map(k=>q*q*q*controls[0][k]+3*q*q*t*controls[1][k]+3*q*t*t*controls[2][k]+t*t*t*controls[3][k]),phase:.9+t*.1};
+        tube(previous,next,.013);previous=next;
+      }
+      // Arrow tip at the return to candidate generation.
+      tube({p:[-2.39,-.9,0],phase:1},previous,.016);
+      tube({p:[-1.94,-1.02,0],phase:1},previous,.016);
     }
     return {vertices:new Float32Array(vertices),indices:new Uint16Array(indices)};
   }
@@ -113,8 +135,8 @@
     const draw=(time,pointer)=>{
       if(lost)return;
       gl.viewport(0,0,canvas.width,canvas.height);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(program);
-      gl.uniform1f(u.uTime,time);gl.uniform1f(u.uScale,1.13);
-      gl.uniformMatrix3fv(u.uRotation,false,rotation(-.38+pointer.y*.22,.38+time*.085+pointer.x*.32,-.36+Math.sin(time*.09)*.09));
+      gl.uniform1f(u.uTime,time);gl.uniform1f(u.uScale,1.25);
+      gl.uniformMatrix3fv(u.uRotation,false,rotation(-.16+pointer.y*.16,-.25+Math.sin(time*.18)*.1+pointer.x*.2,.035));
       for(const object of objects){
         gl.bindBuffer(gl.ARRAY_BUFFER,object.buffer);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,object.index);
         for(const {location,size,offset} of attributes){

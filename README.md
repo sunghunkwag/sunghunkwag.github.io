@@ -44,7 +44,7 @@ Use **Intelligence Research Project** as the public identity and homepage headin
 
 ## Motion
 
-The hero renders a high-resolution sculptural knot and orbital ring using WebGL, procedural jade/champagne materials, studio lighting, specular reflections, and tone mapping. It is conceptual artwork, not research data. Geometry is uploaded once; fine pointers adjust the view with eased movement. A visible control pauses and resumes it, reduced-motion preferences start it paused, and offscreen or background tabs suspend rendering. A 2D projected torus and the original SVG provide fallbacks; WebGL context restoration rebuilds GPU resources. Research text remains visible if JavaScript fails. Intersection-triggered entrances use the Web Animations API without hidden-content classes; section navigation uses native smooth scrolling.
+The hero depicts neural architecture search as a monochrome 3D node-and-connection network, with evaluation feedback to the next candidate. Silver surfaces, neutral lighting, and animated signal propagation clarify model layers and the iterative workflow. This is conceptual, not a measured model or experimental trace. Geometry is uploaded once; fine pointers adjust the view with eased movement. A visible control pauses and resumes it, reduced-motion preferences start it paused, and offscreen or background tabs suspend rendering. Both 2D canvas and static SVG fallbacks depict the same neural-network concept; WebGL context restoration rebuilds GPU resources. Research text remains visible if JavaScript fails. Intersection-triggered entrances use the Web Animations API without hidden-content classes; section navigation uses native smooth scrolling.
 
 ## Citable research library
 

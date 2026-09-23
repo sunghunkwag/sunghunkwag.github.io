@@ -39,7 +39,7 @@ function browser({ reduced = false, canvasAvailable = true } = {}) {
   };
 }
 
-test('Manifold renders finite geometry and changes over successive frames', () => {
+test('Network fallback renders finite geometry and changes over successive frames', () => {
   const b = browser();
   assert.equal(b.control.hidden, false);
   assert.ok(b.strokes().length > 20);
