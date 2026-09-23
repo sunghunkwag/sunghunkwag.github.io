@@ -19,7 +19,7 @@ function driver() {
  const renderer=window.createResearchSculpture(canvas);
  return {renderer,uploads,draws,events,canvas};
 }
-test('GPU meshes have finite unit normals and valid closed-surface indices',()=>{
+test('GPU meshes have finite unit normals and valid mesh indices',()=>{
  const d=driver();assert.equal(d.canvas.dataset.renderer,'webgl');assert.equal(d.uploads.length,4);
  for(let m=0;m<2;m++){
    const vertices=d.uploads[m*2].data,indices=d.uploads[m*2+1].data;

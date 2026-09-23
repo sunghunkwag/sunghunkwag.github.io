@@ -14,59 +14,27 @@
   let ctx = null;
   try { if (!gpu) ctx = canvas?.getContext('2d', { alpha: true }); } catch { /* Keep SVG. */ }
 
-  // A Clifford torus in four dimensions, rotated in XW and YZ planes,
-  // then perspective-projected through 3D into the canvas.
-  function project(u, v, t) {
-    let x = Math.cos(u), y = Math.sin(u), z = Math.cos(v), w = Math.sin(v);
-    const a = t * .23, b = t * .17 + .55;
-    [x, w] = [x * Math.cos(a) - w * Math.sin(a), x * Math.sin(a) + w * Math.cos(a)];
-    [y, z] = [y * Math.cos(b) - z * Math.sin(b), y * Math.sin(b) + z * Math.cos(b)];
-    const depth4 = 2.8 / (2.8 - w * .65);
-    x *= depth4; y *= depth4; z *= depth4;
-    const yaw = .42 + t * .075 + pointer.x * .3, pitch = -.5 + pointer.y * .25;
-    [x, z] = [x * Math.cos(yaw) + z * Math.sin(yaw), -x * Math.sin(yaw) + z * Math.cos(yaw)];
-    [y, z] = [y * Math.cos(pitch) - z * Math.sin(pitch), y * Math.sin(pitch) + z * Math.cos(pitch)];
-    const depth3 = 4.6 / (4.6 - z * .4);
-    return { x: 250 + x * 108 * depth3, y: 250 + y * 108 * depth3, z };
-  }
+  // The fallback preserves the same neural-network meaning without WebGL.
   function draw() {
     if (gpu) { gpu.draw(phase, pointer); return; }
     if (!ctx) return;
-    ctx.clearRect(0, 0, 500, 500);
-    const glow = ctx.createRadialGradient(250, 250, 12, 250, 250, 228);
-    glow.addColorStop(0, 'rgba(126,174,151,.13)'); glow.addColorStop(1, 'rgba(126,174,151,0)');
-    ctx.fillStyle = glow; ctx.fillRect(0, 0, 500, 500);
-    ctx.strokeStyle = 'rgba(173,193,175,.12)'; ctx.lineWidth = .75;
-    ctx.setLineDash([2, 8]); ctx.beginPath(); ctx.arc(250, 250, 220, 0, Math.PI * 2); ctx.stroke();
-    ctx.setLineDash([]); ctx.beginPath(); ctx.arc(250, 250, 194, 0, Math.PI * 2); ctx.stroke();
-    const curves = [];
-    for (let family = 0; family < 2; family++) {
-      const count = family ? 12 : 26;
-      for (let ring = 0; ring < count; ring++) {
-        const points = [];
-        for (let step = 0; step <= 64; step++) {
-          const fixed = ring / count * Math.PI * 2, moving = step / 64 * Math.PI * 2;
-          points.push(project(family ? moving : fixed, family ? fixed : moving, phase));
-        }
-        curves.push({ points, family, depth: points.reduce((n, p) => n + p.z, 0) / points.length });
-      }
+    ctx.clearRect(0,0,500,500);
+    const layers=[3,5,5,2].map((count,l)=>Array.from({length:count},(_,i)=>({
+      x:65+l*123+Math.sin(phase*.18)*3+pointer.x*4,
+      y:228+(i-(count-1)/2)*46+Math.sin(phase*.28)*3
+    })));
+    ctx.lineWidth=1;
+    for(let l=0;l<3;l++)for(const a of layers[l])for(const b of layers[l+1]){
+      ctx.strokeStyle='rgba(220,220,220,.26)';ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
+      const t=(phase*.12)%1;ctx.fillStyle='rgba(245,245,245,.8)';ctx.beginPath();ctx.arc(a.x+(b.x-a.x)*t,a.y+(b.y-a.y)*t,1.7,0,Math.PI*2);ctx.fill();
     }
-    curves.sort((a, b) => a.depth - b.depth);
-    for (const { points, family, depth } of curves) {
-      const alpha = Math.max(.13, Math.min(.75, .36 + depth * .17));
-      ctx.strokeStyle = family ? `rgba(192,211,180,${alpha * .65})` : `rgba(209,190,149,${alpha})`;
-      ctx.lineWidth = family ? .65 : .9;
-      ctx.beginPath(); points.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)); ctx.stroke();
+    for(const node of layers.flat()){
+      const shade=ctx.createRadialGradient(node.x-4,node.y-5,1,node.x,node.y,11);
+      shade.addColorStop(0,'#ffffff');shade.addColorStop(1,'#555555');ctx.fillStyle=shade;
+      ctx.beginPath();ctx.arc(node.x,node.y,11,0,Math.PI*2);ctx.fill();
     }
-    for (let i = 0; i < 7; i++) {
-      const p = project(i * .897 + phase * .22, i * 1.37 + phase * .33, phase);
-      ctx.beginPath(); ctx.fillStyle = 'rgba(218,213,174,.12)'; ctx.arc(p.x, p.y, 7, 0, Math.PI * 2); ctx.fill();
-      ctx.beginPath(); ctx.fillStyle = '#dfd6b3'; ctx.arc(p.x, p.y, 1.8, 0, Math.PI * 2); ctx.fill();
-    }
-    ctx.font = '9px Consolas, monospace'; ctx.fillStyle = '#b7c5b7';
-    ctx.fillText('GENERATE', 71, 67); ctx.fillText('EVALUATE', 367, 383); ctx.fillText('REFINE', 81, 427);
-    ctx.fillStyle = '#c8b58e';
-    for (const [x, y] of [[61, 64], [357, 380], [71, 424]]) { ctx.beginPath(); ctx.arc(x, y, 2.5, 0, Math.PI * 2); ctx.fill(); }
+    ctx.strokeStyle='#777777';ctx.beginPath();ctx.moveTo(434,345);ctx.lineTo(434,390);ctx.lineTo(65,390);ctx.lineTo(65,345);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(59,354);ctx.lineTo(65,345);ctx.lineTo(71,354);ctx.stroke();
   }
   function stop() { cancelAnimationFrame(frame); frame = 0; lastTime = 0; }
   function tick(time) {
