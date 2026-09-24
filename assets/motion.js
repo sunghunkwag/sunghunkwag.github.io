@@ -20,14 +20,14 @@
     if(!ctx)return;
     ctx.clearRect(0,0,500,500);
     const project=(x,y,z)=>[250+(x-z)*31,325+(x+z)*14-y*61];
-    const face=(points,fill)=>{ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.lineTo(...points[0]);ctx.fillStyle=fill;ctx.fill();ctx.strokeStyle='#a0a0a030';ctx.lineWidth=.6;ctx.stroke();};
+    const face=(points,fill)=>{ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.lineTo(...points[0]);ctx.fillStyle=fill;ctx.fill();ctx.strokeStyle='rgba(245,245,245,.34)';ctx.lineWidth=.65;ctx.stroke();};
     for(let row=0;row<8;row++)for(let col=0;col<8;col++){
       const x=(col-3.5)*.66,z=(row-3.5)*.66;
       const wave=.5+.5*Math.sin(x*1.25+z*.9-phase*.85),ripple=.5+.5*Math.cos(z*1.4-x*.7+phase*.58);
       const h=.24+1.55*wave*wave+.7*ripple,w=.23;
       const a=project(x-w,0,z+w),b=project(x+w,0,z+w),c=project(x+w,0,z-w);
       const at=project(x-w,h,z+w),bt=project(x+w,h,z+w),ct=project(x+w,h,z-w),dt=project(x-w,h,z-w);
-      face([a,b,bt,at],'#929292');face([b,c,ct,bt],'#515151');face([at,bt,ct,dt],'#ededed');
+      face([a,b,bt,at],'rgba(225,225,225,.07)');face([b,c,ct,bt],'rgba(225,225,225,.035)');face([at,bt,ct,dt],'rgba(250,250,250,.13)');
     }
   }
   function stop() { cancelAnimationFrame(frame); frame = 0; lastTime = 0; }
