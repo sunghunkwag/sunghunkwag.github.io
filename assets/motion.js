@@ -14,27 +14,21 @@
   let ctx = null;
   try { if (!gpu) ctx = canvas?.getContext('2d', { alpha: true }); } catch { /* Keep SVG. */ }
 
-  // The fallback preserves the same neural-network meaning without WebGL.
+  // An isometric bar-field fallback for browsers without WebGL.
   function draw() {
-    if (gpu) { gpu.draw(phase, pointer); return; }
-    if (!ctx) return;
+    if(gpu){gpu.draw(phase,pointer);return;}
+    if(!ctx)return;
     ctx.clearRect(0,0,500,500);
-    const layers=[3,5,5,2].map((count,l)=>Array.from({length:count},(_,i)=>({
-      x:65+l*123+Math.sin(phase*.18)*3+pointer.x*4,
-      y:228+(i-(count-1)/2)*46+Math.sin(phase*.28)*3
-    })));
-    ctx.lineWidth=1;
-    for(let l=0;l<3;l++)for(const a of layers[l])for(const b of layers[l+1]){
-      ctx.strokeStyle='rgba(220,220,220,.26)';ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
-      const t=(phase*.12)%1;ctx.fillStyle='rgba(245,245,245,.8)';ctx.beginPath();ctx.arc(a.x+(b.x-a.x)*t,a.y+(b.y-a.y)*t,1.7,0,Math.PI*2);ctx.fill();
+    const project=(x,y,z)=>[250+(x-z)*31,325+(x+z)*14-y*61];
+    const face=(points,fill)=>{ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.lineTo(...points[0]);ctx.fillStyle=fill;ctx.fill();ctx.strokeStyle='#a0a0a030';ctx.lineWidth=.6;ctx.stroke();};
+    for(let row=0;row<8;row++)for(let col=0;col<8;col++){
+      const x=(col-3.5)*.66,z=(row-3.5)*.66;
+      const wave=.5+.5*Math.sin(x*1.25+z*.9-phase*.85),ripple=.5+.5*Math.cos(z*1.4-x*.7+phase*.58);
+      const h=.24+1.55*wave*wave+.7*ripple,w=.23;
+      const a=project(x-w,0,z+w),b=project(x+w,0,z+w),c=project(x+w,0,z-w);
+      const at=project(x-w,h,z+w),bt=project(x+w,h,z+w),ct=project(x+w,h,z-w),dt=project(x-w,h,z-w);
+      face([a,b,bt,at],'#929292');face([b,c,ct,bt],'#515151');face([at,bt,ct,dt],'#ededed');
     }
-    for(const node of layers.flat()){
-      const shade=ctx.createRadialGradient(node.x-4,node.y-5,1,node.x,node.y,11);
-      shade.addColorStop(0,'#ffffff');shade.addColorStop(1,'#555555');ctx.fillStyle=shade;
-      ctx.beginPath();ctx.arc(node.x,node.y,11,0,Math.PI*2);ctx.fill();
-    }
-    ctx.strokeStyle='#777777';ctx.beginPath();ctx.moveTo(434,345);ctx.lineTo(434,390);ctx.lineTo(65,390);ctx.lineTo(65,345);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(59,354);ctx.lineTo(65,345);ctx.lineTo(71,354);ctx.stroke();
   }
   function stop() { cancelAnimationFrame(frame); frame = 0; lastTime = 0; }
   function tick(time) {

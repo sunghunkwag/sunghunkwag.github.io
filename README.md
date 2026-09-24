@@ -44,7 +44,7 @@ Use **Intelligence Research Project** as the public identity and homepage headin
 
 ## Motion
 
-The hero depicts neural architecture search as a monochrome 3D node-and-connection network, with evaluation feedback to the next candidate. Silver surfaces, neutral lighting, and animated signal propagation clarify model layers and the iterative workflow. This is conceptual, not a measured model or experimental trace. Geometry is uploaded once; fine pointers adjust the view with eased movement. A visible control pauses and resumes it, reduced-motion preferences start it paused, and offscreen or background tabs suspend rendering. Both 2D canvas and static SVG fallbacks depict the same neural-network concept; WebGL context restoration rebuilds GPU resources. Research text remains visible if JavaScript fails. Intersection-triggered entrances use the Web Animations API without hidden-content classes; section navigation uses native smooth scrolling.
+The hero depicts a conceptual AI search landscape as an 8-by-8 field of monochrome beveled 3D bars. Continuous wave functions animate their heights on the GPU above a graphite platform, with neutral studio lighting and contact shading. It does not show measured benchmark scores. Static geometry uploads once; height deformation corrects surface normals. Pointer movement subtly changes the viewing angle. Pause, reduced-motion preferences, offscreen suspension, and context restoration remain supported. The canvas and SVG fallbacks also depict bars. Research text remains visible if JavaScript fails. Intersection-triggered entrances use the Web Animations API without hidden-content classes; section navigation uses native smooth scrolling.
 
 ## Citable research library
 

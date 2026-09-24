@@ -177,7 +177,7 @@ pre code{overflow-wrap:normal;}
 @media(prefers-reduced-motion:reduce){.reading-progress{display:none;}}
 @media print{.manifold-canvas,.motion-toggle,.reading-progress{display:none!important;}}
 
-/* Monochrome neural architecture visualization. */
+/* Monochrome research bar landscape. */
 .manifold-stage{background:radial-gradient(ellipse at 50% 47%,#ffffff08,transparent 66%);}
 .manifold-stage::after{content:"";position:absolute;left:24%;right:24%;height:6%;bottom:7%;background:#00000077;border-radius:50%;filter:blur(15px);z-index:-1;pointer-events:none;}
 @media(min-width:1051px){.hero-grid{grid-template-columns:minmax(0,1.3fr) minmax(0,1.1fr);gap:20px;}}
@@ -187,3 +187,5 @@ pre code{overflow-wrap:normal;}
 .network-feedback{text-align:center;font:9px/1.5 var(--mono);letter-spacing:.12em;color:#888888;margin:18px 0 26px;}
 .hero-figure figcaption{gap:16px;}
 @media(max-width:760px){.network-legend{font-size:8px;gap:6px;margin-top:-16px;}.network-feedback{font-size:8px;}}
+
+.hero-figure figcaption>span{font-size:9px;line-height:1.6;max-width:28ch;}
