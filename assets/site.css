@@ -189,3 +189,6 @@ pre code{overflow-wrap:normal;}
 @media(max-width:760px){.network-legend{font-size:8px;gap:6px;margin-top:-16px;}.network-feedback{font-size:8px;}}
 
 .hero-figure figcaption>span{font-size:9px;line-height:1.6;max-width:28ch;}
+
+/* Restrained neutral halo around the translucent geometry. */
+.manifold-canvas{filter:drop-shadow(0 0 5px #ffffff1a);}

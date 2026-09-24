@@ -1,20 +1,20 @@
-/* A fluid monochrome bar field representing a conceptual search landscape. Procedural geometry; no library or network dependency. */
+/* A translucent, softly luminous monochrome bar field representing a conceptual search landscape. Procedural geometry; no library or network dependency. */
 (() => {
   'use strict';
   const vertex = [
     'attribute vec3 aPosition; attribute vec3 aNormal; attribute vec2 aUV;',
     'uniform mat3 uRotation; uniform float uTime; uniform float uScale; uniform float uMaterial;',
-    'varying vec3 vPosition; varying vec3 vNormal; varying vec2 vUV;',
+    'varying vec3 vPosition; varying vec3 vNormal; varying vec2 vUV; varying float vEdge;',
     'void main(){',
     'vec3 local=aPosition;vec3 normal=aNormal;',
-    'if(uMaterial<.5){',
+    'if(uMaterial<.5||uMaterial>1.5){',
     'float wave=.5+.5*sin(aUV.x*1.25+aUV.y*.9-uTime*.85);',
     'float ripple=.5+.5*cos(aUV.y*1.4-aUV.x*.7+uTime*.58);',
     'float height=.24+1.55*wave*wave+.7*ripple;',
     'local.y=aPosition.y*height-1.22;normal=normalize(vec3(aNormal.x,aNormal.y/height,aNormal.z));',
     '}',
     'vec3 p=uRotation*local*uScale;',
-    'vPosition=p;vNormal=normalize(uRotation*normal);vUV=aUV;',
+    'vPosition=p;vNormal=normalize(uRotation*normal);vUV=aUV;vEdge=smoothstep(1.02,1.55,abs(aNormal.x)+abs(aNormal.y)+abs(aNormal.z));',
     'vec3 view=p-vec3(0.,0.,8.5);',
     'float near=.1; float far=40.; float f=2.41421356;',
     'gl_Position=vec4(view.xy*f,((far+near)/(near-far))*view.z+(2.*far*near/(near-far)),-view.z);',
@@ -22,7 +22,7 @@
   ].join('\n');
   const fragment = [
     'precision highp float;',
-    'varying vec3 vPosition; varying vec3 vNormal; varying vec2 vUV;',
+    'varying vec3 vPosition; varying vec3 vNormal; varying vec2 vUV; varying float vEdge;',
     'uniform float uTime; uniform float uMaterial;',
     'const float PI=3.14159265;',
     'vec3 film(vec3 x){return clamp((x*(2.51*x+.03))/(x*(2.43*x+.59)+.14),0.,1.);}',
@@ -42,6 +42,7 @@
     'return vec3(sky+softbox*1.8+strip*.8);',
     '}',
     'void main(){',
+    'if(uMaterial>1.5){gl_FragColor=vec4(vec3(.9),.18);return;}',
     'vec3 n=normalize(vNormal); vec3 v=normalize(vec3(0.,0.,8.5)-vPosition);',
     'vec3 base=vec3(.5);float metal=.55;float rough=.3;',
     'if(uMaterial>.5){base=vec3(.045);rough=.52;metal=.25;}',
@@ -55,16 +56,22 @@
     'float contact=1.-smoothstep(.14,.23,max(cell.x,cell.y));',
     'color*=1.-contact*.55;',
     'float grid=1.-smoothstep(.003,.012,min(.23-cell.x,.23-cell.y));',
-    'color+=vec3(grid*.016);',
+    'color+=vec3(grid*.004);',
     '}',
-    'gl_FragColor=vec4(pow(film(color),vec3(1./2.2)),1.);',
+    'if(uMaterial<.5){',
+    'float rim=pow(1.-nv,3.);',
+    'float glow=.12+rim*.32+vEdge*.28;',
+    'vec3 glass=vec3(glow)+studio(reflect(-v,n))*.15;',
+    'float alpha=.01+rim*.03+vEdge*.024;',
+    'gl_FragColor=vec4(glass,alpha);',
+    '}else{gl_FragColor=vec4(pow(film(color),vec3(1./2.2))*.35,1.);}',
     '}'
   ].join('\n');
   // Shared static beveled geometry; only bar heights change in the vertex shader.
   function mesh(platform=false) {
     const vertices=[],indices=[];
     function box(center,half,radius,seed){
-      const cuts=[-1,-.92,.92,1];
+      const cuts=[-1,-.8,.8,1];
       for(let axis=0;axis<3;axis++)for(const sign of [-1,1]){
         const base=vertices.length/8,u=(axis+1)%3,v=(axis+2)%3;
         for(let i=0;i<4;i++)for(let j=0;j<4;j++){
@@ -84,13 +91,22 @@
     }
     return {vertices:new Float32Array(vertices),indices:new Uint16Array(indices)};
   }
+  function edgeMesh(){
+    const vertices=[],indices=[];
+    for(let row=0;row<8;row++)for(let col=0;col<8;col++){
+      const x=(col-3.5)*.46,z=(row-3.5)*.46,base=vertices.length/8;
+      for(const y of [0,1])for(const dx of [-.157,.157])for(const dz of [-.157,.157])vertices.push(x+dx,y,z+dz,0,0,1,x,z);
+      for(const [a,b] of [[0,1],[0,2],[1,3],[2,3],[4,5],[4,6],[5,7],[6,7],[0,4],[1,5],[2,6],[3,7]])indices.push(base+a,base+b);
+    }
+    return {vertices:new Float32Array(vertices),indices:new Uint16Array(indices)};
+  }
   function rotation(x,y,z){
     const sx=Math.sin(x),cx=Math.cos(x),sy=Math.sin(y),cy=Math.cos(y),sz=Math.sin(z),cz=Math.cos(z);
     return new Float32Array([cy*cz,cy*sz,-sy,sx*sy*cz-cx*sz,sx*sy*sz+cx*cz,sx*cy,cx*sy*cz+sx*sz,cx*sy*sz-sx*cz,cx*cy]);
   }
   window.createResearchSculpture = canvas => {
     let gl;
-    try { gl=canvas.getContext('webgl',{alpha:true,antialias:true,premultipliedAlpha:false,powerPreference:'low-power'}); } catch { return null; }
+    try { gl=canvas.getContext('webgl',{alpha:true,antialias:true,premultipliedAlpha:true,powerPreference:'low-power'}); } catch { return null; }
     if(!gl)return null;
     let program, objects=[], attributes=[], lost=false;
     function init(){
@@ -104,8 +120,8 @@
       if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(program));
       gl.useProgram(program);
       attributes=[['aPosition',3,0],['aNormal',3,12],['aUV',2,24]].map(([name,size,offset])=>({location:gl.getAttribLocation(program,name),size,offset}));
-      objects=[false,true].map(halo=>{
-        const data=mesh(halo),buffer=gl.createBuffer(),index=gl.createBuffer();
+      objects=[true,false,"edges"].map(halo=>{
+        const data=halo==="edges"?edgeMesh():mesh(halo),buffer=gl.createBuffer(),index=gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,data.vertices,gl.STATIC_DRAW);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,index);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,data.indices,gl.STATIC_DRAW);
         return {buffer,index,count:data.indices.length,halo};
@@ -122,12 +138,15 @@
       gl.uniform1f(u.uTime,time);gl.uniform1f(u.uScale,.98);
       gl.uniformMatrix3fv(u.uRotation,false,rotation(.56+pointer.y*.1,-.62+Math.sin(time*.12)*.055+pointer.x*.14,0));
       for(const object of objects){
+        if(object.halo===true){gl.disable(gl.BLEND);gl.depthMask(true);}
+        else{gl.enable(gl.BLEND);gl.blendFuncSeparate(gl.SRC_ALPHA,gl.ONE,gl.ONE,gl.ONE_MINUS_SRC_ALPHA);gl.depthMask(false); }
         gl.bindBuffer(gl.ARRAY_BUFFER,object.buffer);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,object.index);
         for(const {location,size,offset} of attributes){
           gl.enableVertexAttribArray(location);gl.vertexAttribPointer(location,size,gl.FLOAT,false,32,offset);
         }
-        gl.uniform1f(u.uMaterial,object.halo?1:0);gl.drawElements(gl.TRIANGLES,object.count,gl.UNSIGNED_SHORT,0);
+        gl.uniform1f(u.uMaterial,object.halo==="edges"?2:object.halo?1:0);gl.drawElements(object.halo==="edges"?gl.LINES:gl.TRIANGLES,object.count,gl.UNSIGNED_SHORT,0);
       }
+      gl.depthMask(true);gl.disable(gl.BLEND);
     };
     canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();lost=true;canvas.closest('.hero-figure')?.classList.remove('has-manifold');});
     canvas.addEventListener('webglcontextrestored',()=>{try{init();u=uniforms();lost=false;draw(0,{x:0,y:0});canvas.closest('.hero-figure')?.classList.add('has-manifold');}catch{lost=true;}});
