@@ -1,14 +1,20 @@
-/* Monochrome neural architecture and evaluation feedback. Procedural geometry; no library or network dependency. */
+/* A fluid monochrome bar field representing a conceptual search landscape. Procedural geometry; no library or network dependency. */
 (() => {
   'use strict';
   const vertex = [
     'attribute vec3 aPosition; attribute vec3 aNormal; attribute vec2 aUV;',
-    'uniform mat3 uRotation; uniform float uTime; uniform float uScale;',
+    'uniform mat3 uRotation; uniform float uTime; uniform float uScale; uniform float uMaterial;',
     'varying vec3 vPosition; varying vec3 vNormal; varying vec2 vUV;',
     'void main(){',
-    'vec3 p=uRotation*aPosition*uScale;',
-    'p.y+=.28+sin(uTime*.28)*.035;',
-    'vPosition=p; vNormal=normalize(uRotation*aNormal); vUV=aUV;',
+    'vec3 local=aPosition;vec3 normal=aNormal;',
+    'if(uMaterial<.5){',
+    'float wave=.5+.5*sin(aUV.x*1.25+aUV.y*.9-uTime*.85);',
+    'float ripple=.5+.5*cos(aUV.y*1.4-aUV.x*.7+uTime*.58);',
+    'float height=.24+1.55*wave*wave+.7*ripple;',
+    'local.y=aPosition.y*height-1.22;normal=normalize(vec3(aNormal.x,aNormal.y/height,aNormal.z));',
+    '}',
+    'vec3 p=uRotation*local*uScale;',
+    'vPosition=p;vNormal=normalize(uRotation*normal);vUV=aUV;',
     'vec3 view=p-vec3(0.,0.,8.5);',
     'float near=.1; float far=40.; float f=2.41421356;',
     'gl_Position=vec4(view.xy*f,((far+near)/(near-far))*view.z+(2.*far*near/(near-far)),-view.z);',
@@ -37,66 +43,44 @@
     '}',
     'void main(){',
     'vec3 n=normalize(vNormal); vec3 v=normalize(vec3(0.,0.,8.5)-vPosition);',
-    'vec3 base=vec3(.38);float metal=.72;float rough=.32;',
-    'if(uMaterial>.5){base=vec3(.13);rough=.4;metal=.45;}',
+    'vec3 base=vec3(.5);float metal=.55;float rough=.3;',
+    'if(uMaterial>.5){base=vec3(.045);rough=.52;metal=.25;}',
     'vec3 color=light(n,v,normalize(vec3(-3.,5.,5.)-vPosition),vec3(4.2),base,metal,rough);',
     'color+=light(n,v,normalize(vec3(4.,1.,1.)-vPosition),vec3(2.),base,metal,rough);',
     'color+=light(n,v,normalize(vec3(-2.,-3.,-2.)-vPosition),vec3(1.6),base,metal,rough);',
     'float nv=max(dot(n,v),0.);vec3 f=fresnel(nv,mix(vec3(.04),base,metal));',
     'color+=studio(reflect(-v,n))*f*.8+base*.13;',
-    'float signal=exp(-pow((fract(uTime*.12)-vUV.x)/.075,2.));',
-    'color+=vec3(signal*(uMaterial>.5?.7:.32));',
+    'if(uMaterial>.5){',
+    'vec2 cell=abs(mod(vUV+vec2(1.61+.23),.46)-.23);',
+    'float contact=1.-smoothstep(.14,.23,max(cell.x,cell.y));',
+    'color*=1.-contact*.55;',
+    'float grid=1.-smoothstep(.003,.012,min(.23-cell.x,.23-cell.y));',
+    'color+=vec3(grid*.016);',
+    '}',
     'gl_FragColor=vec4(pow(film(color),vec3(1./2.2)),1.);',
     '}'
   ].join('\n');
-  const normalize=v=>{const l=Math.hypot(...v)||1;return v.map(x=>x/l);};
-  const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
-  // A conceptual candidate network, not a measured or deployed model.
-  const layers=[3,5,5,2].map((count,layer)=>Array.from({length:count},(_,i)=>({
-    p:[[-2.1,-.75,.75,2.1][layer],(i-(count-1)/2)*.58,layer===0?0:(i%2?.38:-.38)],
-    phase:layer/3*.82+.06, radius:layer===3?.21:.155
-  })));
-  const edges=[];
-  for(let l=0;l<3;l++)for(let i=0;i<layers[l].length;i++)for(let j=0;j<layers[l+1].length;j++){
-    if(l===2||Math.abs(i/(layers[l].length-1)-j/(layers[l+1].length-1))<.51)edges.push([layers[l][i],layers[l+1][j]]);
-  }
-  function mesh(links=false) {
+  // Shared static beveled geometry; only bar heights change in the vertex shader.
+  function mesh(platform=false) {
     const vertices=[],indices=[];
-    function surface(rings,sides,point){
-      const base=vertices.length/8;
-      for(let i=0;i<=rings;i++)for(let j=0;j<=sides;j++){
-        vertices.push(...point(i/rings,j/sides));
-        if(i<rings&&j<sides){const a=base+i*(sides+1)+j,d=a+sides+1;indices.push(a,d,a+1,d,d+1,a+1);}
+    function box(center,half,radius,seed){
+      const cuts=[-1,-.92,.92,1];
+      for(let axis=0;axis<3;axis++)for(const sign of [-1,1]){
+        const base=vertices.length/8,u=(axis+1)%3,v=(axis+2)%3;
+        for(let i=0;i<4;i++)for(let j=0;j<4;j++){
+          const point=[0,0,0];point[axis]=sign*half[axis];point[u]=cuts[i]*half[u];point[v]=cuts[j]*half[v];
+          const inner=point.map((x,k)=>Math.max(-half[k]+radius,Math.min(half[k]-radius,x)));
+          const delta=point.map((x,k)=>x-inner[k]),len=Math.hypot(...delta)||1,normal=delta.map(x=>x/len);
+          const pos=inner.map((x,k)=>center[k]+x+normal[k]*radius);
+          vertices.push(...pos,...normal,...(platform?[pos[0],pos[2]]:seed));
+          if(i<3&&j<3){const n=base+i*4+j;indices.push(n,n+4,n+1,n+4,n+5,n+1);}
+        }
       }
     }
-    function tube(a,b,radius=.016){
-      const tangent=normalize(b.p.map((v,k)=>v-a.p[k]));
-      const n=normalize(cross(tangent,Math.abs(tangent[1])>.95?[1,0,0]:[0,1,0]));
-      const binormal=normalize(cross(tangent,n));
-      surface(16,10,(u,v)=>{
-        const angle=v*Math.PI*2,normal=n.map((x,k)=>x*Math.cos(angle)+binormal[k]*Math.sin(angle));
-        return [...a.p.map((x,k)=>x+(b.p[k]-x)*u+normal[k]*radius),...normal,a.phase+(b.phase-a.phase)*u,v];
-      });
-    }
-    if(!links){
-      for(const node of layers.flat())surface(24,32,(u,v)=>{
-        const theta=u*Math.PI,phi=v*Math.PI*2;
-        const normal=[Math.sin(theta)*Math.cos(phi),Math.cos(theta),Math.sin(theta)*Math.sin(phi)];
-        return [...node.p.map((x,k)=>x+normal[k]*node.radius),...normal,node.phase,v];
-      });
-    }else{
-      edges.forEach(([a,b])=>tube(a,b));
-      // Evaluation feeds the next search iteration along the lower return path.
-      let previous={p:[2.1,-.29,-.38],phase:.9};
-      const controls=[[2.1,-.29,-.38],[2.9,-2.35,0],[-2.9,-2.35,0],[-2.1,-.58,0]];
-      for(let i=1;i<=64;i++){
-        const t=i/64,q=1-t;
-        const next={p:[0,1,2].map(k=>q*q*q*controls[0][k]+3*q*q*t*controls[1][k]+3*q*t*t*controls[2][k]+t*t*t*controls[3][k]),phase:.9+t*.1};
-        tube(previous,next,.013);previous=next;
-      }
-      // Arrow tip at the return to candidate generation.
-      tube({p:[-2.39,-.9,0],phase:1},previous,.016);
-      tube({p:[-1.94,-1.02,0],phase:1},previous,.016);
+    if(platform)box([0,-1.32,0],[2.02,.1,2.02],.045,[0,0]);
+    else for(let row=0;row<8;row++)for(let column=0;column<8;column++){
+      const x=(column-3.5)*.46,z=(row-3.5)*.46;
+      box([x,.5,z],[.166,.5,.166],.024,[x,z]);
     }
     return {vertices:new Float32Array(vertices),indices:new Uint16Array(indices)};
   }
@@ -135,8 +119,8 @@
     const draw=(time,pointer)=>{
       if(lost)return;
       gl.viewport(0,0,canvas.width,canvas.height);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(program);
-      gl.uniform1f(u.uTime,time);gl.uniform1f(u.uScale,1.25);
-      gl.uniformMatrix3fv(u.uRotation,false,rotation(-.16+pointer.y*.16,-.25+Math.sin(time*.18)*.1+pointer.x*.2,.035));
+      gl.uniform1f(u.uTime,time);gl.uniform1f(u.uScale,.98);
+      gl.uniformMatrix3fv(u.uRotation,false,rotation(.56+pointer.y*.1,-.62+Math.sin(time*.12)*.055+pointer.x*.14,0));
       for(const object of objects){
         gl.bindBuffer(gl.ARRAY_BUFFER,object.buffer);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,object.index);
         for(const {location,size,offset} of attributes){
