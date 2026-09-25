@@ -46,6 +46,12 @@ Use **Intelligence Research Project** as the public identity and homepage headin
 
 The hero depicts a conceptual AI search landscape as an 8-by-8 field of translucent monochrome beveled 3D bars. Continuous wave functions animate their heights on the GPU above a graphite platform, with neutral reflections, Fresnel edge light, a faint halo, and a dark platform. It does not show measured benchmark scores. Transparent surfaces use additive blending with depth writes disabled over an opaque platform; this is a stylized glass effect, not a refraction simulation. Static geometry uploads once; height deformation corrects surface normals. Pointer movement subtly changes the viewing angle. Pause, reduced-motion preferences, offscreen suspension, and context restoration remain supported. The canvas and SVG fallbacks also depict bars. Research text remains visible if JavaScript fails. Intersection-triggered entrances use the Web Animations API without hidden-content classes; section navigation uses native smooth scrolling.
 
+## Recursive self-improvement guide
+
+[/research/recursive-self-improvement/](https://sunghunkwag.github.io/research/recursive-self-improvement/) is the site's main page for the query *recursive self-improvement*. It gives a plain definition, a sourced history (I. J. Good 1965 through 2026 systems), a confound-and-control checklist, and links to the project's own RSI notes. The homepage, research hub, RSI-Bench, and matched-control notes link to it with descriptive anchor text.
+
+External results on that page are summaries of their authors' reports, each linked to the source. Recheck them when a source is revised, and keep the distinction between bounded and open-ended RSI. Do not add claims that this project has demonstrated open-ended RSI.
+
 ## Citable research library
 
 Three notes connect architecture-search results, RSI-Bench methods, and matched-compute RSI results to immutable sources. BibTeX and CSL JSON cite the explanatory webpages, distinct from software authorship. CSV downloads preserve reported values and limitations.
