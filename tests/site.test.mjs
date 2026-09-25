@@ -128,6 +128,19 @@ test('Public identity remains the project rather than its owner', () => {
   }
 });
 
+test('RSI guide defines the term, cites sources, and links the project evidence', () => {
+  const html = read('research/recursive-self-improvement/index.html');
+  for (const section of ['definition', 'history', 'status', 'testing', 'experiments', 'faq', 'references']) assert.ok(ids(html).includes(section), section);
+  assert.match(html, /<title>Recursive Self-Improvement \(RSI\)/);
+  assert.match(html, /"@type": "DefinedTerm"/);
+  assert.match(html, /arxiv\.org\/abs\/2607\.07663/);
+  for (const note of ['/research/gated-self-improvement/', '/research/rsi-bench/']) assert.ok(html.includes('href="' + note), note);
+  for (const file of ['index.html', 'research/index.html', 'research/rsi-bench/index.html', 'research/gated-self-improvement/index.html']) {
+    assert.ok(read(file).includes('href="/research/recursive-self-improvement/'), file + ' links to the RSI guide');
+  }
+  for (const [, ref] of html.matchAll(/href="#(ref-[\w-]+)"/g)) assert.ok(ids(html).includes(ref), ref);
+});
+
 test('Citations identify the correct note and reported results retain their contrasts', () => {
   for (const slug of ['attention-free-sequence-model', 'rsi-bench', 'gated-self-improvement']) {
     const url = origin + '/research/' + slug + '/';
