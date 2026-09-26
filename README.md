@@ -59,6 +59,10 @@ External results on that page are summaries of their authors' reports, each link
 - **Figures (`assets/charts.js`):** matched-compute contrasts (lollipop plot), task-level accuracy (grouped bars), an interactive RSI-Bench calculator (six sliders, a radar and both means), the compute-matched control, and the recursive loop. Each figure reads its numbers from the page's own table and starts `hidden`, so the table remains the no-JS and print view. Tooltips work on hover and keyboard focus.
 - **Palette:** chart colors are brass `#bb8733` and blue `#3b8fc7`. They pass the categorical lightness, chroma, colour-blindness separation and contrast checks on both dark surfaces.
 
+## Support
+
+The homepage support section leads with email, which opens a prefilled message, and keeps GitHub Sponsors as a secondary option. It sets out three concrete ways to help: fund the GPU laptop, sponsor the real-scale validation run, or reproduce, critique and cite the research. Every research page ends with a support band that links to the same email and to `/#support`, because search visitors usually land on a research note rather than on the homepage. Do not add payment methods or funding totals that have not been confirmed.
+
 ## Citable research library
 
 Three notes connect architecture-search results, RSI-Bench methods, and matched-compute RSI results to immutable sources. BibTeX and CSL JSON cite the explanatory webpages, distinct from software authorship. CSV downloads preserve reported values and limitations.
