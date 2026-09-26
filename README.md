@@ -52,6 +52,13 @@ The hero depicts a conceptual AI search landscape as an 8-by-8 field of transluc
 
 External results on that page are summaries of their authors' reports, each linked to the source. Recheck them when a source is revised, and keep the distinction between bounded and open-ended RSI. Do not add claims that this project has demonstrated open-ended RSI.
 
+## Motion and interactive figures (v2)
+
+- **Hero:** a 14 × 14 field of translucent bars, explored by a search probe with a fading six-point trail. It also has an evaluation beam that sweeps the field, rising particles at the probe, and a local lift under the pointer. It is a conceptual illustration, not measured data. The hero stays monochrome through the existing grayscale filter.
+- **Site-wide motion:** headings rise out of a mask when they enter view, the homepage figures count up, and cards tilt with a soft glare on fine pointers. Buttons lean toward the cursor, and dark bands carry a faint light that follows the pointer. Pages cross-fade through CSS view transitions, the history timeline on the RSI guide draws itself as it scrolls, and the hero drifts back while the page scrolls. Everything stops under `prefers-reduced-motion` and with the pause control.
+- **Figures (`assets/charts.js`):** matched-compute contrasts (lollipop plot), task-level accuracy (grouped bars), an interactive RSI-Bench calculator (six sliders, a radar and both means), the compute-matched control, and the recursive loop. Each figure reads its numbers from the page's own table and starts `hidden`, so the table remains the no-JS and print view. Tooltips work on hover and keyboard focus.
+- **Palette:** chart colors are brass `#bb8733` and blue `#3b8fc7`. They pass the categorical lightness, chroma, colour-blindness separation and contrast checks on both dark surfaces.
+
 ## Citable research library
 
 Three notes connect architecture-search results, RSI-Bench methods, and matched-compute RSI results to immutable sources. BibTeX and CSL JSON cite the explanatory webpages, distinct from software authorship. CSV downloads preserve reported values and limitations.

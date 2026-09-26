@@ -108,7 +108,10 @@ test('Research content does not depend on a JavaScript reveal to be visible', ()
   assert.doesNotMatch(read('assets/site.css'), /\.reveal\s*\{[^}]*opacity\s*:\s*0(?:\D|$)/);
   for (const file of indexable) {
     const scripts = [...read(file).matchAll(/<script([^>]*)>/g)].map(m => m[1]);
-    assert.ok(scripts.every(s => s.includes('type="application/ld+json"') || ((s.includes('src="/assets/motion.js') || s.includes('src="/assets/sculpture.js')) && s.includes('defer'))), file);
+    assert.ok(scripts.every(s => s.includes('type="application/ld+json"') || ((s.includes('src="/assets/motion.js') || s.includes('src="/assets/sculpture.js') || s.includes('src="/assets/charts.js')) && s.includes('defer'))), file);
+    const html = read(file);
+    for (const figure of html.matchAll(/<figure class="viz[^"]*" data-viz="(\w+)"([^>]*)>/g)) assert.match(figure[2], /\bhidden\b/, file + ': figures stay hidden until the script renders them');
+    if (html.includes('data-viz=')) assert.match(html, /src="\/assets\/charts\.js[^"]*" defer/, file);
   }
   assert.doesNotMatch(read('assets/site.css'), /(?:\.reveal|\[data-motion[^]*?)\s*\{[^}]*visibility\s*:\s*hidden/);
 });
@@ -157,4 +160,17 @@ test('Citations identify the correct note and reported results retain their cont
   assert.ok(csv.every(row => row[5] === '9e67b2159b174fa4f263a78aac28bf18b00b20fc'));
   assert.match(read('research/rsi-bench/index.html'), /Missing is not zero/);
   assert.match(read('research/rsi-bench/index.html'), /does not claim a clickable backlink/);
+});
+
+test('Figure script compiles, uses textContent only and keeps a table beside every figure', () => {
+  const source = read('assets/charts.js');
+  new Function(source);
+  assert.doesNotMatch(source, /innerHTML|insertAdjacentHTML|document\.write/);
+  for (const file of indexable) {
+    const html = read(file);
+    for (const [, kind] of html.matchAll(/data-viz="(\w+)"/g)) {
+      assert.match(source, new RegExp('\\b' + kind + '\\b'), file + ': unknown figure ' + kind);
+      if (['contrasts', 'accuracy'].includes(kind)) assert.match(html, /<table>/, file + ': figure needs its table view');
+    }
+  }
 });
