@@ -91,17 +91,24 @@ test('Structured data is valid JSON with resolvable local entity references', ()
   }
 });
 
-test('Research note retains evidence limitations and pinned source links', () => {
-  const html = read('research/attention-free-sequence-model/index.html');
-  for (const section of ['results-table', 'mechanisms', 'limitations', 'reproduce']) assert.ok(ids(html).includes(section));
-  assert.match(html, /does not report a new benchmark run or an independent replication/);
-  assert.match(html, /ed1955973c10f6cfeef61a0139d9d13fc8d13812/);
-  assert.match(html, /0\.9772/);
-  assert.match(html, /97\.6%/);
-  const csv = read('assets/data/attention-free-reported-results.csv').trim().split('\n').slice(1).map(r => r.split(','));
-  assert.equal(csv.length, 4);
-  for (const row of csv) assert.ok(Math.abs(Number(row[3]) - Number(row[1]) - Number(row[4])) < 0.001, row[0]);
-  for (let col = 1; col <= 3; col++) assert.ok(Math.abs(csv.slice(0, 3).reduce((sum, row) => sum + Number(row[col]), 0) / 3 - Number(csv[3][col])) < 0.051);
+test('Withdrawn attention-free work is gone from every page, the sitemap and the assets', () => {
+  assert.ok(!existsSync(resolve(root, 'research/attention-free-sequence-model')));
+  for (const path of ['assets/data/attention-free-reported-results.csv', 'assets/citations/attention-free-sequence-model.json', 'assets/citations/attention-free-sequence-model.bib']) assert.ok(!existsSync(resolve(root, path)), path);
+  for (const file of [...pages, 'sitemap.xml']) assert.doesNotMatch(read(file), /attention-free|neural architecture search|sequence length 64/i, file);
+});
+
+test('Gated self-improvement is the featured result, shown with its null and its budget caveat', () => {
+  const home = read('index.html');
+  const featured = home.match(/<article class="reveal featured-project">([\s\S]*?)<\/article>/g) || [];
+  assert.equal(featured.length, 1);
+  assert.match(featured[0], /gated-self-improvement/);
+  assert.match(featured[0], /\+1\.55/);
+  assert.match(featured[0], /not significant/);
+  assert.ok(home.indexOf('featured-project') < home.indexOf('github.com/sunghunkwag/rsi-bench"'), 'featured card comes first');
+  assert.match(read('research/index.html'), /<span class="topic-number">01 \/ RESEARCH NOTE<\/span><h3><a href="\/research\/gated-self-improvement\/">/);
+  const note = read('research/gated-self-improvement/index.html');
+  assert.match(note, /matched to the five-round chain on its budget cap, not on measured spend/);
+  assert.match(note, /draws 25 source tasks where the control draws 5/);
 });
 
 test('Research content does not depend on a JavaScript reveal to be visible', () => {
@@ -145,7 +152,7 @@ test('RSI guide defines the term, cites sources, and links the project evidence'
 });
 
 test('Citations identify the correct note and reported results retain their contrasts', () => {
-  for (const slug of ['attention-free-sequence-model', 'rsi-bench', 'gated-self-improvement']) {
+  for (const slug of ['rsi-bench', 'gated-self-improvement']) {
     const url = origin + '/research/' + slug + '/';
     const citation = JSON.parse(read('assets/citations/' + slug + '.json'))[0];
     assert.equal(citation.URL, url);
@@ -170,7 +177,7 @@ test('Figure script compiles, uses textContent only and keeps a table beside eve
     const html = read(file);
     for (const [, kind] of html.matchAll(/data-viz="(\w+)"/g)) {
       assert.match(source, new RegExp('\\b' + kind + '\\b'), file + ': unknown figure ' + kind);
-      if (['contrasts', 'accuracy'].includes(kind)) assert.match(html, /<table>/, file + ': figure needs its table view');
+      if (kind === 'contrasts') assert.match(html, /<table>/, file + ': figure needs its table view');
     }
   }
 });
