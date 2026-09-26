@@ -63,7 +63,7 @@ External results on that page are summaries of their authors' reports, each link
 
 ## Support
 
-The homepage support section leads with email, which opens a prefilled message, and keeps GitHub Sponsors as a secondary option. It sets out three concrete ways to help: fund the laptop, sponsor the compounding re-run of gated-self-improvement, or reproduce, critique and cite the research. Every research page ends with a support band that links to the same email and to `/#support`, because search visitors usually land on a research note rather than on the homepage. Do not add payment methods or funding totals that have not been confirmed.
+The homepage support section leads with email, which opens a prefilled message, and keeps GitHub Sponsors as a secondary option. It sets out three concrete ways to help: fund the research, sponsor the compounding re-run of gated-self-improvement, or reproduce, critique and cite the research. Every research page ends with a support band that links to the same email and to `/#support`, because search visitors usually land on a research note rather than on the homepage. Support is described as research funding for compute and time, with no hardware named and no target amount. Do not add payment methods, hardware, or funding totals that have not been confirmed.
 
 ## Citable research library
 
