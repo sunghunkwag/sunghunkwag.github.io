@@ -19,7 +19,7 @@
 <meta name="twitter:description" content="A research note on 3,000 attention-free model candidates: task-level results, benchmark code, reproducibility caveats, and limits of the transformer comparison.">
 <meta name="theme-color" content="#141b1b">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/assets/site.css?v=20260923-evidence">
+<link rel="stylesheet" href="/assets/site.css?v=20260926-motion">
 <script type="application/ld+json">{
   "@context": "https://schema.org",
   "@graph": [
@@ -114,7 +114,8 @@
     }
   ]
 }</script>
-<script src="/assets/motion.js?v=20260923" defer></script>
+<script src="/assets/motion.js?v=20260926-motion" defer></script>
+<script src="/assets/charts.js?v=20260926-motion" defer></script>
 </head>
 <body id="top">
 <div class="reading-progress" aria-hidden="true"></div><a class="skip-link" href="#main">Skip to content</a><div class="page"><nav class="topnav" aria-label="Main navigation">
@@ -147,7 +148,7 @@
 <section class="band band-dark research-section" id="results-table"><div class="wrap">
 <h2>Task-level results, with the baseline visible</h2>
 <p>The README reports approximately 103–105K parameters per model, 200 training steps, AdamW with a learning rate of 0.0003, and a batch size of 16. The sequence lengths are 32–64.</p>
-<div class="table-scroll" role="region" aria-label="Benchmark results table; scroll horizontally on small screens" tabindex="0"><table>
+<figure class="viz" data-viz="accuracy" hidden><div class="viz-head"><p class="viz-title">Reported accuracy by task</p></div><div class="viz-plot"></div><figcaption>Bars show reported accuracy on the three synthetic tasks and their mean; the discovered model is highlighted. Hover or focus a bar for its value. The table below lists the same values.</figcaption></figure><div class="table-scroll" role="region" aria-label="Benchmark results table; scroll horizontally on small screens" tabindex="0"><table>
 <caption>Reported accuracy (%). Gains are percentage-point differences between the discovered model and the transformer, calculated from the rounded published values.</caption>
 <thead><tr><th scope="col">Task</th><th scope="col">Transformer</th><th scope="col">AFN v3</th><th scope="col">Discovered model</th><th scope="col">Gain (pp)</th></tr></thead>
 <tbody><tr><th scope="row">Nested Depth</th><td>92.5</td><td>98.4</td><td>99.8</td><td>7.3</td></tr>
