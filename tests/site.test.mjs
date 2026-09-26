@@ -174,3 +174,14 @@ test('Figure script compiles, uses textContent only and keeps a table beside eve
     }
   }
 });
+
+test('Every page offers a direct email route to support the research', () => {
+  for (const file of indexable) {
+    const html = read(file);
+    assert.match(html, /href="mailto:sunghunkwag@gmail\.com\?subject=[^"]*Support/i, file + ': support email');
+  }
+  const home = read('index.html');
+  assert.match(home, /class="support-ways"/);
+  assert.equal((home.match(/class="support-way"/g) || []).length, 3);
+  for (const file of indexable.filter(f => f.startsWith('research/'))) assert.match(read(file), /class="band band-dark support-strip"/, file);
+});
