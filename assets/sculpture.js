@@ -1,30 +1,60 @@
-/* A translucent, softly luminous monochrome bar field representing a conceptual search landscape. Procedural geometry; no library or network dependency. */
+/* A living search landscape: a 14x14 field of translucent glass bars, explored by a
+   search probe that leaves a fading trail, swept by an evaluation beam, and lifted
+   locally by the viewer's pointer. Conceptual illustration only — no measured data.
+   Procedural geometry; no library or network dependency. */
 (() => {
   'use strict';
+  const GRID = 14, STEP = .29, HALF = .105, TRAIL = 6, PARTICLES = 180;
   const vertex = [
     'attribute vec3 aPosition; attribute vec3 aNormal; attribute vec2 aUV;',
-    'uniform mat3 uRotation; uniform float uTime; uniform float uScale; uniform float uMaterial;',
-    'varying vec3 vPosition; varying vec3 vNormal; varying vec2 vUV; varying float vEdge;',
-    'void main(){',
-    'vec3 local=aPosition;vec3 normal=aNormal;',
-    'if(uMaterial<.5||uMaterial>1.5){',
-    'float wave=.5+.5*sin(aUV.x*1.25+aUV.y*.9-uTime*.85);',
-    'float ripple=.5+.5*cos(aUV.y*1.4-aUV.x*.7+uTime*.58);',
-    'float height=.24+1.55*wave*wave+.7*ripple;',
-    'local.y=aPosition.y*height-1.22;normal=normalize(vec3(aNormal.x,aNormal.y/height,aNormal.z));',
+    'uniform mat3 uRotation; uniform float uTime; uniform float uScale; uniform float uMaterial; uniform float uPoint;',
+    'uniform vec3 uTrail[' + TRAIL + ']; uniform vec3 uPointer; uniform float uScan;',
+    'varying vec3 vPosition; varying vec3 vNormal; varying vec2 vUV; varying float vEdge; varying float vGlow; varying float vScan; varying float vLife;',
+    'float field(vec2 c){',
+    'float wave=.5+.5*sin(c.x*1.6+c.y*1.1-uTime*.6);',
+    'float ripple=.5+.5*cos(c.y*1.9-c.x*.8+uTime*.42);',
+    'return .16+.95*wave*wave+.42*ripple;',
     '}',
-    'vec3 p=uRotation*local*uScale;',
-    'vPosition=p;vNormal=normalize(uRotation*normal);vUV=aUV;vEdge=smoothstep(1.02,1.55,abs(aNormal.x)+abs(aNormal.y)+abs(aNormal.z));',
-    'vec3 view=p-vec3(0.,0.,8.5);',
-    'float near=.1; float far=40.; float f=2.41421356;',
+    'float probe(vec2 c){',
+    'float g=0.;',
+    'for(int i=0;i<' + TRAIL + ';i++){vec2 d=c-uTrail[i].xy;g+=uTrail[i].z*exp(-dot(d,d)/.32);}',
+    'return g;',
+    '}',
+    'float attention(vec2 c){vec2 d=c-uPointer.xy;return uPointer.z*exp(-dot(d,d)/.22);}',
+    'vec3 project(vec3 local){',
+    'vec3 p=uRotation*local*uScale;vPosition=p;',
+    'vec3 view=p-vec3(0.,0.,8.5);float near=.1;float far=40.;float f=2.41421356;',
     'gl_Position=vec4(view.xy*f,((far+near)/(near-far))*view.z+(2.*far*near/(near-far)),-view.z);',
+    'return p;',
+    '}',
+    'void main(){',
+    'vec3 local=aPosition;vec3 normal=aNormal;vGlow=0.;vScan=0.;vLife=1.;vUV=aUV;',
+    'if(uPoint>.5){',
+    'float life=fract(uTime*aNormal.y+aNormal.x);',
+    'vec2 origin=uTrail[0].xy+aPosition.xz*.55;',
+    'float lift=field(origin)*(1.+.9*probe(origin));',
+    'local=vec3(origin.x+sin(uTime*1.3+aNormal.z*6.)*.05*life,lift-1.1+life*1.35,origin.y);',
+    'vLife=life;project(local);vNormal=vec3(0.,1.,0.);vEdge=0.;',
+    'gl_PointSize=(1.4+2.6*(1.-life))*uScale*2.;',
+    'return;',
+    '}',
+    'if(uMaterial<.5||uMaterial>1.5){',
+    'float g=probe(aUV);float a=attention(aUV);',
+    'float height=field(aUV)*(1.+.9*g)+.85*a;',
+    'local.y=aPosition.y*height-1.22;normal=normalize(vec3(aNormal.x,aNormal.y/height,aNormal.z));',
+    'vGlow=clamp(g*.8+a*.9,0.,1.6);',
+    'vScan=exp(-pow(aUV.x-uScan,2.)/.018);',
+    '}',
+    'project(local);',
+    'vNormal=normalize(uRotation*normal);vEdge=smoothstep(1.02,1.55,abs(aNormal.x)+abs(aNormal.y)+abs(aNormal.z));',
     '}'
   ].join('\n');
   const fragment = [
     'precision highp float;',
-    'varying vec3 vPosition; varying vec3 vNormal; varying vec2 vUV; varying float vEdge;',
-    'uniform float uTime; uniform float uMaterial;',
+    'varying vec3 vPosition; varying vec3 vNormal; varying vec2 vUV; varying float vEdge; varying float vGlow; varying float vScan; varying float vLife;',
+    'uniform float uTime; uniform float uMaterial; uniform float uPoint;',
     'const float PI=3.14159265;',
+    'const vec3 WARM=vec3(1.,.86,.62);',
     'vec3 film(vec3 x){return clamp((x*(2.51*x+.03))/(x*(2.43*x+.59)+.14),0.,1.);}',
     'vec3 fresnel(float h,vec3 f){return f+(1.-f)*pow(1.-h,5.);}',
     'vec3 light(vec3 n,vec3 v,vec3 l,vec3 color,vec3 base,float metal,float rough){',
@@ -42,7 +72,12 @@
     'return vec3(sky+softbox*1.8+strip*.8);',
     '}',
     'void main(){',
-    'if(uMaterial>1.5){gl_FragColor=vec4(vec3(.9),.18);return;}',
+    'if(uPoint>.5){',
+    'vec2 c=gl_PointCoord-.5;float r=dot(c,c);if(r>.25)discard;',
+    'float a=(1.-smoothstep(.0,.25,r))*(1.-vLife)*smoothstep(0.,.12,vLife)*.9;',
+    'gl_FragColor=vec4(WARM*1.2,a);return;',
+    '}',
+    'if(uMaterial>1.5){float e=.075+vGlow*.5+vScan*.28;gl_FragColor=vec4(mix(vec3(.9),WARM,clamp(vGlow*1.2,0.,1.)),e);return;}',
     'vec3 n=normalize(vNormal); vec3 v=normalize(vec3(0.,0.,8.5)-vPosition);',
     'vec3 base=vec3(.5);float metal=.55;float rough=.3;',
     'if(uMaterial>.5){base=vec3(.045);rough=.52;metal=.25;}',
@@ -52,21 +87,27 @@
     'float nv=max(dot(n,v),0.);vec3 f=fresnel(nv,mix(vec3(.04),base,metal));',
     'color+=studio(reflect(-v,n))*f*.8+base*.13;',
     'if(uMaterial>.5){',
-    'vec2 cell=abs(mod(vUV+vec2(1.61+.23),.46)-.23);',
-    'float contact=1.-smoothstep(.14,.23,max(cell.x,cell.y));',
-    'color*=1.-contact*.55;',
-    'float grid=1.-smoothstep(.003,.012,min(.23-cell.x,.23-cell.y));',
-    'color+=vec3(grid*.004);',
+    'vec2 cell=abs(mod(vUV+vec2(2.03),.29)-.145);',
+    'float contact=1.-smoothstep(.09,.145,max(cell.x,cell.y));',
+    'color*=1.-contact*.5;',
+    'float grid=1.-smoothstep(.002,.009,min(.145-cell.x,.145-cell.y));',
+    'color+=vec3(grid*.006);',
     '}',
     'if(uMaterial<.5){',
     'float rim=pow(1.-nv,3.);',
-    'float glow=.12+rim*.32+vEdge*.28;',
+    'float glow=.05+rim*.2+vEdge*.18;',
     'vec3 glass=vec3(glow)+studio(reflect(-v,n))*.15;',
-    'float alpha=.01+rim*.03+vEdge*.024;',
+    'glass+=WARM*(vGlow*(.45+rim*.7))+vec3(vScan*(.1+vEdge*.26));',
+    'float alpha=.006+rim*.022+vEdge*.018+vGlow*.06+vScan*.016;',
     'gl_FragColor=vec4(glass,alpha);',
     '}else{gl_FragColor=vec4(pow(film(color),vec3(1./2.2))*.35,1.);}',
     '}'
   ].join('\n');
+  const centers = () => {
+    const out = [];
+    for (let row = 0; row < GRID; row++) for (let col = 0; col < GRID; col++) out.push([(col - (GRID - 1) / 2) * STEP, (row - (GRID - 1) / 2) * STEP]);
+    return out;
+  };
   // Shared static beveled geometry; only bar heights change in the vertex shader.
   function mesh(platform=false) {
     const vertices=[],indices=[];
@@ -84,25 +125,39 @@
         }
       }
     }
-    if(platform)box([0,-1.32,0],[2.02,.1,2.02],.045,[0,0]);
-    else for(let row=0;row<8;row++)for(let column=0;column<8;column++){
-      const x=(column-3.5)*.46,z=(row-3.5)*.46;
-      box([x,.5,z],[.166,.5,.166],.024,[x,z]);
-    }
+    if(platform)box([0,-1.32,0],[2.1,.1,2.1],.045,[0,0]);
+    else for(const [x,z] of centers())box([x,.5,z],[HALF,.5,HALF],.016,[x,z]);
     return {vertices:new Float32Array(vertices),indices:new Uint16Array(indices)};
   }
   function edgeMesh(){
-    const vertices=[],indices=[];
-    for(let row=0;row<8;row++)for(let col=0;col<8;col++){
-      const x=(col-3.5)*.46,z=(row-3.5)*.46,base=vertices.length/8;
-      for(const y of [0,1])for(const dx of [-.157,.157])for(const dz of [-.157,.157])vertices.push(x+dx,y,z+dz,0,0,1,x,z);
+    const vertices=[],indices=[],e=HALF-.008;
+    for(const [x,z] of centers()){
+      const base=vertices.length/8;
+      for(const y of [0,1])for(const dx of [-e,e])for(const dz of [-e,e])vertices.push(x+dx,y,z+dz,0,0,1,x,z);
       for(const [a,b] of [[0,1],[0,2],[1,3],[2,3],[4,5],[4,6],[5,7],[6,7],[0,4],[1,5],[2,6],[3,7]])indices.push(base+a,base+b);
     }
     return {vertices:new Float32Array(vertices),indices:new Uint16Array(indices)};
   }
+  // Deterministic particle seeds: offset around the probe (x,z), phase, rate, sway.
+  function particleMesh(){
+    const vertices=[];let s=0x9e3779b9;
+    const rand=()=>{s^=s<<13;s>>>=0;s^=s>>>17;s^=s<<5;s>>>=0;return s/4294967296;};
+    for(let i=0;i<PARTICLES;i++){
+      const angle=rand()*Math.PI*2,radius=Math.sqrt(rand());
+      vertices.push(Math.cos(angle)*radius,0,Math.sin(angle)*radius,rand(),.18+rand()*.32,rand(),0,0);
+    }
+    return {vertices:new Float32Array(vertices),count:PARTICLES};
+  }
   function rotation(x,y,z){
     const sx=Math.sin(x),cx=Math.cos(x),sy=Math.sin(y),cy=Math.cos(y),sz=Math.sin(z),cz=Math.cos(z);
     return new Float32Array([cy*cz,cy*sz,-sy,sx*sy*cz-cx*sz,sx*sy*sz+cx*cz,sx*cy,cx*sy*cz+sx*sz,cx*sy*sz-sx*cz,cx*cy]);
+  }
+  // The probe wanders a Lissajous path; its recent positions form a fading trail.
+  function probeAt(t){return [1.55*Math.sin(t*.23),1.55*Math.sin(t*.31+1.2)];}
+  function trail(time){
+    const out=new Float32Array(TRAIL*3);
+    for(let i=0;i<TRAIL;i++){const [x,z]=probeAt(time-i*.7);out.set([x,z,Math.pow(.66,i)],i*3);}
+    return out;
   }
   window.createResearchSculpture = canvas => {
     let gl;
@@ -120,31 +175,42 @@
       if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(program));
       gl.useProgram(program);
       attributes=[['aPosition',3,0],['aNormal',3,12],['aUV',2,24]].map(([name,size,offset])=>({location:gl.getAttribLocation(program,name),size,offset}));
-      objects=[true,false,"edges"].map(halo=>{
-        const data=halo==="edges"?edgeMesh():mesh(halo),buffer=gl.createBuffer(),index=gl.createBuffer();
+      objects=['platform','glass','edges','particles'].map(kind=>{
+        const data=kind==='edges'?edgeMesh():kind==='particles'?particleMesh():mesh(kind==='platform'),buffer=gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,data.vertices,gl.STATIC_DRAW);
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,index);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,data.indices,gl.STATIC_DRAW);
-        return {buffer,index,count:data.indices.length,halo};
+        let index=null;
+        if(data.indices){index=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,index);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,data.indices,gl.STATIC_DRAW);}
+        return {buffer,index,count:data.indices?data.indices.length:data.count,kind};
       });
       gl.enable(gl.DEPTH_TEST);gl.disable(gl.CULL_FACE);gl.clearColor(0,0,0,0);
       canvas.dataset.renderer='webgl';
     }
     try{init();}catch(error){console.warn('Sculpture renderer unavailable; retaining illustration.',error);return null;}
-    const uniforms=()=>Object.fromEntries(['uRotation','uTime','uScale','uMaterial'].map(k=>[k,gl.getUniformLocation(program,k)]));
+    const names=['uRotation','uTime','uScale','uMaterial','uPoint','uTrail','uPointer','uScan'];
+    const uniforms=()=>Object.fromEntries(names.map(k=>[k,gl.getUniformLocation(program,k)]));
     let u=uniforms();
     const draw=(time,pointer)=>{
       if(lost)return;
+      const active=Math.max(0,Math.min(1,pointer.active??0));
       gl.viewport(0,0,canvas.width,canvas.height);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(program);
       gl.uniform1f(u.uTime,time);gl.uniform1f(u.uScale,.98);
-      gl.uniformMatrix3fv(u.uRotation,false,rotation(.56+pointer.y*.1,-.62+Math.sin(time*.12)*.055+pointer.x*.14,0));
+      gl.uniformMatrix3fv(u.uRotation,false,rotation(.58+pointer.y*.08,-.62+Math.sin(time*.1)*.1+pointer.x*.12,0));
+      gl.uniform3fv(u.uTrail,trail(time));
+      gl.uniform3fv(u.uPointer,new Float32Array([pointer.x*1.9,pointer.y*1.9,active]));
+      gl.uniform1f(u.uScan,(time*.5)%5.6-2.8);
       for(const object of objects){
-        if(object.halo===true){gl.disable(gl.BLEND);gl.depthMask(true);}
-        else{gl.enable(gl.BLEND);gl.blendFuncSeparate(gl.SRC_ALPHA,gl.ONE,gl.ONE,gl.ONE_MINUS_SRC_ALPHA);gl.depthMask(false); }
-        gl.bindBuffer(gl.ARRAY_BUFFER,object.buffer);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,object.index);
+        const points=object.kind==='particles';
+        if(object.kind==='platform'){gl.disable(gl.BLEND);gl.depthMask(true);}
+        else{gl.enable(gl.BLEND);gl.blendFuncSeparate(gl.SRC_ALPHA,gl.ONE,gl.ONE,gl.ONE_MINUS_SRC_ALPHA);gl.depthMask(false);}
+        gl.bindBuffer(gl.ARRAY_BUFFER,object.buffer);
+        if(object.index)gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,object.index);
         for(const {location,size,offset} of attributes){
           gl.enableVertexAttribArray(location);gl.vertexAttribPointer(location,size,gl.FLOAT,false,32,offset);
         }
-        gl.uniform1f(u.uMaterial,object.halo==="edges"?2:object.halo?1:0);gl.drawElements(object.halo==="edges"?gl.LINES:gl.TRIANGLES,object.count,gl.UNSIGNED_SHORT,0);
+        gl.uniform1f(u.uPoint,points?1:0);
+        gl.uniform1f(u.uMaterial,object.kind==='edges'?2:object.kind==='platform'?1:0);
+        if(points)gl.drawArrays(gl.POINTS,0,object.count);
+        else gl.drawElements(object.kind==='edges'?gl.LINES:gl.TRIANGLES,object.count,gl.UNSIGNED_SHORT,0);
       }
       gl.depthMask(true);gl.disable(gl.BLEND);
     };
