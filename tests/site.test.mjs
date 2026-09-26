@@ -191,4 +191,5 @@ test('Every page offers a direct email route to support the research', () => {
   assert.match(home, /class="support-ways"/);
   assert.equal((home.match(/class="support-way"/g) || []).length, 3);
   for (const file of indexable.filter(f => f.startsWith('research/'))) assert.match(read(file), /class="band band-dark support-strip"/, file);
+  for (const file of indexable) assert.doesNotMatch(read(file), /laptop|\bGPU\b|\$2,900|3,500|hardware/i, file + ': support is research funding, with no hardware or target amount');
 });
