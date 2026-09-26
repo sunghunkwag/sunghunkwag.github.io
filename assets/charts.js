@@ -140,48 +140,7 @@
     onView(figure, () => tween(1500, setProgress, markDone));
   }
 
-  /* 2. Task-level accuracy: grouped bars, the discovered model emphasised. */
-  function accuracy(figure) {
-    const table = figure.closest('section').querySelector('table');
-    const rows = [...table.tBodies[0].rows].map(tr => ({ task: tr.cells[0].textContent, t: num(tr.cells[1].textContent), a: num(tr.cells[2].textContent), d: num(tr.cells[3].textContent) }));
-    const series = [['t', 'Transformer', C.g1], ['a', 'AFN v3 (hand-designed)', C.g2], ['d', 'Discovered model', C.a]];
-    legend(figure.querySelector('.viz-head'), series.map(([, label, color]) => ({ label, color, shape: 'bar' })));
-    const plot = figure.querySelector('.viz-plot'), tip = tooltip(plot);
-    let progress = reduced ? 1 : 0, bars = [];
-    const setProgress = p => { progress = p; bars.forEach(b => b(p)); };
-    const markDone = responsive(figure, (host, w) => {
-      const narrow = w < 620, labelW = narrow ? 0 : 170, bar = 10, gap = 2, groupH = narrow ? 70 : 52;
-      const x0 = labelW + 14, x1 = w - 58, h = rows.length * groupH + 34;
-      const s = svg('svg', { width: w, height: h, viewBox: `0 0 ${w} ${h}`, role: 'img', 'aria-label': 'Reported accuracy by task and model' }, host);
-      const x = v => x0 + v / 100 * (x1 - x0);
-      for (const t of [0, 25, 50, 75, 100]) {
-        svg('line', { x1: x(t), x2: x(t), y1: 0, y2: h - 26, class: t ? 'viz-grid' : 'viz-zero' }, s);
-        text(s, x(t), h - 8, t + '%', 'viz-tick', 'middle');
-      }
-      bars = [];
-      rows.forEach((row, i) => {
-        const gy = i * groupH + (narrow ? 22 : 8);
-        if (narrow) text(s, x0, gy - 8, row.task, 'viz-label');
-        else text(s, labelW, gy + 20, row.task, 'viz-label' + (/mean/i.test(row.task) ? ' strong' : ''), 'end');
-        series.forEach(([key, label, color], j) => {
-          const y = gy + j * (bar + gap), v = row[key];
-          const rect = svg('path', { fill: color, class: 'viz-bar' }, s);
-          const hit = svg('rect', { x: x0, y: y - 3, width: x(v) - x0 + 8, height: bar + 6, class: 'viz-hit', tabindex: 0, role: 'button', 'aria-label': `${row.task}, ${label}: ${v}%` }, s);
-          bindTip(hit, tip, host, () => v.toFixed(1) + '%', () => `${label} · ${row.task}`);
-          const value = key === 'd' ? text(s, x(0), y + bar - 1, '', 'viz-value') : null;
-          const update = t => {
-            const end = x(v * t), r = Math.min(4, Math.max(0, end - x0));
-            rect.setAttribute('d', `M${x0},${y}H${end - r}Q${end},${y} ${end},${y + r}V${y + bar - r}Q${end},${y + bar} ${end - r},${y + bar}H${x0}Z`);
-            if (value) { value.setAttribute('x', end + 6); value.textContent = (v * t).toFixed(1) + '%'; }
-          };
-          bars.push(update); update(progress);
-        });
-      });
-    });
-    onView(figure, () => tween(1400, setProgress, markDone));
-  }
-
-  /* 3. What the aggregate can hide: an interactive six-axis calculator. */
+  /* 2. What the aggregate can hide: an interactive six-axis calculator. */
   function aggregate(figure) {
     const axes = ['Self-modification depth', 'Improvement trajectory', 'Operator discovery', 'Meta-adaptation', 'Safety and stability', 'Goal generation'];
     const presets = {
@@ -269,7 +228,7 @@
     onView(figure, () => animateTo(state.v, state.on));
   }
 
-  /* 4. The compute-matched control: two arms, the same budget, only one recursive. */
+  /* 3. The compute-matched control: two arms, the same budget, only one recursive. */
   function compute(figure) {
     legend(figure.querySelector('.viz-head'), [
       { label: 'Five recursive rounds', color: C.a, shape: 'bar' },
@@ -327,7 +286,7 @@
     document.addEventListener('visibilitychange', update);
   }
 
-  /* 5. The recursive loop: an outer task loop and an inner improver loop, both in motion. */
+  /* 4. The recursive loop: an outer task loop and an inner improver loop, both in motion. */
   function loop(figure) {
     const plot = figure.querySelector('.viz-plot');
     let dots = [], visible = false, raf = 0;
@@ -373,7 +332,7 @@
     }).observe(figure);
   }
 
-  const kinds = { contrasts, accuracy, aggregate, compute, loop };
+  const kinds = { contrasts, aggregate, compute, loop };
   document.querySelectorAll('[data-viz]').forEach(figure => {
     try { kinds[figure.dataset.viz]?.(figure); }
     catch (error) { figure.hidden = true; console.warn('Figure unavailable; the table remains.', error); }
