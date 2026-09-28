@@ -1,9 +1,9 @@
-contrast,environment,n,task_difference,p_value,source_revision
-R5PLUS_minus_ROUND1_5X,local,40,1.55,<0.0001,9e67b2159b174fa4f263a78aac28bf18b00b20fc
-R5PLUS_minus_ROUND1_5X,kaggle,60,1.47,0.00005,9e67b2159b174fa4f263a78aac28bf18b00b20fc
-R5PLUS_minus_ROUND5,local,40,2.18,<0.0001,9e67b2159b174fa4f263a78aac28bf18b00b20fc
-R5PLUS_minus_ROUND5,kaggle,60,1.67,0.00005,9e67b2159b174fa4f263a78aac28bf18b00b20fc
-ROUND5_minus_COLD,local,40,-2.08,<0.0001,9e67b2159b174fa4f263a78aac28bf18b00b20fc
-ROUND5_minus_COLD,kaggle,60,-2.03,0.00005,9e67b2159b174fa4f263a78aac28bf18b00b20fc
-R5PLUS_minus_COLD,local,40,0.1,ns,9e67b2159b174fa4f263a78aac28bf18b00b20fc
-R5PLUS_minus_COLD,kaggle,60,-0.37,ns,9e67b2159b174fa4f263a78aac28bf18b00b20fc
+experiment,hypothesis,contrast,metric,n,mean,ci_low,ci_high,p,p_type,verdict,source_revision
+v3,H1,MEMORY_CARRY-NO_CARRY,final_holdout_tasks_per_run,300,1.523,0.55,2.48,0.0011,one-sided,supported,8e69e9f3149db5310e7571b6f5ef5a2a422d69ae
+v3,H2,MEMORY_CARRY-FROZEN,final_holdout_tasks_per_run,300,1.777,0.85,2.73,0.0006,holm,supported,8e69e9f3149db5310e7571b6f5ef5a2a422d69ae
+v3,H3,NO_CARRY-FROZEN,final_holdout_tasks_per_run,300,0.253,-0.67,1.15,0.60,holm,null,8e69e9f3149db5310e7571b6f5ef5a2a422d69ae
+v3,H4,MEMORY_CARRY-NO_CARRY growth (problems 6-10 minus 1-5),final_holdout_tasks_per_run,300,0.050,-0.84,0.95,0.60,holm,null,8e69e9f3149db5310e7571b6f5ef5a2a422d69ae
+v2,H1,RECURSIVE_FULL-SINGLE_5X,external_holdout_tasks_of_24,300,0.397,0.10,0.70,0.0098,holm,supported,8e69e9f3149db5310e7571b6f5ef5a2a422d69ae
+v2,H2,RECURSIVE_FULL-RECURSIVE_FROZEN,external_holdout_tasks_of_24,300,-0.080,-0.35,0.19,0.73,holm,null,8e69e9f3149db5310e7571b6f5ef5a2a422d69ae
+v1-audit,retraction,R5PLUS-COLD (shared streams),held_out_tasks_per_seed,100,-0.700,-1.06,-0.34,0.0005,reported,retracted,8e69e9f3149db5310e7571b6f5ef5a2a422d69ae
+v1-audit,retraction,R5PLUS-R1PLUS_DM (shared streams),held_out_tasks_per_seed,100,-0.590,-0.94,-0.24,0.0018,reported,retracted,8e69e9f3149db5310e7571b6f5ef5a2a422d69ae

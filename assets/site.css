@@ -244,8 +244,10 @@ pre code{overflow-wrap:normal;}
 .viz-tick,.viz-axis{font:10px var(--mono);fill:var(--ink-faint);letter-spacing:.02em;}
 .viz-label{font:13px var(--sans);fill:var(--ink);}
 .viz-label.strong{font-weight:600;}
+.viz-label-bg{fill:var(--surface);}
 .viz-value{font:11px var(--mono);fill:var(--ink);}
 .viz-stem{stroke-width:2;stroke-linecap:round;opacity:.5;}
+.viz-ci{stroke-width:3;stroke-linecap:round;opacity:.55;}
 .viz-mark,.agg-dot{stroke:var(--surface);stroke-width:2;}
 .viz-bar{transition:opacity .2s;}
 .viz-hit{fill:transparent;cursor:pointer;outline:none;}

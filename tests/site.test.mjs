@@ -97,18 +97,25 @@ test('Withdrawn attention-free work is gone from every page, the sitemap and the
   for (const file of [...pages, 'sitemap.xml']) assert.doesNotMatch(read(file), /attention-free|neural architecture search|sequence length 64/i, file);
 });
 
-test('Gated self-improvement is the featured result, shown with its null and its budget caveat', () => {
+test('Gated self-improvement is the featured result, shown with its nulls, its limits and the retraction', () => {
   const home = read('index.html');
   const featured = home.match(/<article class="reveal featured-project">([\s\S]*?)<\/article>/g) || [];
   assert.equal(featured.length, 1);
   assert.match(featured[0], /gated-self-improvement/);
-  assert.match(featured[0], /\+1\.55/);
+  assert.match(featured[0], /\+1\.52/);
+  assert.match(featured[0], /Pre&#8209;registered/);
   assert.match(featured[0], /not significant/);
+  assert.match(featured[0], /does not keep growing/);
   assert.ok(home.indexOf('featured-project') < home.indexOf('github.com/sunghunkwag/rsi-bench"'), 'featured card comes first');
+  const failures = home.slice(home.indexOf('id="failures"'), home.indexOf('id="support"'));
+  assert.match(failures, /\+1\.55 tasks per seed/, 'the retracted headline stays in the failure log');
+  assert.equal((failures.match(/class="status bad"/g) || []).length, 3, 'three retractions');
   assert.match(read('research/index.html'), /<span class="topic-number">01 \/ RESEARCH NOTE<\/span><h3><a href="\/research\/gated-self-improvement\/">/);
   const note = read('research/gated-self-improvement/index.html');
-  assert.match(note, /matched to the five-round chain on its budget cap, not on measured spend/);
-  assert.match(note, /draws 25 source tasks where the control draws 5/);
+  assert.match(note, /The headline is retracted/);
+  assert.match(note, /holds steady rather than growing/);
+  assert.match(note, /Process control beyond ranking is not established/);
+  for (const file of pages) assert.doesNotMatch(read(file), /Kaggle/i, file + ': the retracted run environments stay off the site');
 });
 
 test('Research content does not depend on a JavaScript reveal to be visible', () => {
@@ -160,11 +167,17 @@ test('Citations identify the correct note and reported results retain their cont
     assert.ok(read('assets/citations/' + slug + '.bib').includes(url));
     assert.ok(ids(read('research/' + slug + '/index.html')).includes('cite'));
   }
-  const csv = read('assets/data/gated-rsi-reported-results.csv').trim().split(/\r?\n/).slice(1).map(row => row.split(','));
-  assert.equal(csv.length, 8);
-  assert.deepEqual(csv.map(row => Number(row[3])), [1.55, 1.47, 2.18, 1.67, -2.08, -2.03, 0.10, -0.37]);
-  assert.deepEqual(csv.slice(-2).map(row => row[4]), ['ns', 'ns']);
-  assert.ok(csv.every(row => row[5] === '9e67b2159b174fa4f263a78aac28bf18b00b20fc'));
+  const [head, ...rows] = read('assets/data/gated-rsi-reported-results.csv').trim().split(/\r?\n/).map(row => row.split(','));
+  assert.deepEqual(head, ['experiment', 'hypothesis', 'contrast', 'metric', 'n', 'mean', 'ci_low', 'ci_high', 'p', 'p_type', 'verdict', 'source_revision']);
+  assert.deepEqual(rows.map(r => r[0] + ' ' + r[1]), ['v3 H1', 'v3 H2', 'v3 H3', 'v3 H4', 'v2 H1', 'v2 H2', 'v1-audit retraction', 'v1-audit retraction']);
+  assert.deepEqual(rows.map(r => Number(r[5])), [1.523, 1.777, 0.253, 0.05, 0.397, -0.08, -0.7, -0.59]);
+  assert.deepEqual(rows.map(r => r[10]), ['supported', 'supported', 'null', 'null', 'supported', 'null', 'retracted', 'retracted']);
+  assert.ok(rows.every(r => r.length === head.length && r[11] === '8e69e9f3149db5310e7571b6f5ef5a2a422d69ae'));
+  const note = read('research/gated-self-improvement/index.html');
+  const signed = v => (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v).toFixed(2);
+  for (const r of rows.slice(0, 4)) {
+    assert.ok(note.includes('<td>' + signed(Number(r[5])) + '</td><td>[' + signed(Number(r[6])) + ', ' + signed(Number(r[7])) + ']</td>'), 'note table matches CSV for ' + r[1]);
+  }
   assert.match(read('research/rsi-bench/index.html'), /Missing is not zero/);
   assert.match(read('research/rsi-bench/index.html'), /does not claim a clickable backlink/);
 });
@@ -177,7 +190,7 @@ test('Figure script compiles, uses textContent only and keeps a table beside eve
     const html = read(file);
     for (const [, kind] of html.matchAll(/data-viz="(\w+)"/g)) {
       assert.match(source, new RegExp('\\b' + kind + '\\b'), file + ': unknown figure ' + kind);
-      if (kind === 'contrasts') assert.match(html, /<table>/, file + ': figure needs its table view');
+      if (kind === 'estimates') assert.match(html, /<table>/, file + ': figure needs its table view');
     }
   }
 });

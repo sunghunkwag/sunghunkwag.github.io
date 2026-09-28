@@ -32,7 +32,9 @@ References: [Google SEO starter guide](https://developers.google.com/search/docs
 
 ## Research notes and regression checks
 
-The featured result is the [matched-compute note for gated-self-improvement](https://sunghunkwag.github.io/research/gated-self-improvement/). It includes the contrasts table, a downloadable CSV, pinned source links, a reproduction guide, and explicit limits: the repaired loop does not beat the untrained baseline, and the single-round control is matched on its budget cap rather than on measured spend. These are reported project results, not a new independent run.
+The featured result is the [pre-registered results note for gated-self-improvement](https://sunghunkwag.github.io/research/gated-self-improvement/). It covers the v3 carried-memory experiment and the v2 recursion test, both pre-registered and run once on untouched seeds, with their nulls and limits: the effect is small, and the carried advantage does not keep growing. It also records the retracted v1 headline (+1.55), which an audit showed was produced by arm-keyed evaluation randomness and a data confound. The note includes the hypotheses table, a downloadable CSV, pinned source links and a reproduction guide. These are reported project results, not a new independent run.
+
+Run environments of the retracted v1 result are not named on the site.
 
 The attention-free sequence-model work was withdrawn from the site on September 27, 2026. Do not re-add it, its page, CSV or citation files.
 

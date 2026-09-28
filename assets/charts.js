@@ -86,29 +86,35 @@
     return () => { animated = true; };
   }
 
-  /* 1. Matched-compute contrasts: a lollipop plot around zero, two environments. */
-  function contrasts(figure) {
+  /* 1. Pre-registered estimates: a point and its 95% interval for each hypothesis. */
+  function estimates(figure) {
     const table = figure.closest('section').querySelector('table');
-    const rows = [...table.tBodies[0].rows].map(tr => ({
-      label: tr.cells[0].dataset.short || tr.cells[0].textContent,
-      full: tr.cells[0].textContent,
-      local: num(tr.cells[1].textContent), localP: tr.cells[1].textContent.split(';')[1]?.trim() || '',
-      kaggle: num(tr.cells[2].textContent), kaggleP: tr.cells[2].textContent.split(';')[1]?.trim() || ''
-    }));
-    const plot = figure.querySelector('.viz-plot');
+    const sign = v => (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v).toFixed(2);
+    const rows = [...table.tBodies[0].rows].map(tr => {
+      const ci = (tr.cells[2].textContent.match(/[-+−]?\d+(\.\d+)?/g) || []).map(num);
+      return {
+        label: tr.cells[0].dataset.short || tr.cells[0].textContent,
+        full: tr.cells[0].textContent,
+        mean: num(tr.cells[1].textContent), lo: ci[0], hi: ci[1],
+        p: tr.cells[4].textContent.trim(),
+        ok: /supported/i.test(tr.cells[5].textContent)
+      };
+    });
     legend(figure.querySelector('.viz-head'), [
-      { label: 'Local runs, n = 40', color: C.a, shape: 'dot' },
-      { label: 'Kaggle runs, n = 60', color: C.b, shape: 'square' }
+      { label: 'Supported', color: C.a, shape: 'dot' },
+      { label: 'Null', color: C.g2, shape: 'dot' }
     ]);
+    const plot = figure.querySelector('.viz-plot');
     const tip = tooltip(plot);
+    const lo = Math.floor(Math.min(0, ...rows.map(r => r.lo))), hi = Math.ceil(Math.max(0, ...rows.map(r => r.hi)));
     let progress = reduced ? 1 : 0, marks = [];
     const setProgress = p => { progress = p; marks.forEach(m => m(p)); };
     const markDone = responsive(figure, (host, w) => {
-      const narrow = w < 620, labelW = narrow ? 0 : 250, rowH = narrow ? 78 : 64, top = 8;
+      const narrow = w < 620, labelW = narrow ? 0 : 220, rowH = narrow ? 66 : 56, top = 8;
       const x0 = labelW + 16, x1 = w - 16, h = top + rows.length * rowH + 44;
-      const s = svg('svg', { width: w, height: h, viewBox: `0 0 ${w} ${h}`, role: 'img', 'aria-label': 'Differences in tasks solved per seed, by contrast and environment' }, host);
-      const x = v => x0 + (v + 2.5) / 5 * (x1 - x0);
-      for (const t of [-2, -1, 0, 1, 2]) {
+      const s = svg('svg', { width: w, height: h, viewBox: `0 0 ${w} ${h}`, role: 'img', 'aria-label': 'Pre-registered estimates with 95% intervals, in final-holdout tasks per run' }, host);
+      const x = v => x0 + (v - lo) / (hi - lo) * (x1 - x0);
+      for (let t = lo; t <= hi; t++) {
         svg('line', { x1: x(t), x2: x(t), y1: top, y2: h - 36, class: t === 0 ? 'viz-zero' : 'viz-grid' }, s);
         text(s, x(t), h - 18, (t > 0 ? '+' : t < 0 ? '−' : '') + Math.abs(t), 'viz-tick', 'middle');
       }
@@ -116,28 +122,27 @@
       text(s, x0, h - 2, '← favours second arm', 'viz-axis');
       marks = [];
       rows.forEach((row, i) => {
-        const y = top + i * rowH + (narrow ? 34 : rowH / 2);
-        if (narrow) text(s, x0, top + i * rowH + 16, row.label, 'viz-label');
-        else text(s, labelW, y + 4, row.label, 'viz-label', 'end');
-        for (const [key, color, dy, p, env] of [['local', C.a, -8, row.localP, 'Local, n = 40'], ['kaggle', C.b, 8, row.kaggleP, 'Kaggle, n = 60']]) {
-          const v = row[key], cy = y + dy;
-          const stem = svg('line', { x1: x(0), x2: x(0), y1: cy, y2: cy, stroke: color, class: 'viz-stem' }, s);
-          const mark = key === 'local'
-            ? svg('circle', { cx: x(0), cy, r: 5.5, fill: color, class: 'viz-mark' }, s)
-            : svg('rect', { x: x(0) - 5, y: cy - 5, width: 10, height: 10, rx: 1.5, fill: color, class: 'viz-mark' }, s);
-          const hit = svg('circle', { cx: x(v), cy, r: 14, class: 'viz-hit', tabindex: 0, role: 'button',
-            'aria-label': `${row.full}, ${env}: ${v > 0 ? '+' : ''}${v} tasks, ${p}` }, s);
-          bindTip(hit, tip, host, () => `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v).toFixed(2)} tasks`, () => `${env} · ${p || 'reported'}`);
-          const update = t => {
-            const px = x(v * t);
-            stem.setAttribute('x2', px);
-            if (key === 'local') mark.setAttribute('cx', px); else mark.setAttribute('x', px - 5);
-          };
-          marks.push(update); update(progress);
+        const y = top + i * rowH + (narrow ? 44 : rowH / 2);
+        if (narrow) {
+          const node = text(s, x0, top + i * rowH + 18, row.label, 'viz-label');
+          const bb = node.getBBox();
+          s.insertBefore(svg('rect', { x: bb.x - 4, y: bb.y - 2, width: bb.width + 8, height: bb.height + 4, class: 'viz-label-bg' }), node);
         }
+        else text(s, labelW, y + 4, row.label, 'viz-label', 'end');
+        const color = row.ok ? C.a : C.g2;
+        const bar = svg('line', { x1: x(row.mean), x2: x(row.mean), y1: y, y2: y, stroke: color, class: 'viz-ci' }, s);
+        svg('circle', { cx: x(row.mean), cy: y, r: 6, fill: color, class: 'viz-mark' }, s);
+        const hit = svg('circle', { cx: x(row.mean), cy: y, r: 14, class: 'viz-hit', tabindex: 0, role: 'button',
+          'aria-label': `${row.full}: ${sign(row.mean)} tasks, 95% interval ${sign(row.lo)} to ${sign(row.hi)}, ${row.p}` }, s);
+        bindTip(hit, tip, host, () => `${sign(row.mean)} tasks`, () => `95% CI ${sign(row.lo)} to ${sign(row.hi)} · ${row.p}`);
+        const update = t => {
+          bar.setAttribute('x1', x(row.mean + (row.lo - row.mean) * t));
+          bar.setAttribute('x2', x(row.mean + (row.hi - row.mean) * t));
+        };
+        marks.push(update); update(progress);
       });
     });
-    onView(figure, () => tween(1500, setProgress, markDone));
+    onView(figure, () => tween(1200, setProgress, markDone));
   }
 
   /* 2. What the aggregate can hide: an interactive six-axis calculator. */
@@ -332,7 +337,7 @@
     }).observe(figure);
   }
 
-  const kinds = { contrasts, aggregate, compute, loop };
+  const kinds = { estimates, aggregate, compute, loop };
   document.querySelectorAll('[data-viz]').forEach(figure => {
     try { kinds[figure.dataset.viz]?.(figure); }
     catch (error) { figure.hidden = true; console.warn('Figure unavailable; the table remains.', error); }
