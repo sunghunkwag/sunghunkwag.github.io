@@ -155,8 +155,8 @@ test('The project keeps its heading and names its author for search', () => {
   const home = read('index.html');
   const heading = home.match(/<h1[^>]*>([\s\S]*?)<\/h1>/)[1].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
   assert.equal(heading, 'Intelligence Research Project');
-  assert.match(home.match(/<title>([^<]+)<\/title>/)[1], /Sung Hun Kwag \(곽성훈\)/);
-  assert.match(home, /class="hero-byline">By <strong>Sung Hun Kwag<\/strong> \(<span lang="ko">곽성훈<\/span>\)/);
+  assert.match(home.match(/<title>([^<]+)<\/title>/)[1], /^Sung Hun Kwag \|/);
+  assert.match(home, /class="hero-byline">By <strong>Sung Hun Kwag<\/strong>, independent AI researcher/);
   for (const file of indexable) {
     const html = read(file);
     assert.match(html, /"@type": "ResearchProject"/, file);
@@ -165,7 +165,7 @@ test('The project keeps its heading and names its author for search', () => {
     const person = schema['@graph'].find(n => n['@type'] === 'Person');
     assert.ok(person, file + ': Person entity');
     assert.equal(person.name, 'Sung Hun Kwag');
-    assert.ok(person.alternateName.includes('곽성훈'), file);
+    assert.ok(!JSON.stringify(person).includes('곽성훈'), file + ': English name only');
     assert.ok(person.sameAs.includes('https://github.com/sunghunkwag'), file);
     assert.equal(schema['@graph'].find(n => n['@type'] === 'ResearchProject').founder['@id'], person['@id'], file);
   }

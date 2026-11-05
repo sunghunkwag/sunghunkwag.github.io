@@ -47,7 +47,7 @@ Before adding a research note, include primary evidence and clearly distinguish 
 
 ## Project identity
 
-The homepage heading stays **Intelligence Research Project**. Since November 5, 2026 the author is named so that name searches reach the site: the homepage title and hero byline read Sung Hun Kwag (곽성훈), every page's `author` meta is Sung Hun Kwag, and every page's JSON-LD carries a `Person` entity (`/#person`, alternate name 곽성훈, linked to GitHub and Hugging Face) as the `founder` of the `ResearchProject` and `author` of the `WebSite`. Citation files still credit the project. Keep the existing repository and contact destinations. The visual system uses dark forest charcoal, warm ivory, restrained brass accents, editorial serif headings, and a code-native research-loop illustration.
+The homepage heading stays **Intelligence Research Project**. Since November 5, 2026 the author is named so that name searches reach the site: the homepage title and hero byline read Sung Hun Kwag, every page's `author` meta is Sung Hun Kwag, and every page's JSON-LD carries a `Person` entity (`/#person`, English name only, linked to GitHub and Hugging Face) as the `founder` of the `ResearchProject` and `author` of the `WebSite`. Citation files still credit the project. Keep the existing repository and contact destinations. The visual system uses dark forest charcoal, warm ivory, restrained brass accents, editorial serif headings, and a code-native research-loop illustration.
 
 ## Motion
 
