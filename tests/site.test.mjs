@@ -151,14 +151,19 @@ test('Homepage preserves both original and active Search Console verification ta
   assert.ok(tokens.includes('NF-4K5jGPvN4lWdqnNApFgtFtNAsVajT7kvSBKEvx50'));
 });
 
-test('The project keeps its heading and names its author for search', () => {
+test('Titles and descriptions target recursive self-improvement, not the author name', () => {
   const home = read('index.html');
   const heading = home.match(/<h1[^>]*>([\s\S]*?)<\/h1>/)[1].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
   assert.equal(heading, 'Intelligence Research Project');
-  assert.match(home.match(/<title>([^<]+)<\/title>/)[1], /^Sung Hun Kwag \|/);
-  assert.match(home, /class="hero-byline">By <strong>Sung Hun Kwag<\/strong>, independent AI researcher/);
+  assert.match(home.match(/<title>([^<]+)<\/title>/)[1], /^Intelligence Research Project \| .*Recursive Self-Improvement/);
+  assert.doesNotMatch(home, /hero-byline/);
   for (const file of indexable) {
     const html = read(file);
+    const title = html.match(/<title>([^<]+)<\/title>/)[1];
+    const description = tags(html).find(t => t.name === 'description')?.content || '';
+    assert.doesNotMatch(title + ' ' + description, /Sung Hun Kwag/, file + ': the name is not a search target');
+    assert.match(title + ' ' + description, /recursive self-improvement|RSI|self-improving/i, file);
+    assert.doesNotMatch(html, /Intelligence Research Project · Sung Hun Kwag/, file + ': footer names the project');
     assert.match(html, /"@type": "ResearchProject"/, file);
     assert.equal(tags(html).find(t => t.name === 'author')?.content, 'Sung Hun Kwag', file);
     const schema = JSON.parse(html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
