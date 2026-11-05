@@ -151,28 +151,26 @@ test('Homepage preserves both original and active Search Console verification ta
   assert.ok(tokens.includes('NF-4K5jGPvN4lWdqnNApFgtFtNAsVajT7kvSBKEvx50'));
 });
 
-test('Titles and descriptions target recursive self-improvement, not the author name', () => {
+test('The site targets recursive self-improvement and never names its owner', () => {
   const home = read('index.html');
   const heading = home.match(/<h1[^>]*>([\s\S]*?)<\/h1>/)[1].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
   assert.equal(heading, 'Intelligence Research Project');
   assert.match(home.match(/<title>([^<]+)<\/title>/)[1], /^Intelligence Research Project \| .*Recursive Self-Improvement/);
   assert.doesNotMatch(home, /hero-byline/);
+  for (const file of [...indexable, '404.html']) {
+    const html = read(file);
+    assert.doesNotMatch(html, /Sung[\s.-]+Hun[\s.-]+Kwag|Kwag,\s*Sung|곽성훈/i, file + ': no personal name anywhere');
+  }
   for (const file of indexable) {
     const html = read(file);
     const title = html.match(/<title>([^<]+)<\/title>/)[1];
     const description = tags(html).find(t => t.name === 'description')?.content || '';
-    assert.doesNotMatch(title + ' ' + description, /Sung Hun Kwag/, file + ': the name is not a search target');
     assert.match(title + ' ' + description, /recursive self-improvement|RSI|self-improving/i, file);
-    assert.doesNotMatch(html, /Intelligence Research Project · Sung Hun Kwag/, file + ': footer names the project');
     assert.match(html, /"@type": "ResearchProject"/, file);
-    assert.equal(tags(html).find(t => t.name === 'author')?.content, 'Sung Hun Kwag', file);
+    assert.equal(tags(html).find(t => t.name === 'author')?.content, 'Intelligence Research Project', file);
     const schema = JSON.parse(html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
-    const person = schema['@graph'].find(n => n['@type'] === 'Person');
-    assert.ok(person, file + ': Person entity');
-    assert.equal(person.name, 'Sung Hun Kwag');
-    assert.ok(!JSON.stringify(person).includes('곽성훈'), file + ': English name only');
-    assert.ok(person.sameAs.includes('https://github.com/sunghunkwag'), file);
-    assert.equal(schema['@graph'].find(n => n['@type'] === 'ResearchProject').founder['@id'], person['@id'], file);
+    assert.ok(!schema['@graph'].some(n => n['@type'] === 'Person'), file + ': no Person entity');
+    assert.ok(!JSON.stringify(schema).includes('#person'), file + ': no reference to a Person entity');
   }
 });
 

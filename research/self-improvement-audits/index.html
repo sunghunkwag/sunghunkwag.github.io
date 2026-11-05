@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Auditing Self-Improving AI Systems: 27 Issues Across 23 Open-Source Projects | Intelligence Research Project</title>
 <meta name="description" content="Recursive self-improvement audit: 27 issues filed in 23 open-source self-improving AI systems, showing where evaluation, selection and gating let unproven gains through, and what others reproduced.">
-<meta name="author" content="Sung Hun Kwag">
+<meta name="author" content="Intelligence Research Project">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="https://sunghunkwag.github.io/research/self-improvement-audits/">
 <meta name="google-site-verification" content="VLRR7e_mlywf18lUX8r34llUfazIfXLyenjHkKhW1Kw">
@@ -28,9 +28,6 @@
       "@id": "https://sunghunkwag.github.io/#project",
       "name": "Intelligence Research Project",
       "url": "https://sunghunkwag.github.io/",
-      "founder": {
-        "@id": "https://sunghunkwag.github.io/#person"
-      },
       "sameAs": [
         "https://github.com/sunghunkwag"
       ],
@@ -44,27 +41,6 @@
       ]
     },
     {
-      "@type": "Person",
-      "@id": "https://sunghunkwag.github.io/#person",
-      "name": "Sung Hun Kwag",
-      "alternateName": [
-        "Sung hun Kwag",
-        "sunghunkwag"
-      ],
-      "url": "https://sunghunkwag.github.io/",
-      "jobTitle": "Independent AI researcher",
-      "sameAs": [
-        "https://github.com/sunghunkwag",
-        "https://huggingface.co/stargatek1"
-      ],
-      "knowsAbout": [
-        "Recursive self-improvement",
-        "Self-improving AI agents",
-        "AI evaluation",
-        "Program synthesis"
-      ]
-    },
-    {
       "@type": "WebSite",
       "@id": "https://sunghunkwag.github.io/#website",
       "url": "https://sunghunkwag.github.io/",
@@ -74,7 +50,7 @@
         "@id": "https://sunghunkwag.github.io/#project"
       },
       "author": {
-        "@id": "https://sunghunkwag.github.io/#person"
+        "@id": "https://sunghunkwag.github.io/#project"
       }
     },
     {
@@ -103,7 +79,7 @@
       "dateModified": "2026-11-05",
       "inLanguage": "en",
       "author": {
-        "@id": "https://sunghunkwag.github.io/#person"
+        "@id": "https://sunghunkwag.github.io/#project"
       },
       "publisher": {
         "@id": "https://sunghunkwag.github.io/#project"
@@ -187,7 +163,7 @@
       </div>
     </div>
   </nav>
-<main id="main" tabindex="-1"><article><header class="hero-beat wrap article-header"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><a href="/research/">Research</a><span aria-hidden="true">/</span><span aria-current="page">Self-improvement audits</span></nav><p class="eyebrow">Research note / External audits</p><h1>Auditing self-improving AI systems</h1><p class="sub">27 issues filed in 23 open-source self-improving AI projects, looking for the places where a system can approve its own unproven gains.</p><p class="article-meta">By Sung Hun Kwag · <a href="/">Intelligence Research Project</a> · Issues filed June 2026 · Statuses checked <time datetime="2026-11-05">November 5, 2026</time></p><p class="note">An issue is a report or a proposal on someone else&rsquo;s repository, not a confirmed defect. Where another person reproduced the problem or implemented the fix, that response is linked. Most issues are still open, and none of this is peer review.</p><div class="nav-links"><a href="#why">The problem</a><a href="#confirmed">Reproduced or implemented</a><a href="#patterns">Failure patterns</a><a href="#record">Full record</a><a href="#limits">Limits</a></div></header>
+<main id="main" tabindex="-1"><article><header class="hero-beat wrap article-header"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><a href="/research/">Research</a><span aria-hidden="true">/</span><span aria-current="page">Self-improvement audits</span></nav><p class="eyebrow">Research note / External audits</p><h1>Auditing self-improving AI systems</h1><p class="sub">27 issues filed in 23 open-source self-improving AI projects, looking for the places where a system can approve its own unproven gains.</p><p class="article-meta">By <a href="/">Intelligence Research Project</a> · Issues filed June 2026 · Statuses checked <time datetime="2026-11-05">November 5, 2026</time></p><p class="note">An issue is a report or a proposal on someone else&rsquo;s repository, not a confirmed defect. Where another person reproduced the problem or implemented the fix, that response is linked. Most issues are still open, and none of this is peer review.</p><div class="nav-links"><a href="#why">The problem</a><a href="#confirmed">Reproduced or implemented</a><a href="#patterns">Failure patterns</a><a href="#record">Full record</a><a href="#limits">Limits</a></div></header>
 <section class="band band-light research-section" id="why"><div class="wrap"><h2>When the system grades its own work</h2><p>A self-improving system proposes a change, tests it, and keeps it if the test says it helped. If the same system also writes, tunes or selects the test, a change can pass without being real: the evaluator is gamed, the held-out data leaks into the search, or the selection step keeps the wrong candidate. Nothing in the reported score shows the difference.</p><p>This matters more as AI does more of its own development. In September 2026 Anthropic described an internal R&amp;D automation index in which Claude agents gather the evidence and a separate Claude judge assigns each automation level (<a href="https://unite.ai/anthropic-says-claude-leads-26-of-its-ai-research-and-development">report</a>). The question this record asks is narrower and testable today: in open-source self-improvement code, where can an unproven gain get through, and does anyone else see the same problem?</p><p>For the concept and the controls a claim needs, see the <a href="/research/recursive-self-improvement/">guide to recursive self-improvement</a>.</p></div></section>
 <section class="band band-dark research-section" id="confirmed"><div class="wrap"><h2>What others reproduced or implemented</h2><p>Five of the issues drew a concrete public response from someone other than me: a reproduction, a counterexample, or code.</p><div class="topic-grid audit-grid">
 <article class="topic-card"><span class="topic-number">REPRODUCED TWICE</span><h3><a href="https://github.com/NousResearch/hermes-agent-self-evolution/issues/141">Skill evolution was a no-op</a></h3><p>In NousResearch&rsquo;s hermes-agent-self-evolution, the evolved skill text was the unchanged baseline, so the optimizer never touched it. Two other users reproduced this on different stacks, one with a diff showing the evolved and baseline files byte-identical; a third reported a fix.</p><a href="https://github.com/NousResearch/hermes-agent-self-evolution/issues/141">Issue #141 →</a></article>
