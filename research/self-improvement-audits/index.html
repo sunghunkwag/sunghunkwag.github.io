@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auditing Self-Improving AI Systems: 27 Issues Across 23 Open-Source Projects | Intelligence Research Project</title>
+<meta name="description" content="Sung Hun Kwag&#x27;s audit record of open-source self-improving AI agents: where evaluation, selection and gating let unproven gains through, what others reproduced, and what is still open.">
+<meta name="author" content="Sung Hun Kwag">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://sunghunkwag.github.io/research/self-improvement-audits/">
+<meta name="google-site-verification" content="VLRR7e_mlywf18lUX8r34llUfazIfXLyenjHkKhW1Kw">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Intelligence Research Project">
+<meta property="og:title" content="Auditing Self-Improving AI Systems: 27 Issues Across 23 Open-Source Projects | Intelligence Research Project">
+<meta property="og:description" content="Sung Hun Kwag&#x27;s audit record of open-source self-improving AI agents: where evaluation, selection and gating let unproven gains through, what others reproduced, and what is still open.">
+<meta property="og:url" content="https://sunghunkwag.github.io/research/self-improvement-audits/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Auditing Self-Improving AI Systems: 27 Issues Across 23 Open-Source Projects | Intelligence Research Project">
+<meta name="twitter:description" content="Sung Hun Kwag&#x27;s audit record of open-source self-improving AI agents: where evaluation, selection and gating let unproven gains through, what others reproduced, and what is still open.">
+<meta name="theme-color" content="#141b1b">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/site.css?v=20261105-audits">
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ResearchProject",
+      "@id": "https://sunghunkwag.github.io/#project",
+      "name": "Intelligence Research Project",
+      "url": "https://sunghunkwag.github.io/",
+      "founder": {
+        "@id": "https://sunghunkwag.github.io/#person"
+      },
+      "sameAs": [
+        "https://github.com/sunghunkwag"
+      ],
+      "description": "An independent, open-source AI research project studying recursive self-improvement, how to measure it, and validation-gated program synthesis.",
+      "knowsAbout": [
+        "Artificial intelligence research",
+        "Recursive self-improvement",
+        "Counterfactual evaluation",
+        "Program synthesis",
+        "AI evaluation"
+      ]
+    },
+    {
+      "@type": "Person",
+      "@id": "https://sunghunkwag.github.io/#person",
+      "name": "Sung Hun Kwag",
+      "alternateName": [
+        "곽성훈",
+        "Sung hun Kwag",
+        "sunghunkwag"
+      ],
+      "url": "https://sunghunkwag.github.io/",
+      "jobTitle": "Independent AI researcher",
+      "sameAs": [
+        "https://github.com/sunghunkwag",
+        "https://huggingface.co/stargatek1"
+      ],
+      "knowsAbout": [
+        "Recursive self-improvement",
+        "Self-improving AI agents",
+        "AI evaluation",
+        "Program synthesis"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://sunghunkwag.github.io/#website",
+      "url": "https://sunghunkwag.github.io/",
+      "name": "Intelligence Research Project",
+      "inLanguage": "en",
+      "publisher": {
+        "@id": "https://sunghunkwag.github.io/#project"
+      },
+      "author": {
+        "@id": "https://sunghunkwag.github.io/#person"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://sunghunkwag.github.io/research/self-improvement-audits/#webpage",
+      "url": "https://sunghunkwag.github.io/research/self-improvement-audits/",
+      "name": "Auditing Self-Improving AI Systems: 27 Issues Across 23 Open-Source Projects | Intelligence Research Project",
+      "description": "Sung Hun Kwag's audit record of open-source self-improving AI agents: where evaluation, selection and gating let unproven gains through, what others reproduced, and what is still open.",
+      "inLanguage": "en",
+      "isPartOf": {
+        "@id": "https://sunghunkwag.github.io/#website"
+      },
+      "mainEntity": {
+        "@id": "https://sunghunkwag.github.io/research/self-improvement-audits/#article"
+      },
+      "breadcrumb": {
+        "@id": "https://sunghunkwag.github.io/research/self-improvement-audits/#breadcrumbs"
+      }
+    },
+    {
+      "@type": "Article",
+      "@id": "https://sunghunkwag.github.io/research/self-improvement-audits/#article",
+      "headline": "Auditing self-improving AI systems",
+      "description": "Sung Hun Kwag's audit record of open-source self-improving AI agents: where evaluation, selection and gating let unproven gains through, what others reproduced, and what is still open.",
+      "datePublished": "2026-11-05",
+      "dateModified": "2026-11-05",
+      "inLanguage": "en",
+      "author": {
+        "@id": "https://sunghunkwag.github.io/#person"
+      },
+      "publisher": {
+        "@id": "https://sunghunkwag.github.io/#project"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://sunghunkwag.github.io/research/self-improvement-audits/#webpage"
+      },
+      "about": [
+        "Recursive self-improvement",
+        "Self-improving AI agents",
+        "Reward hacking",
+        "AI evaluation"
+      ],
+      "citation": [
+        "https://github.com/NousResearch/hermes-agent-self-evolution/issues/141",
+        "https://github.com/jennyzzt/dgm/issues/31",
+        "https://github.com/microsoft/SkillOpt/issues/67",
+        "https://github.com/microsoft/stop/issues/7",
+        "https://github.com/google-research/reasoning-bank/issues/17",
+        "https://github.com/aiming-lab/Agent0/issues/30",
+        "https://github.com/modelscope/AgentEvolver/issues/48",
+        "https://github.com/OpenDataBox/Workspace-Bench/issues/8",
+        "https://github.com/neosigmaai/auto-harness/issues/25",
+        "https://github.com/gepa-ai/gepa/issues/381",
+        "https://github.com/facebookresearch/HyperAgents/issues/35",
+        "https://github.com/Arvid-pku/Godel_Agent/issues/4",
+        "https://github.com/facebookresearch/matrix/issues/138",
+        "https://github.com/HolobiomicsLab/Mimosa-AI/issues/154",
+        "https://github.com/iLearn-Lab/EvoHarness/issues/1",
+        "https://github.com/VectorInstitute/helix/issues/86",
+        "https://github.com/hexo-ai/sia/issues/38",
+        "https://github.com/JARVIS-Xs/SE-Agent/issues/516",
+        "https://github.com/Human-Agent-Society/CORAL/issues/124",
+        "https://github.com/NousResearch/hermes-agent-self-evolution/issues/118",
+        "https://github.com/NousResearch/hermes-agent-self-evolution/issues/115",
+        "https://github.com/neosigmaai/auto-harness/issues/24",
+        "https://github.com/kayba-ai/recursive-improve/issues/2",
+        "https://github.com/microsoft/stop/issues/6",
+        "https://github.com/zou-group/sirius/issues/2",
+        "https://github.com/VectorInstitute/aieng-bot/issues/105"
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://sunghunkwag.github.io/research/self-improvement-audits/#breadcrumbs",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://sunghunkwag.github.io/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Research",
+          "item": "https://sunghunkwag.github.io/research/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Self-improvement audits",
+          "item": "https://sunghunkwag.github.io/research/self-improvement-audits/"
+        }
+      ]
+    }
+  ]
+}</script>
+<script src="/assets/motion.js?v=20260926-motion" defer></script>
+</head>
+<body id="top">
+<div class="reading-progress" aria-hidden="true"></div><a class="skip-link" href="#main">Skip to content</a><div class="page"><nav class="topnav" aria-label="Main navigation">
+    <div class="wrap topnav-inner">
+      <a class="topnav-mark" href="/"><svg class="brand-symbol" width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 3 37 32H3Z M20 13 31 32 M20 13 9 32 M20 23v9" fill="none" stroke="currentColor" stroke-width="1.3"/></svg><span>Intelligence<br>Research Project</span></a>
+      <div class="nav-links">
+        <a href="/research/">Research</a>
+        <a href="/research/self-improvement-audits/" aria-current="page">Audits</a>
+        <a href="/#results">Results</a>
+        <a href="/#failures">Failure log</a>
+        <a href="/#support">Support</a>
+      </div>
+    </div>
+  </nav>
+<main id="main" tabindex="-1"><article><header class="hero-beat wrap article-header"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><a href="/research/">Research</a><span aria-hidden="true">/</span><span aria-current="page">Self-improvement audits</span></nav><p class="eyebrow">Research note / External audits</p><h1>Auditing self-improving AI systems</h1><p class="sub">27 issues filed in 23 open-source self-improving AI projects, looking for the places where a system can approve its own unproven gains.</p><p class="article-meta">By Sung Hun Kwag (<span lang="ko">곽성훈</span>) · <a href="/">Intelligence Research Project</a> · Issues filed June 2026 · Statuses checked <time datetime="2026-11-05">November 5, 2026</time></p><p class="note">An issue is a report or a proposal on someone else&rsquo;s repository, not a confirmed defect. Where another person reproduced the problem or implemented the fix, that response is linked. Most issues are still open, and none of this is peer review.</p><div class="nav-links"><a href="#why">The problem</a><a href="#confirmed">Reproduced or implemented</a><a href="#patterns">Failure patterns</a><a href="#record">Full record</a><a href="#limits">Limits</a></div></header>
+<section class="band band-light research-section" id="why"><div class="wrap"><h2>When the system grades its own work</h2><p>A self-improving system proposes a change, tests it, and keeps it if the test says it helped. If the same system also writes, tunes or selects the test, a change can pass without being real: the evaluator is gamed, the held-out data leaks into the search, or the selection step keeps the wrong candidate. Nothing in the reported score shows the difference.</p><p>This matters more as AI does more of its own development. In September 2026 Anthropic described an internal R&amp;D automation index in which Claude agents gather the evidence and a separate Claude judge assigns each automation level (<a href="https://unite.ai/anthropic-says-claude-leads-26-of-its-ai-research-and-development">report</a>). The question this record asks is narrower and testable today: in open-source self-improvement code, where can an unproven gain get through, and does anyone else see the same problem?</p><p>For the concept and the controls a claim needs, see the <a href="/research/recursive-self-improvement/">guide to recursive self-improvement</a>.</p></div></section>
+<section class="band band-dark research-section" id="confirmed"><div class="wrap"><h2>What others reproduced or implemented</h2><p>Five of the issues drew a concrete public response from someone other than me: a reproduction, a counterexample, or code.</p><div class="topic-grid audit-grid">
+<article class="topic-card"><span class="topic-number">REPRODUCED TWICE</span><h3><a href="https://github.com/NousResearch/hermes-agent-self-evolution/issues/141">Skill evolution was a no-op</a></h3><p>In NousResearch&rsquo;s hermes-agent-self-evolution, the evolved skill text was the unchanged baseline, so the optimizer never touched it. Two other users reproduced this on different stacks, one with a diff showing the evolved and baseline files byte-identical; a third reported a fix.</p><a href="https://github.com/NousResearch/hermes-agent-self-evolution/issues/141">Issue #141 →</a></article>
+<article class="topic-card"><span class="topic-number">COUNTEREXAMPLE</span><h3><a href="https://github.com/microsoft/SkillOpt/issues/67">A gate that accepts evaluator gaming</a></h3><p>In Microsoft&rsquo;s SkillOpt, another user later reported a reproducible case: the edit gate accepted a rule that gamed a heading check, lifting the validation mean from 0.682 to 0.852 while one task regressed. The gate compared means with no per-task regression check.</p><a href="https://github.com/microsoft/SkillOpt/issues/67">Issue #67 →</a></article>
+<article class="topic-card"><span class="topic-number">IMPLEMENTED</span><h3><a href="https://github.com/iLearn-Lab/EvoHarness/issues/1">Negative-control probes</a></h3><p>A collaborator on EvoHarness implemented the proposal: a candidate that passes replay and regression can still be blocked when a near-miss probe shows it claiming success where it should fail.</p><a href="https://github.com/iLearn-Lab/EvoHarness/commit/b8f323e151dbf43eeed0e76dbf4305a62c49106b">Commit b8f323e →</a></article>
+<article class="topic-card"><span class="topic-number">PULL REQUEST · OPEN</span><h3><a href="https://github.com/gepa-ai/gepa/issues/381">An admission ledger for GEPA</a></h3><p>An external contributor implemented a per-decision record of every accepted and rejected candidate, so an acceptance can be replayed. I reviewed it; it was open on the check date.</p><a href="https://github.com/gepa-ai/gepa/pull/382">Pull request #382 →</a></article>
+<article class="topic-card"><span class="topic-number">PULL REQUEST · OPEN</span><h3><a href="https://github.com/jennyzzt/dgm/issues/31">Darwin G&ouml;del Machine selection</a></h3><p>The &ldquo;best&rdquo; parent-selection mode could not be chosen from the command line, and when called it sorted toward the lowest scores. Another contributor opened a fix; it was open on the check date.</p><a href="https://github.com/jennyzzt/dgm/pull/32">Pull request #32 →</a></article>
+</div></div></section>
+<section class="band band-light research-section" id="patterns"><div class="wrap"><h2>Seven recurring failure patterns</h2><p>The 26 active issues group into seven ways a self-improvement loop can report progress it has not shown. Each pattern lists the issues that raise it.</p><ol class="pattern-list">
+<li><strong>The optimizer never touches what it claims to optimize.</strong> The evolved artifact is byte-for-byte the baseline, so any reported gain came from somewhere else. <span class="pattern-refs"><a href="https://github.com/NousResearch/hermes-agent-self-evolution/issues/141">NousResearch/hermes-agent-self-evolution#141</a></span></li>
+<li><strong>Selection picks the wrong end.</strong> A mode meant to keep the best candidates cannot be chosen, and when called it keeps the worst. <span class="pattern-refs"><a href="https://github.com/jennyzzt/dgm/issues/31">jennyzzt/dgm#31</a></span></li>
+<li><strong>A mean-score gate accepts a regression.</strong> An edit that games the evaluator lifts the average while a task gets worse, and the gate only looks at the average. <span class="pattern-refs"><a href="https://github.com/microsoft/SkillOpt/issues/67">microsoft/SkillOpt#67</a>, <a href="https://github.com/microsoft/stop/issues/7">microsoft/stop#7</a></span></li>
+<li><strong>Held-out answers leak into the search.</strong> Memory retrieval, generated data or rubrics can expose the answer the system is later scored against. <span class="pattern-refs"><a href="https://github.com/google-research/reasoning-bank/issues/17">google-research/reasoning-bank#17</a>, <a href="https://github.com/aiming-lab/Agent0/issues/30">aiming-lab/Agent0#30</a>, <a href="https://github.com/modelscope/AgentEvolver/issues/48">modelscope/AgentEvolver#48</a>, <a href="https://github.com/OpenDataBox/Workspace-Bench/issues/8">OpenDataBox/Workspace-Bench#8</a>, <a href="https://github.com/neosigmaai/auto-harness/issues/25">neosigmaai/auto-harness#25</a></span></li>
+<li><strong>No record of what was admitted or rejected.</strong> Without a per-decision ledger, nobody can replay why a candidate was kept, so a lucky or contaminated acceptance is invisible. <span class="pattern-refs"><a href="https://github.com/gepa-ai/gepa/issues/381">gepa-ai/gepa#381</a>, <a href="https://github.com/facebookresearch/HyperAgents/issues/35">facebookresearch/HyperAgents#35</a>, <a href="https://github.com/Arvid-pku/Godel_Agent/issues/4">Arvid-pku/Godel_Agent#4</a>, <a href="https://github.com/facebookresearch/matrix/issues/138">facebookresearch/matrix#138</a>, <a href="https://github.com/HolobiomicsLab/Mimosa-AI/issues/154">HolobiomicsLab/Mimosa-AI#154</a></span></li>
+<li><strong>Gains promoted without a negative control.</strong> A change is promoted because it helped where it was tried, with no test that it does not also claim success where it should fail. <span class="pattern-refs"><a href="https://github.com/iLearn-Lab/EvoHarness/issues/1">iLearn-Lab/EvoHarness#1</a>, <a href="https://github.com/VectorInstitute/helix/issues/86">VectorInstitute/helix#86</a>, <a href="https://github.com/hexo-ai/sia/issues/38">hexo-ai/sia#38</a>, <a href="https://github.com/JARVIS-Xs/SE-Agent/issues/516">JARVIS-Xs/SE-Agent#516</a>, <a href="https://github.com/Human-Agent-Society/CORAL/issues/124">Human-Agent-Society/CORAL#124</a>, <a href="https://github.com/NousResearch/hermes-agent-self-evolution/issues/118">NousResearch/hermes-agent-self-evolution#118</a>, <a href="https://github.com/NousResearch/hermes-agent-self-evolution/issues/115">NousResearch/hermes-agent-self-evolution#115</a></span></li>
+<li><strong>Configuration that silently changes the run.</strong> Ignored timeouts, misrouted output paths and outdated setup make a reported run hard to reproduce. <span class="pattern-refs"><a href="https://github.com/neosigmaai/auto-harness/issues/24">neosigmaai/auto-harness#24</a>, <a href="https://github.com/kayba-ai/recursive-improve/issues/2">kayba-ai/recursive-improve#2</a>, <a href="https://github.com/microsoft/stop/issues/6">microsoft/stop#6</a>, <a href="https://github.com/zou-group/sirius/issues/2">zou-group/sirius#2</a>, <a href="https://github.com/VectorInstitute/aieng-bot/issues/105">VectorInstitute/aieng-bot#105</a></span></li>
+</ol><p>The same patterns appear in this project&rsquo;s own work: a 15/15 result that the task generator guaranteed, and a recursive chain whose reported gain reversed under shared random streams. Both are in the <a href="/#failures">failure log</a>.</p></div></section>
+<section class="band band-dark research-section" id="record"><div class="wrap"><h2>The full record</h2><p>Every issue filed in June 2026, with its state and any public response as of November 5, 2026. One issue was withdrawn by me shortly after filing and is listed for completeness.</p><div class="table-scroll" role="region" aria-label="All 27 audit issues; scroll horizontally" tabindex="0"><table class="audit-table"><caption>Issues filed on other projects&rsquo; repositories. A response is listed only when it is publicly visible on the issue.</caption><thead><tr><th scope="col">Project and issue</th><th scope="col">What it raises</th><th scope="col">State</th><th scope="col">Public response</th></tr></thead><tbody>
+<tr><th scope="row"><a href="https://github.com/NousResearch/hermes-agent-self-evolution/issues/141">NousResearch/hermes-agent-self-evolution#141</a></th><td>Skill evolution is a no-op: optimized_module.skill_text is the unchanged baseline</td><td>Open</td><td>Reproduced independently by two other users; a third reported a fix</td></tr>
+<tr><th scope="row"><a href="https://github.com/jennyzzt/dgm/issues/31">jennyzzt/dgm#31</a></th><td>best parent-selection mode is unreachable from CLI and selects lowest scores when called</td><td>Open</td><td>Fix opened by another contributor as PR #32 (open)</td></tr>
+<tr><th scope="row"><a href="https://github.com/microsoft/SkillOpt/issues/67">microsoft/SkillOpt#67</a></th><td>Add a verifier-discipline stress test for reward-hacking skill edits</td><td>Closed</td><td>Another user reported a reproducible counterexample after closure</td></tr>
+<tr><th scope="row"><a href="https://github.com/microsoft/stop/issues/7">microsoft/stop#7</a></th><td>Require a relative utility gate before adopting the next self-improver</td><td>Open</td><td>&mdash;</td></tr>
+<tr><th scope="row"><a href="https://github.com/google-research/reasoning-bank/issues/17">google-research/reasoning-bank#17</a></th><td>Add a leave-one-task-out guard for memory retrieval to prevent self-retrieval contamination</td><td>Open</td><td>&mdash;</td></tr>
+<tr><th scope="row"><a href="https://github.com/aiming-lab/Agent0/issues/30">aiming-lab/Agent0#30</a></th><td>Add an admission manifest for generated-question data and answer-leakage canaries</td><td>Open</td><td>&mdash;</td></tr>
+<tr><th scope="row"><a href="https://github.com/modelscope/AgentEvolver/issues/48">modelscope/AgentEvolver#48</a></th><td>Add a canary audit for ground-truth/reference-solution isolation</td><td>Open</td><td>&mdash;</td></tr>
+<tr><th scope="row"><a href="https://github.com/OpenDataBox/Workspace-Bench/issues/8">OpenDataBox/Workspace-Bench#8</a></th><td>Add a canary leakage audit for rubric and ground-truth isolation</td><td>Closed</td><td>Discussion (3 comments)</td></tr>
+<tr><th scope="row"><a href="https://github.com/neosigmaai/auto-harness/issues/25">neosigmaai/auto-harness#25</a></th><td>Add sealed negative-control tasks to audit train/test leakage and gate discipline</td><td>Open</td><td>&mdash;</td></tr>
+<tr><th scope="row"><a href="https://github.com/gepa-ai/gepa/issues/381">gepa-ai/gepa#381</a></th><td>Add a run_dir admission manifest for candidate acceptance/rejection audits</td><td>Open</td><td>Implemented by an external contributor as PR #382 (open)</td></tr>
+<tr><th scope="row"><a href="https://github.com/facebookresearch/HyperAgents/issues/35">facebookresearch/HyperAgents#35</a></th><td>Add machine-readable admission manifests for generated agents and rollback decisions</td><td>Open</td><td>Discussion (1 comment)</td></tr>
+<tr><th scope="row"><a href="https://github.com/Arvid-pku/Godel_Agent/issues/4">Arvid-pku/Godel_Agent#4</a></th><td>Add a modification ledger before dumping accepted self-modified logic</td><td>Open</td><td>Discussion (1 comment)</td></tr>
+<tr><th scope="row"><a href="https://github.com/facebookresearch/matrix/issues/138">facebookresearch/matrix#138</a></th><td>Add optional acceptance/provenance gates for synthetic multi-agent outputs</td><td>Open</td><td>&mdash;</td></tr>
+<tr><th scope="row"><a href="https://github.com/HolobiomicsLab/Mimosa-AI/issues/154">HolobiomicsLab/Mimosa-AI#154</a></th><td>Add workflow admission cards before similarity-based template reuse</td><td>Open</td><td>Discussion (2 comments)</td></tr>
+<tr><th scope="row"><a href="https://github.com/iLearn-Lab/EvoHarness/issues/1">iLearn-Lab/EvoHarness#1</a></th><td>Add negative-control probes to promotion validation</td><td>Open</td><td>Implemented by a repository collaborator (commit b8f323e)</td></tr>
+<tr><th scope="row"><a href="https://github.com/VectorInstitute/helix/issues/86">VectorInstitute/helix#86</a></th><td>[FEATURE] Add transfer-evidence cards before promoting Helix improvements to main</td><td>Open</td><td>&mdash;</td></tr>
+<tr><th scope="row"><a href="https://github.com/hexo-ai/sia/issues/38">hexo-ai/sia#38</a></th><td>Add transfer-evidence cards to separate reusable improvements from task-specific residue</td><td>Open</td><td>&mdash;</td></tr>
+<tr><th scope="row"><a href="https://github.com/JARVIS-Xs/SE-Agent/issues/516">JARVIS-Xs/SE-Agent#516</a></th><td>Add counterfactual admission gates for trajectory-pool reuse</td><td>Open</td><td>&mdash;</td></tr>
+<tr><th scope="row"><a href="https://github.com/Human-Agent-Society/CORAL/issues/124">Human-Agent-Society/CORAL#124</a></th><td>Add quarantine-backed promotion gates for cross-island memory and skill migration</td><td>Open</td><td>Discussion (4 comments)</td></tr>
+<tr><th scope="row"><a href="https://github.com/NousResearch/hermes-agent-self-evolution/issues/118">NousResearch/hermes-agent-self-evolution#118</a></th><td>Phase 4 verifier/fitness harness: sealed hidden evals, rollback traces, and adaptive-vs-frozen gates</td><td>Open</td><td>&mdash;</td></tr>
+<tr><th scope="row"><a href="https://github.com/NousResearch/hermes-agent-self-evolution/issues/115">NousResearch/hermes-agent-self-evolution#115</a></th><td>[Design Proposal] Runtime-gated reingestion with negative-control probes for skill evolution</td><td>Closed</td><td>&mdash;</td></tr>
+<tr><th scope="row"><a href="https://github.com/neosigmaai/auto-harness/issues/24">neosigmaai/auto-harness#24</a></th><td>Terminal-Bench per_task_timeout config is ignored by benchmark and gate runners</td><td>Open</td><td>&mdash;</td></tr>
+<tr><th scope="row"><a href="https://github.com/kayba-ai/recursive-improve/issues/2">kayba-ai/recursive-improve#2</a></th><td>evolve update writes scores to a nested island status file when run from a worktree</td><td>Open</td><td>&mdash;</td></tr>
+<tr><th scope="row"><a href="https://github.com/microsoft/stop/issues/6">microsoft/stop#6</a></th><td>Add reproducible setup notes for current Python/OpenAI SDK environments</td><td>Open</td><td>&mdash;</td></tr>
+<tr><th scope="row"><a href="https://github.com/zou-group/sirius/issues/2">zou-group/sirius#2</a></th><td>Make feedback and finetune-data paths respect subject/model args</td><td>Open</td><td>&mdash;</td></tr>
+<tr><th scope="row"><a href="https://github.com/VectorInstitute/aieng-bot/issues/105">VectorInstitute/aieng-bot#105</a></th><td>Align agentic fix-loop staging instructions and result-comment step id</td><td>Closed</td><td>Discussion (2 comments)</td></tr>
+<tr><th scope="row"><a href="https://github.com/SakanaAI/AI-Scientist/issues/249">SakanaAI/AI-Scientist#249</a></th><td>Withdrawn by the author shortly after filing</td><td>Withdrawn</td><td>&mdash;</td></tr>
+</tbody></table></div><p>Follow-up code: <a href="https://github.com/NousResearch/hermes-agent-self-evolution/pull/202">pull request #202</a> to hermes-agent-self-evolution adds lesson probes, a regression gate that checks each lesson by removing it and confirming the behavior it provided. It was open on the check date.</p></div></section>
+<section class="band band-light research-section" id="limits"><div class="wrap"><h2>What this record does not show</h2><ul><li>An open issue is a claim by its author. Only the five cases above have a public reproduction, counterexample or implementation by someone else.</li><li>Maintainers have not merged most of the proposals, and a closed issue is not necessarily a resolved one.</li><li>The issues were written with AI agents under my direction and filed from my account. The same verification standard applies to them as to the systems they audit.</li><li>Responses are counted only when visible on the issue page; private replies and later changes are not included until the next check.</li></ul><p><a href="/research/#notes">Browse all research notes →</a></p></div></section></article></main><section class="band band-dark support-strip" aria-labelledby="support-strip-title"><div class="wrap support-strip-inner"><div><p class="eyebrow">Support independent research</p><h2 id="support-strip-title">Help fund the next audit.</h2><p>Each audit takes time to read the code, rerun the claim and write a report a maintainer can act on. Research funding buys more of them, and every result is published, including the ones that turn out wrong.</p></div><div class="hero-actions"><a class="btn btn-solid" href="mailto:sunghunkwag@gmail.com?subject=Supporting%20the%20Intelligence%20Research%20Project&amp;body=Hello%2C%0A%0AI%20read%20the%20audit%20record%20and%20would%20like%20to%20support%20the%20project.%0A%0AWhat%20I%20would%20like%20to%20support%20%28research%20funding%2C%20a%20specific%20audit%2C%20other%29%3A%0AApproximate%20amount%3A%0A%0AThank%20you.">Email to support <span aria-hidden="true">→</span></a><a class="btn btn-ghost" href="/#support">Ways to support</a></div></div></section><footer class="band band-dark"><div class="wrap footer-inner">
+  <p>Intelligence Research Project · Sung Hun Kwag<br><span class="footer-note">Independent research. Open evidence.</span></p>
+  <div class="nav-links"><a href="/research/">Research areas</a><a href="https://github.com/sunghunkwag">GitHub</a><a href="mailto:sunghunkwag@gmail.com">Contact</a><a href="#top">Back to top ↑</a></div>
+  </div></footer></div></body></html>

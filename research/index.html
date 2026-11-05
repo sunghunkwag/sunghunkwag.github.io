@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Recursive Self-Improvement Research: Experiments and Methods | Intelligence Research Project</title>
 <meta name="description" content="Explore recursive self-improvement experiments with matched-compute controls, a multi-axis RSI benchmark, and validation-gated program synthesis, with open code and limitations.">
-<meta name="author" content="Intelligence Research Project">
+<meta name="author" content="Sung Hun Kwag">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="https://sunghunkwag.github.io/research/">
 <meta name="google-site-verification" content="VLRR7e_mlywf18lUX8r34llUfazIfXLyenjHkKhW1Kw">
@@ -19,7 +19,7 @@
 <meta name="twitter:description" content="Explore recursive self-improvement experiments with matched-compute controls, a multi-axis RSI benchmark, and validation-gated program synthesis, with open code and limitations.">
 <meta name="theme-color" content="#141b1b">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/assets/site.css?v=20260928-prereg">
+<link rel="stylesheet" href="/assets/site.css?v=20261105-audits">
 <script type="application/ld+json">{
   "@context": "https://schema.org",
   "@graph": [
@@ -38,6 +38,31 @@
         "Counterfactual evaluation",
         "Program synthesis",
         "AI evaluation"
+      ],
+      "founder": {
+        "@id": "https://sunghunkwag.github.io/#person"
+      }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://sunghunkwag.github.io/#person",
+      "name": "Sung Hun Kwag",
+      "alternateName": [
+        "곽성훈",
+        "Sung hun Kwag",
+        "sunghunkwag"
+      ],
+      "url": "https://sunghunkwag.github.io/",
+      "jobTitle": "Independent AI researcher",
+      "sameAs": [
+        "https://github.com/sunghunkwag",
+        "https://huggingface.co/stargatek1"
+      ],
+      "knowsAbout": [
+        "Recursive self-improvement",
+        "Self-improving AI agents",
+        "AI evaluation",
+        "Program synthesis"
       ]
     },
     {
@@ -48,6 +73,9 @@
       "inLanguage": "en",
       "publisher": {
         "@id": "https://sunghunkwag.github.io/#project"
+      },
+      "author": {
+        "@id": "https://sunghunkwag.github.io/#person"
       }
     },
     {
@@ -75,6 +103,7 @@
       <a class="topnav-mark" href="/"><svg class="brand-symbol" width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 3 37 32H3Z M20 13 31 32 M20 13 9 32 M20 23v9" fill="none" stroke="currentColor" stroke-width="1.3"/></svg><span>Intelligence<br>Research Project</span></a>
       <div class="nav-links">
         <a href="/research/" aria-current="page">Research</a>
+        <a href="/research/self-improvement-audits/">Audits</a>
         <a href="/#results">Results</a>
         <a href="/#failures">Failure log</a>
         <a href="/#support">Support</a>
@@ -83,7 +112,7 @@
   </nav>
 <main id="main" tabindex="-1">
 <header class="hero-beat wrap"><p class="eyebrow">Intelligence Research Project / Research</p><h1>Recursive self-improvement research</h1><p class="sub">Open-source AI research from the <a href="/">Intelligence Research Project</a>. The central question: can a system improve its own methods, and can that improvement survive an independent check?</p><div class="nav-links"><a href="#notes">Research notes</a><a href="#recursive-self-improvement">Self-improvement</a><a href="#measurement">Measurement</a><a href="#program-synthesis">Program synthesis</a></div></header>
-<section class="band band-light research-section" id="notes"><div class="wrap"><p class="eyebrow">Research library</p><h2>Methods, results, and the evidence behind them.</h2><p class="section-intro">Each note connects a research question to pinned code, interpretable results, and a reference you can cite. New to the topic? Start with the <a href="/research/recursive-self-improvement/">guide to recursive self-improvement</a>.</p><div class="topic-grid"><article class="topic-card"><span class="topic-number">01 / RESEARCH NOTE</span><h3><a href="/research/gated-self-improvement/">Gated Self-Improvement: Pre-Registered Results</a></h3><p>Two pre-registered experiments, run once on untouched seeds: carried improvement memory, and recursion against a compute-matched single round. Includes the nulls and the retracted first headline.</p><a href="/research/gated-self-improvement/#cite">Citation and source details →</a></article><article class="topic-card"><span class="topic-number">02 / RESEARCH NOTE</span><h3><a href="/research/rsi-bench/">RSI-Bench: Measuring Recursive Self-Improvement</a></h3><p>Six evaluation dimensions, a worked scoring example, and a verified external reference.</p><a href="/research/rsi-bench/#cite">Citation and source details →</a></article><article class="topic-card"><span class="topic-number">03 / GUIDE</span><h3><a href="/research/recursive-self-improvement/">What recursive self-improvement is, and how to test a claim</a></h3><p>A definition, a sourced history, and the controls an RSI claim needs before it means anything.</p><a href="/research/recursive-self-improvement/#testing">How to test a claim →</a></article></div></div></div></section>
+<section class="band band-light research-section" id="notes"><div class="wrap"><p class="eyebrow">Research library</p><h2>Methods, results, and the evidence behind them.</h2><p class="section-intro">Each note connects a research question to pinned code, interpretable results, and a reference you can cite. New to the topic? Start with the <a href="/research/recursive-self-improvement/">guide to recursive self-improvement</a>.</p><div class="topic-grid notes-grid"><article class="topic-card"><span class="topic-number">01 / AUDIT RECORD</span><h3><a href="/research/self-improvement-audits/">Auditing Self-Improving AI Systems</a></h3><p>27 issues filed in 23 open-source self-improving AI projects: where evaluation, selection and gating let unproven gains through, and which reports others reproduced or implemented.</p><a href="/research/self-improvement-audits/#record">The full record →</a></article><article class="topic-card"><span class="topic-number">02 / RESEARCH NOTE</span><h3><a href="/research/gated-self-improvement/">Gated Self-Improvement: Pre-Registered Results</a></h3><p>Two pre-registered experiments, run once on untouched seeds: carried improvement memory, and recursion against a compute-matched single round. Includes the nulls and the retracted first headline.</p><a href="/research/gated-self-improvement/#cite">Citation and source details →</a></article><article class="topic-card"><span class="topic-number">03 / RESEARCH NOTE</span><h3><a href="/research/rsi-bench/">RSI-Bench: Measuring Recursive Self-Improvement</a></h3><p>Six evaluation dimensions, a worked scoring example, and a verified external reference.</p><a href="/research/rsi-bench/#cite">Citation and source details →</a></article><article class="topic-card"><span class="topic-number">04 / GUIDE</span><h3><a href="/research/recursive-self-improvement/">What recursive self-improvement is, and how to test a claim</a></h3><p>A definition, a sourced history, and the controls an RSI claim needs before it means anything.</p><a href="/research/recursive-self-improvement/#testing">How to test a claim →</a></article></div></div></div></section>
 <section class="band band-dark research-section" id="recursive-self-improvement"><div class="wrap"><p class="eyebrow">01 / Recursive self-improvement</p><h2>Measure improvement in the process itself</h2>
 <p>Recursive self-improvement (RSI) research asks whether a system can change the methods it uses to solve problems and improve through those changes. A higher score alone does not establish this: extra compute, an easier task distribution, or a mismatched control can also produce an apparent gain.</p><figure class="viz viz-light" data-viz="loop" hidden><div class="viz-plot"></div><figcaption>Ordinary self-improvement runs the outer loop. Recursive self-improvement also revises the inner one: the process that proposes and keeps changes.</figcaption></figure>
 <p>For the definition, a sourced history from I. J. Good to 2026 systems, and a checklist of confounds, read <a href="/research/recursive-self-improvement/">what recursive self-improvement is and how to test a claim</a>.</p><p>This project studies bounded, testable forms of self-improvement. It does not claim to have demonstrated artificial general intelligence or open-ended recursive improvement.</p>
@@ -96,6 +125,6 @@
 <p class="note"><strong>A rejected claim:</strong> a 15/15 adoption result was traced to the task generator and search engine having been co-designed. It was caught before publication. Read the <a href="https://github.com/sunghunkwag/rsi-metaforge-core/blob/main/docs/05_limitations.md">standing gates and limitations</a>; there is no separate postmortem for that result.</p></div></section>
 <section class="band band-light research-section" id="evaluation"><div class="wrap"><p class="eyebrow">Reading the evidence</p><h2>What does “validated” mean here?</h2><p>On this site, “validated” means a result survives a stated counterfactual or held-out test linked from the project entry. It is not a claim of independent replication, peer review, or general applicability.</p><ol><li><strong>Check the task and scale.</strong> Bounded tasks and small search budgets impose limits on what a result can establish.</li><li><strong>Inspect the control.</strong> Compare compute budgets and evaluation conditions before attributing a gain to the mechanism.</li><li><strong>Read the rejected results.</strong> Retractions and limitations are part of the evidence, not footnotes to skip.</li><li><strong>Follow the source.</strong> Repository documentation and run artifacts provide the detailed record behind the website summary.</li></ol><div class="hero-actions"><a class="btn btn-solid" href="/#results">View all research projects</a><a class="btn btn-ghost" href="/#failures">Read the failure log</a></div><p>For research questions and collaboration: <a href="mailto:sunghunkwag@gmail.com">Email the project ↗</a>.</p></div></section>
 </main><section class="band band-dark support-strip" aria-labelledby="support-strip-title"><div class="wrap support-strip-inner"><div><p class="eyebrow">Support independent research</p><h2 id="support-strip-title">Help fund the next experiment.</h2><p>Each run is bounded by the compute it can afford. In the latest experiment a run gives the improvement process about 50 decisions, where measuring its options would take roughly 400. Research funding would buy longer runs and more of them. Every result will be published, including the failures.</p></div><div class="hero-actions"><a class="btn btn-solid" href="mailto:sunghunkwag@gmail.com?subject=Supporting%20the%20Intelligence%20Research%20Project&amp;body=Hello%2C%0A%0AI%20read%20a%20research%20note%20and%20would%20like%20to%20support%20the%20project.%0A%0AWhat%20I%20would%20like%20to%20support%20%28research%20funding%2C%20a%20specific%20experiment%2C%20other%29%3A%0AApproximate%20amount%3A%0A%0AThank%20you.">Email to support <span aria-hidden="true">→</span></a><a class="btn btn-ghost" href="/#support">Ways to support</a></div></div></section><footer class="band band-dark"><div class="wrap footer-inner">
-  <p>Intelligence Research Project<br><span class="footer-note">Independent research. Open evidence.</span></p>
+  <p>Intelligence Research Project · Sung Hun Kwag<br><span class="footer-note">Independent research. Open evidence.</span></p>
   <div class="nav-links"><a href="/research/">Research areas</a><a href="https://github.com/sunghunkwag">GitHub</a><a href="mailto:sunghunkwag@gmail.com">Contact</a><a href="#top">Back to top ↑</a></div>
   </div></footer></div></body></html>

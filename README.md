@@ -4,6 +4,7 @@ English-language website for [Intelligence Research Project independent AI resea
 
 - [Homepage](https://sunghunkwag.github.io/): project introduction, project evidence, retractions, and research support.
 - [Research areas](https://sunghunkwag.github.io/research/): recursive self-improvement experiments, RSI measurement, and validation-gated program synthesis.
+- [Self-improvement audits](https://sunghunkwag.github.io/research/self-improvement-audits/): 27 issues filed in 23 open-source self-improving AI projects, with their states and public responses.
 
 ## Development
 
@@ -13,7 +14,7 @@ Preserve evidence links and scope limitations when updating results. A bounded-t
 
 ## Search setup
 
-All indexable pages have a unique English title and description, an absolute canonical URL, Open Graph / Twitter metadata, and linked WebSite, WebPage, and ResearchProject JSON-LD. The existing Google verification token is preserved. robots.txt allows crawling and advertises sitemap.xml. The custom 404 is noindex.
+All indexable pages have a unique English title and description, an absolute canonical URL, Open Graph / Twitter metadata, and linked WebSite, WebPage, ResearchProject and Person JSON-LD. The existing Google verification token is preserved. robots.txt allows crawling and advertises sitemap.xml. The custom 404 is noindex.
 
 No regional targeting or Korean-language page is configured. English content is available globally. Google does not use the keywords meta tag for ranking, so keyword stuffing is deliberately avoided.
 
@@ -32,7 +33,9 @@ References: [Google SEO starter guide](https://developers.google.com/search/docs
 
 ## Research notes and regression checks
 
-The featured result is the [pre-registered results note for gated-self-improvement](https://sunghunkwag.github.io/research/gated-self-improvement/). It covers the v3 carried-memory experiment and the v2 recursion test, both pre-registered and run once on untouched seeds, with their nulls and limits: the effect is small, and the carried advantage does not keep growing. It also records the retracted v1 headline (+1.55), which an audit showed was produced by arm-keyed evaluation randomness and a data confound. The note includes the hypotheses table, a downloadable CSV, pinned source links and a reproduction guide. These are reported project results, not a new independent run.
+The featured work is the [external audit record](https://sunghunkwag.github.io/research/self-improvement-audits/): every issue filed in June 2026 on other projects' self-improvement code, grouped into seven failure patterns, with the five cases another person reproduced, countered with a case, or implemented. Issue states and responses were checked on November 5, 2026; recheck them before changing any count, and keep the statement that an issue is a report, not a confirmed defect. Open pull requests by other contributors (DGM #32, GEPA #382) must not be described as merged until they are.
+
+The gated-self-improvement entry stays on the homepage below the featured card. Its note is the [pre-registered results note for gated-self-improvement](https://sunghunkwag.github.io/research/gated-self-improvement/). It covers the v3 carried-memory experiment and the v2 recursion test, both pre-registered and run once on untouched seeds, with their nulls and limits: the effect is small, and the carried advantage does not keep growing. It also records the retracted v1 headline (+1.55), which an audit showed was produced by arm-keyed evaluation randomness and a data confound. The note includes the hypotheses table, a downloadable CSV, pinned source links and a reproduction guide. These are reported project results, not a new independent run.
 
 Run environments of the retracted v1 result are not named on the site.
 
@@ -44,7 +47,7 @@ Before adding a research note, include primary evidence and clearly distinguish 
 
 ## Project identity
 
-Use **Intelligence Research Project** as the public identity and homepage heading. Do not introduce the owner’s personal name into visible copy, page titles, social metadata, or structured data. Keep the existing repository and contact destinations. The visual system uses dark forest charcoal, warm ivory, restrained brass accents, editorial serif headings, and a code-native research-loop illustration.
+The homepage heading stays **Intelligence Research Project**. Since November 5, 2026 the author is named so that name searches reach the site: the homepage title and hero byline read Sung Hun Kwag (곽성훈), every page's `author` meta is Sung Hun Kwag, and every page's JSON-LD carries a `Person` entity (`/#person`, alternate name 곽성훈, linked to GitHub and Hugging Face) as the `founder` of the `ResearchProject` and `author` of the `WebSite`. Citation files still credit the project. Keep the existing repository and contact destinations. The visual system uses dark forest charcoal, warm ivory, restrained brass accents, editorial serif headings, and a code-native research-loop illustration.
 
 ## Motion
 

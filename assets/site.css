@@ -317,3 +317,11 @@ pre code{overflow-wrap:normal;}
 
 /* Featured result plus two entries: two columns on wide screens. */
 @media(min-width:1051px){#results .log-group{grid-template-columns:repeat(2,minmax(0,1fr));}}
+/* Audits note and name byline (2026-11-05) */
+.hero-byline{font:11px/1.8 var(--mono);letter-spacing:.04em;color:#aebbb1;margin:18px 0 0;}
+.hero-byline strong{font-weight:600;color:inherit;}
+.pattern-list li{margin-bottom:20px;}
+.pattern-refs{display:block;font:11px/1.9 var(--mono);margin-top:6px;}
+@media(min-width:761px){.audit-grid .topic-card:nth-child(3n+1){padding-left:0;border-left:0;}.audit-grid .topic-card:nth-child(n+4){border-top:1px solid var(--line);}.notes-grid{grid-template-columns:repeat(2,minmax(0,1fr));}.notes-grid .topic-card:nth-child(odd){padding-left:0;border-left:0;}.notes-grid .topic-card:nth-child(n+3){border-top:1px solid var(--line);}}
+.audit-table th,.audit-table td{text-align:left;vertical-align:top;}.audit-table td:nth-child(3){white-space:nowrap;}
+.audit-table tbody tr:last-child{background:none;font-weight:inherit;}

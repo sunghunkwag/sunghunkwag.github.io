@@ -97,20 +97,35 @@ test('Withdrawn attention-free work is gone from every page, the sitemap and the
   for (const file of [...pages, 'sitemap.xml']) assert.doesNotMatch(read(file), /attention-free|neural architecture search|sequence length 64/i, file);
 });
 
-test('Gated self-improvement is the featured result, shown with its nulls, its limits and the retraction', () => {
+test('The external audit record is the featured work, with its limits stated', () => {
   const home = read('index.html');
   const featured = home.match(/<article class="reveal featured-project">([\s\S]*?)<\/article>/g) || [];
   assert.equal(featured.length, 1);
-  assert.match(featured[0], /gated-self-improvement/);
-  assert.match(featured[0], /\+1\.52/);
-  assert.match(featured[0], /Pre&#8209;registered/);
-  assert.match(featured[0], /not significant/);
-  assert.match(featured[0], /does not keep growing/);
-  assert.ok(home.indexOf('featured-project') < home.indexOf('github.com/sunghunkwag/rsi-bench"'), 'featured card comes first');
+  assert.match(featured[0], /href="\/research\/self-improvement-audits\/"/);
+  assert.match(featured[0], /an issue is a report, not a confirmed defect/);
+  assert.ok(home.indexOf('featured-project') < home.indexOf('github.com/sunghunkwag/gated-self-improvement"'), 'featured card comes first');
+  assert.match(read('research/index.html'), /<span class="topic-number">01 \/ AUDIT RECORD<\/span><h3><a href="\/research\/self-improvement-audits\/">/);
+  const audits = read('research/self-improvement-audits/index.html');
+  const rows = [...audits.matchAll(/<tr><th scope="row"><a href="https:\/\/github\.com\/([^/]+\/[^/]+)\/issues\/(\d+)">/g)];
+  assert.equal(rows.length, 27, 'every filed issue is listed');
+  assert.equal(new Set(rows.map(r => r[1])).size, 23, 'across 23 projects');
+  assert.match(audits, /not a confirmed defect/);
+  assert.match(audits, /none of this is peer review/);
+  assert.match(audits, /written with AI agents under my direction/);
+  for (const ref of ['jennyzzt/dgm/pull/32', 'gepa-ai/gepa/pull/382', 'iLearn-Lab/EvoHarness/commit/b8f323e']) assert.ok(audits.includes('https://github.com/' + ref), ref);
+});
+
+test('Gated self-improvement stays on the homepage with its nulls, its limits and the retraction', () => {
+  const home = read('index.html');
+  const card = home.slice(home.indexOf('github.com/sunghunkwag/gated-self-improvement"'), home.indexOf('github.com/sunghunkwag/rsi-bench"'));
+  assert.match(card, /\+1\.52/);
+  assert.match(card, /Pre&#8209;registered/);
+  assert.match(card, /not significant/);
+  assert.match(card, /does not keep growing/);
   const failures = home.slice(home.indexOf('id="failures"'), home.indexOf('id="support"'));
   assert.match(failures, /\+1\.55 tasks per seed/, 'the retracted headline stays in the failure log');
   assert.equal((failures.match(/class="status bad"/g) || []).length, 3, 'three retractions');
-  assert.match(read('research/index.html'), /<span class="topic-number">01 \/ RESEARCH NOTE<\/span><h3><a href="\/research\/gated-self-improvement\/">/);
+  assert.match(read('research/index.html'), /<span class="topic-number">02 \/ RESEARCH NOTE<\/span><h3><a href="\/research\/gated-self-improvement\/">/);
   const note = read('research/gated-self-improvement/index.html');
   assert.match(note, /The headline is retracted/);
   assert.match(note, /holds steady rather than growing/);
@@ -136,12 +151,23 @@ test('Homepage preserves both original and active Search Console verification ta
   assert.ok(tokens.includes('NF-4K5jGPvN4lWdqnNApFgtFtNAsVajT7kvSBKEvx50'));
 });
 
-test('Public identity remains the project rather than its owner', () => {
-  const heading = read('index.html').match(/<h1[^>]*>([\s\S]*?)<\/h1>/)[1].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+test('The project keeps its heading and names its author for search', () => {
+  const home = read('index.html');
+  const heading = home.match(/<h1[^>]*>([\s\S]*?)<\/h1>/)[1].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
   assert.equal(heading, 'Intelligence Research Project');
+  assert.match(home.match(/<title>([^<]+)<\/title>/)[1], /Sung Hun Kwag \(곽성훈\)/);
+  assert.match(home, /class="hero-byline">By <strong>Sung Hun Kwag<\/strong> \(<span lang="ko">곽성훈<\/span>\)/);
   for (const file of indexable) {
-    assert.doesNotMatch(read(file), /Sung Hun Kwag/i, file);
-    assert.match(read(file), /"@type": "ResearchProject"/, file);
+    const html = read(file);
+    assert.match(html, /"@type": "ResearchProject"/, file);
+    assert.equal(tags(html).find(t => t.name === 'author')?.content, 'Sung Hun Kwag', file);
+    const schema = JSON.parse(html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
+    const person = schema['@graph'].find(n => n['@type'] === 'Person');
+    assert.ok(person, file + ': Person entity');
+    assert.equal(person.name, 'Sung Hun Kwag');
+    assert.ok(person.alternateName.includes('곽성훈'), file);
+    assert.ok(person.sameAs.includes('https://github.com/sunghunkwag'), file);
+    assert.equal(schema['@graph'].find(n => n['@type'] === 'ResearchProject').founder['@id'], person['@id'], file);
   }
 });
 
