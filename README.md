@@ -57,7 +57,7 @@ The hero depicts a conceptual AI search landscape as an 8-by-8 field of transluc
 
 [/research/recursive-self-improvement/](https://sunghunkwag.github.io/research/recursive-self-improvement/) is the site's main page for the query *recursive self-improvement*. It gives a plain definition, a sourced history (I. J. Good 1965 through 2026 systems), a confound-and-control checklist, and links to the project's own RSI notes. The homepage, research hub, RSI-Bench, and matched-control notes link to it with descriptive anchor text.
 
-External results on that page are summaries of their authors' reports, each linked to the source. Recheck them when a source is revised, and keep the distinction between bounded and open-ended RSI. Do not add claims that this project has demonstrated open-ended RSI.
+Its status section was updated on November 5, 2026 with a "Where it stands in November 2026" list (OpenAI's automated research intern, Anthropic's R&D automation index, Jack Clark's revised forecast, Karpathy's move to Anthropic); these are lab-reported claims cited through news reports, so recheck them against newer statements before the next edit. External results on that page are summaries of their authors' reports, each linked to the source. Recheck them when a source is revised, and keep the distinction between bounded and open-ended RSI. Do not add claims that this project has demonstrated open-ended RSI.
 
 ## Motion and interactive figures (v2)
 
